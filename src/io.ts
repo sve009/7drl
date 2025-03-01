@@ -15,18 +15,14 @@ export class IOHandler {
   }
 
   async requestKey(): Promise<string> {
-    let key = this.lastKey;
-    if (key) {
-      this.lastKey = null;
-      return key;
-    } else {
-      return new Promise((resolve, reject) => {
-        this.keyPressCallback = resolve;
-      });
-    }
+    return new Promise((resolve, reject) => {
+      this.keyPressCallback = resolve;
+    });
   }
 
   handleKeyDown(event: KeyboardEvent) {
+    this.lastKey = null;
+
     let code = event.keyCode;
     switch (code) {
       case KEYS.VK_SHIFT: {
@@ -59,7 +55,7 @@ export class IOHandler {
       } 
     }
 
-    if (this.keyPressCallback) {
+    if (this.keyPressCallback && this.lastKey) {
       this.keyPressCallback(this.lastKey);
     }
   }

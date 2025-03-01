@@ -1,6 +1,7 @@
 import { Display } from "rot-js";
 import { GameState } from "./gamestate";
 import { generateLevel } from "./mapgen";
+import { Player } from "./player";
 
 export class Game {
   display: Display;
@@ -14,14 +15,18 @@ export class Game {
   run() {
     this.state.running = true;
     generateLevel(this.state.map);
+    this.state.entities.push(new Player(5, 5));
     this.gameLoop();
+
+    this.state.map.draw(this.display);
   }
 
   async gameLoop() {
     while (this.state.running) {
       // Update entities
       for (let entity of this.state.entities) {
-        entity.update();
+        let action = await entity.update();
+        action.run();
       }
 
       // Draw map
@@ -31,6 +36,8 @@ export class Game {
       for (let entity of this.state.entities) {
         entity.draw(this.display);
       }
+
+      console.log('loop complete');
 
       // Pause
       await new Promise((resolve, reject) => {

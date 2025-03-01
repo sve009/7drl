@@ -6,10 +6,10 @@ import { Display } from "rot-js";
  */
 export abstract class Entity {
   // Map position
-  position: {x: number, y: number};
+  position: { x: number; y: number; };
 
   // Action for turn
-  abstract update(): Action;
+  abstract update(): Promise<Action>;
 
   // Draw entity on the map
   abstract draw(display: Display): void;
