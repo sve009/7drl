@@ -1,4 +1,5 @@
-import { Action } from "./action";
+import type { GameState } from "./gamestate";
+import type { Action } from "./action";
 import { Display } from "rot-js";
 
 /**
@@ -9,7 +10,7 @@ export abstract class Entity {
   position: { x: number; y: number; };
 
   // Action for turn
-  abstract update(): Promise<Action>;
+  abstract update(state: GameState): Promise<Action>;
 
   // Draw entity on the map
   abstract draw(display: Display): void;

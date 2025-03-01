@@ -33,6 +33,10 @@ export class GameMap {
     }
   }
 
+  passable(x: number, y: number): boolean {
+    return this.tiles[x + this.width*y].passable();
+  }
+
   blocksSight(x: number, y: number): boolean {
     return this.tiles[x + this.width*y].blocksSight();
   }

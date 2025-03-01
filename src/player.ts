@@ -2,6 +2,7 @@ import { Entity } from "./entity";
 import * as Actions from "./action";
 import { IOHandler } from "./io";
 import { Display } from "rot-js";
+import type { GameState, GameMap } from "./gamestate";
 
 export class Player extends Entity {
   visionRadius: number;
@@ -14,41 +15,59 @@ export class Player extends Entity {
     this.ioHandler = new IOHandler();
   }
 
-  async update() {
+  async update(state: GameState) {
+    while (true) {
     let key = await this.ioHandler.requestKey();
-    switch (key) {
-      case "h": {
-        return new Actions.MoveAction(this, { 
-          x: this.position.x-1, 
-          y: this.position.y 
-        });
-        break;
-      }
-      case "j": {
-        return new Actions.MoveAction(this, { 
-          x: this.position.x, 
-          y: this.position.y+1 
-        });
-        break;
-      }
-      case "k": {
-        return new Actions.MoveAction(this, { 
-          x: this.position.x, 
-          y: this.position.y-1 
-        });
-        break;
-      }
-      case "l": {
-        return new Actions.MoveAction(this, { 
-          x: this.position.x+1, 
-          y: this.position.y 
-        });
-        break;
-      }
-      default: {
-        return new Actions.NoAction();
+      switch (key) {
+        case "h": {
+          let pos = {
+            x: this.position.x-1, 
+            y: this.position.y 
+          };
+          if (this.canMove(pos, state.map)) {
+            return new Actions.MoveAction(this, pos);  
+          }
+          break;
+        }
+        case "j": {
+          let pos = {
+            x: this.position.x, 
+            y: this.position.y+1 
+          };
+          if (this.canMove(pos, state.map)) {
+            return new Actions.MoveAction(this, pos);  
+          }
+          break;
+        }
+        case "k": {
+          let pos = {
+            x: this.position.x, 
+            y: this.position.y-1 
+          };
+          if (this.canMove(pos, state.map)) {
+            return new Actions.MoveAction(this, pos);  
+          }
+          break;
+        }
+        case "l": {
+          let pos = {
+            x: this.position.x+1, 
+            y: this.position.y 
+          };
+          if (this.canMove(pos, state.map)) {
+            return new Actions.MoveAction(this, pos);  
+          }
+          break;
+        }
+        default: {
+          return new Actions.NoAction();
+        }
       }
     }
+  }
+
+  canMove(position: { x: number; y: number; }, map: GameMap): boolean {
+    return map.passable(position.x, position.y);
   }
 
   draw(display: Display) {

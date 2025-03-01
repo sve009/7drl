@@ -29,7 +29,7 @@ export class Game {
 
       // Update entities
       for (let entity of this.state.entities) {
-        let action = await entity.update();
+        let action = await entity.update(this.state);
         action.run();
       }
 
