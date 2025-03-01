@@ -4,11 +4,13 @@ import { IOHandler } from "./io";
 import { Display } from "rot-js";
 
 export class Player extends Entity {
+  visionRadius: number;
   ioHandler: IOHandler;
 
   constructor(x: number, y: number) {
     super();
     this.position = {x, y};
+    this.visionRadius = 5;
     this.ioHandler = new IOHandler();
   }
 
@@ -50,6 +52,6 @@ export class Player extends Entity {
   }
 
   draw(display: Display) {
-    display.draw(this.position.x, this.position.y, "@", "#fff", "#000");
+    display.draw(this.position.x, this.position.y, "@", "#4287f5", "#000");
   }
 }

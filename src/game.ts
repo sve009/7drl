@@ -15,14 +15,18 @@ export class Game {
   run() {
     this.state.running = true;
     generateLevel(this.state.map);
-    this.state.entities.push(new Player(5, 5));
+    this.state.player = new Player(5, 5);
+    this.state.entities.push(this.state.player);
     this.gameLoop();
 
-    this.state.map.draw(this.display);
+    this.state.map.draw(this.display, this.state.sightMap);
   }
 
   async gameLoop() {
     while (this.state.running) {
+      // Update FOV
+      this.state.sightMap.update(this.state.player);
+
       // Update entities
       for (let entity of this.state.entities) {
         let action = await entity.update();
@@ -30,7 +34,7 @@ export class Game {
       }
 
       // Draw map
-      this.state.map.draw(this.display);
+      this.state.map.draw(this.display, this.state.sightMap);
       
       // Draw entitites
       for (let entity of this.state.entities) {
