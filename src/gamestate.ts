@@ -1,5 +1,5 @@
 import { Entity } from "./entity"
-import { Display } from "rot-js";
+import { Display, RNG } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
 
@@ -34,9 +34,11 @@ export class GameMap {
   }
 
   openSpot(): { x: number; y: number; } {
+    const offset = Math.floor(RNG.getUniform() * this.width * this.height);
     for (let i = 0; i < this.width*this.height; i++) {
-      let x = i % this.width;
-      let y = i // x;
+      const j = (i + offset) % (this.width * this.height);
+      const x = j % this.width;
+      const y = Math.floor(j / this.width);
       if (this.passable(x, y)) {
         return { x, y };
       }
@@ -58,10 +60,15 @@ export class GameMap {
 
   draw(display: Display, sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
-      for (let j = 0; j < this.width; j++) {
+      for (let j = 0; j < this.width; j++) { 
+        let tile = this.tiles[j + i*this.width];
         if (sightMap.isVisible(j, i)) {
-          let tile = this.tiles[j + i*this.width];
+          tile.seen = true;
           display.draw(j, i, tile.getSymbol(), "#fff", "#000");
+        } else if (tile.seen) {
+          display.draw(j, i, tile.getSymbol(), "#999", "#000");
+        } else {
+          display.draw(j, i, tile.getSymbol(), "#000", "#000");
         }
       }
     }

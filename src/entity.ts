@@ -1,4 +1,4 @@
-import type { GameState } from "./gamestate";
+import type { GameState, GameMap } from "./gamestate";
 import type { Action } from "./action";
 import { Display } from "rot-js";
 
@@ -14,4 +14,8 @@ export abstract class Entity {
 
   // Draw entity on the map
   abstract draw(display: Display): void;
+
+  canMove(position: { x: number; y: number; }, map: GameMap): boolean {
+    return map.passable(position.x, position.y);
+  }
 }

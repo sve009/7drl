@@ -2,6 +2,7 @@ import { Display } from "rot-js";
 import { GameState } from "./gamestate";
 import { generateLevel } from "./mapgen";
 import { Player } from "./player";
+import { Bat } from "./enemies";
 
 export class Game {
   display: Display;
@@ -16,8 +17,16 @@ export class Game {
     this.state.running = true;
     generateLevel(this.state.map);
     let { x, y } = this.state.map.openSpot();
+
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
+
+    for (let i = 0; i < 3; i++) {
+      const { x, y } = this.state.map.openSpot();
+      const bat = new Bat(x, y);
+      this.state.entities.push(bat);
+    }
+
     this.gameLoop();
 
     this.state.map.draw(this.display, this.state.sightMap);

@@ -66,10 +66,6 @@ export class Player extends Entity {
     }
   }
 
-  canMove(position: { x: number; y: number; }, map: GameMap): boolean {
-    return map.passable(position.x, position.y);
-  }
-
   draw(display: Display) {
     display.draw(this.position.x, this.position.y, "@", "#4287f5", "#000");
   }
