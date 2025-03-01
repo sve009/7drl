@@ -1,4 +1,5 @@
-import { Action } from "./Action"
+import { Action } from "./action";
+import { Display } from "rot-js";
 
 /**
  * Entities represent anything present on the map with dynamic behavior.
@@ -9,4 +10,7 @@ export abstract class Entity {
 
   // Action for turn
   abstract update(): Action;
+
+  // Draw entity on the map
+  abstract draw(display: Display): void;
 }
