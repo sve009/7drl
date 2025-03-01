@@ -33,6 +33,16 @@ export class GameMap {
     }
   }
 
+  openSpot(): { x: number; y: number; } {
+    for (let i = 0; i < this.width*this.height; i++) {
+      let x = i % this.width;
+      let y = i // x;
+      if (this.passable(x, y)) {
+        return { x, y };
+      }
+    }
+  }
+
   passable(x: number, y: number): boolean {
     return this.tiles[x + this.width*y].passable();
   }

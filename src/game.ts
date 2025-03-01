@@ -15,7 +15,8 @@ export class Game {
   run() {
     this.state.running = true;
     generateLevel(this.state.map);
-    this.state.player = new Player(5, 5);
+    let { x, y } = this.state.map.openSpot();
+    this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
     this.gameLoop();
 
