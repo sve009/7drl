@@ -48,7 +48,7 @@ export class Game {
       
       // Draw entitites
       for (let entity of this.state.entities) {
-        entity.draw(this.display);
+        entity.draw(this.display, this.state.sightMap);
       }
 
       console.log('loop complete');

@@ -3,6 +3,7 @@ import * as Actions from "./action";
 import { IOHandler } from "./io";
 import { Display } from "rot-js";
 import type { GameState, GameMap } from "./gamestate";
+import type { SightMap } from "./fov";
 
 export class Player extends Entity {
   visionRadius: number;
@@ -66,7 +67,7 @@ export class Player extends Entity {
     }
   }
 
-  draw(display: Display) {
+  draw(display: Display, sightMap: SightMap) {
     display.draw(this.position.x, this.position.y, "@", "#4287f5", "#000");
   }
 }
