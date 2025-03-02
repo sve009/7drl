@@ -10,12 +10,26 @@ export class GameState {
   sightMap: SightMap;
   player?: Player;
   entities: Entity[];
+  entityLayer: Layer;
 
   constructor() {
     this.running = false;
     this.map = new GameMap(80, 40);
     this.sightMap = new SightMap(80, 40, this.map);
     this.entities = [];
+    this.entityLayer = new Layer(1, 80, 40);
+  }
+
+  updateColor() {
+    this.map.updateColor(this.sightMap);
+
+    for (const entity of this.entities) {
+      const {x, y, glyph} = entity.updateColor(this.sightMap);
+      if (!glyph) {
+        continue;
+      }
+      this.entityLayer.board[y][x] = glyph;
+    }
   }
 }
 
@@ -61,7 +75,7 @@ export class GameMap {
     this.tiles[x + this.width*y] = tile;
   }
 
-  draw(sightMap: SightMap) {
+  updateColor(sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) { 
         let tile = this.tiles[j + i*this.width];

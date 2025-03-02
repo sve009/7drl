@@ -13,6 +13,7 @@ export class Game {
     this.state = new GameState();
     this.renderer = new Renderer(display);
     this.renderer.addLayer(this.state.map.layer);
+    this.renderer.addLayer(this.state.entityLayer);
   }
 
   run() {
@@ -20,14 +21,14 @@ export class Game {
     generateLevel(this.state.map);
     let { x, y } = this.state.map.openSpot();
 
-    this.state.player = new Player(x, y);
-    this.state.entities.push(this.state.player);
-
     for (let i = 0; i < 3; i++) {
       const { x, y } = this.state.map.openSpot();
       const bat = new Bat(x, y);
       this.state.entities.push(bat);
     }
+
+    this.state.player = new Player(x, y);
+    this.state.entities.push(this.state.player);
 
     this.gameLoop();
 
@@ -35,6 +36,7 @@ export class Game {
   }
 
   async gameLoop() {
+    this.renderer.draw();
     while (this.state.running) {
       // Terrain Update
       // Entity Update
@@ -52,22 +54,17 @@ export class Game {
         action.run();
       }
 
-      // Draw map
-      this.state.map.draw(this.state.sightMap);
-      
-      // Draw entitites
-      for (let entity of this.state.entities) {
-        entity.draw(this.renderer.display, this.state.sightMap);
-      }
-      
+      this.state.updateColor();
+
+      this.renderer.draw();
+
       console.log('loop complete');
-      
+
       // Pause
       await new Promise((resolve, reject) => {
         setTimeout(resolve, 100);
       });
 
-      this.renderer.draw();
     }
 
     this.finishGame();

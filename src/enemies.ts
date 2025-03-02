@@ -1,9 +1,9 @@
-import type { Display } from "rot-js";
 import * as AI from "./ai";
 import { Entity } from "./entity";
 import type { GameState } from "./gamestate";
 import type { SightMap } from "./fov";
 import type { Action } from "./action";
+import { Glyph } from "./renderer";
 
 export abstract class Enemy extends Entity {
   protected ai: AI.AIProfile;
@@ -23,15 +23,10 @@ export class Bat extends Enemy {
     return this.ai.update(state, this);
   }
 
-  draw(display: Display, sightMap: SightMap): void {
+  updateColor(sightMap: SightMap) {
     if (this.visible) {
-      display.draw(
-        this.position.x,
-        this.position.y,
-        "b",
-        "#ba944e",
-        "#000"
-      );
+      return { x: this.position.x, y: this.position.y, glyph: new Glyph("b", "#ba944e", "#000")};
     }
+    return { x: 0, y: 0, glyph: null };
   }
 }

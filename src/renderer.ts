@@ -15,7 +15,10 @@ export class Renderer {
 
     draw () {
         const sortedLayers = this.layers.sort((layerA, layerB) => layerA.index - layerB.index);
-        sortedLayers.forEach(layer => layer.draw(this.display));
+        sortedLayers.forEach(layer => {
+            layer.draw(this.display);
+            layer.reset();
+        });
     }
 }
 
@@ -29,6 +32,10 @@ export class Layer {
         this.index = layerIdx;
         this.width = width;
         this.height = height;
+        this.reset();
+    }
+
+    reset() {
         this.board = new Array(this.height);
         for (let j = 0; j < this.height; j++) {
             this.board[j] = new Array(this.width);
