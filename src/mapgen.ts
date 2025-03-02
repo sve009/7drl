@@ -21,32 +21,49 @@ export function generateLevel(gameMap: GameMap) {
 export class MapGenerator {
   width: number;
   height: number;
+  map: GameMap;
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, gameMap: GameMap) {
     this.width = width;
     this.height = height;
+    this.map = gameMap;
   }
 
   generateLevel(): void {
-      
+    const grid = this.createFirstRoom();  
+
+    // 20 rooms for now
+    for (let i = 0; i < 20; i++) {
+      const [room, doors] = this.createRoom();
+      this.attachRoom(grid, room, doors);
+    }
+
+    for (let i = 0; i < grid.width*grid.height; i++) {
+      if (grid.values[i]) {
+        const { x, y } = breakIndex(i, grid.width);
+        this.map.setTile(x, y, grid.values[i]);
+      }
+    }
+  }
+
+  createFirstRoom(): Grid {
+    const grid = this.createRectRoom();
+    return grid;
   }
 
   createRoom(): [grid: Grid, doors: DoorPoints] {
     let room;
     switch(randi(0, 2)) {
       case 0: {
-        console.log('rect');
         room = this.createRectRoom();
         break;
       }
       case 1: {
-        console.log('circle');
         room = this.createCircleRoom();
         break;
       }
     }
     const doorPoints = this.findDoorPoints(room);
-    console.log('doorPoints', doorPoints);
 
     if (randi(0, 2)) {
       this.attachCorridor(room, doorPoints);
@@ -162,6 +179,29 @@ export class MapGenerator {
     for (const k of doorPoints.keys()) {
       if (k != dir) {
         doorPoints.delete(k);
+      }
+    }
+  }
+
+  attachRoom (grid: Grid, room: Grid, doors: DoorPoints) {
+    const tiles = this.shuffledTiles();
+    for (const tile of tiles) {
+      if (grid.values[tile]) {
+        continue;
+      }
+      if (this.numberAdjacent(grid, tile) == 1) {
+        const d = this.dirAdjacent(grid, tile);
+        if (!doors.has(d)) {
+          continue;
+        }
+
+        const rp = doors.get(d); 
+        const { x, y } = breakIndex(tile, room.width);
+        if (grid.fits(room, x - rp.x + 1, y - rp.y + 1)) {
+          grid.merge(room, x - rp.x, y - rp.y);
+          grid.values[tile] = 2;
+          break;
+        }
       }
     }
   }

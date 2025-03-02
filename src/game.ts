@@ -1,6 +1,6 @@
 import { Display } from "rot-js";
 import { GameState } from "./gamestate";
-import { generateLevel } from "./mapgen";
+import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
 import { Bat } from "./enemies";
@@ -11,6 +11,7 @@ export class Game {
   state: GameState;
   uiManager: UIManager;
   renderer: Renderer;
+  generator: MapGenerator;
 
   constructor(display: Display) {
     this.state = new GameState();
@@ -18,11 +19,12 @@ export class Game {
     this.uiManager = new UIManager;
     this.renderer.addPermanentLayer(this.state.map.layer);
     this.renderer.addPermanentLayer(this.state.entityLayer);
+    this.generator = new MapGenerator(80, 40, this.state.map);
   }
 
   run() {
     this.state.running = true;
-    generateLevel(this.state.map);
+    this.generator.generateLevel();
     let { x, y } = this.state.map.openSpot();
 
     for (let i = 0; i < 3; i++) {

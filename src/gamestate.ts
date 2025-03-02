@@ -89,15 +89,16 @@ export class GameMap {
   updateColor(sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) { 
-        let tile = this.tiles[j + i*this.width];
-        if (sightMap.isVisible(j, i)) {
-          let tile = this.tiles[j + i*this.width];
+        const visible = sightMap.isVisible(j, i);
+        const tile = this.tiles[j + i*this.width];
+        const [fg, bg] = tile.getColor(visible);
+        if (visible) {
           tile.seen = true;
-          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#fff", "#000"));
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         } else if (tile.seen) {
-          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#999", "#000"));
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         } else {
-          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#000", "#000"));
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         }
       }
     }
@@ -105,7 +106,6 @@ export class GameMap {
 }
 
 class Tile {
-  visible: boolean;
   seen: boolean;
 
   layers: Map<string, number>;
@@ -120,7 +120,8 @@ class Tile {
   }
 
   blocksSight(): boolean {
-    return this.layers.get("TERRAIN") == 0;
+    const val = this.layers.get("TERRAIN");
+    return val != 1;
   }
 
   getSymbol(): string {
@@ -130,6 +131,48 @@ class Tile {
       }
       case 1: {
         return ".";
+        break;
+      }
+      case 2: {
+        return "+";
+        break;
+      }
+    }
+  }
+
+  // TODO: make separate tile classes which encapsulate this logic
+  getColor(visible: boolean): [string, string] {
+    const symbol = this.getSymbol();
+    switch (symbol) {
+      case "#": {
+        if (visible) {
+          return ["#fff", "#444"];
+        } else if (this.seen) {
+          return ["#999", "#444"];
+        } else {
+          return ["#000", "#000"];
+        }
+        break;
+      }
+      case ".": {
+        if (visible) {
+          return ["#fff", "#000"];
+        } else if (this.seen) {
+          return ["#999", "#000"];
+        } else {
+          return ["#000", "#000"];
+        }
+        break;
+      }
+      case "+": {
+        if (visible) {
+          return ["#fff", "#593909"];
+        } else if (this.seen) {
+          return ["#999", "#362204"];
+        } else {
+          return ["#000", "#000"];
+        }
+        break;
       }
     }
   }
