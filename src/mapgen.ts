@@ -3,6 +3,7 @@ import { GameMap } from "./gamestate";
 import { Grid } from "./grid";
 import { dirMap, oppDir } from "./constants";
 import { randi, joinIndex, breakIndex } from "./utilities";
+import { IOHandler } from "./io";
 
 type DoorPoints = Map<number, { x: number; y: number; }>;
 
@@ -164,4 +165,17 @@ export class MapGenerator {
       }
     }
   }
+}
+
+async function printGrid(grid: Grid, display: ROT.Display): Promise<boolean> {
+  const handler = new IOHandler;
+  for (let i = 0; i < grid.width*grid.height; i++) {
+    if (grid.values[i]) {
+      const { x, y } = breakIndex(i, 80);
+      display.draw(x, y, "x", "#999", "#999");
+    }
+  }
+  await handler.requestKey(); 
+
+  return true;
 }
