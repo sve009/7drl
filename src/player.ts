@@ -4,6 +4,7 @@ import { IOHandler } from "./io";
 import type { GameState, GameMap } from "./gamestate";
 import type { SightMap } from "./fov";
 import { Glyph } from "./renderer";
+import { dirMap } from "./constants";
 
 export class Player extends Character {
   visionRadius: number;
@@ -21,49 +22,38 @@ export class Player extends Character {
   async update(state: GameState) {
     while (true) {
     let key = await this.ioHandler.requestKey();
+      let dir = -1;
       switch (key) {
         case "h": {
-          let pos = {
-            x: this.position.x-1, 
-            y: this.position.y 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          dir = 0;
           break;
         }
         case "j": {
-          let pos = {
-            x: this.position.x, 
-            y: this.position.y+1 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          dir = 1;
           break;
         }
         case "k": {
-          let pos = {
-            x: this.position.x, 
-            y: this.position.y-1 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          dir = 3;
           break;
         }
         case "l": {
-          let pos = {
-            x: this.position.x+1, 
-            y: this.position.y 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          dir = 2;
           break;
         }
         default: {
           return new Actions.NoAction();
+        }
+      }
+
+      if (dir != -1) {
+        const { x, y } = dirMap.get(dir);
+        const fx = this.position.x + x;
+        const fy = this.position.y + y;
+        const e = state.entityAt(this.position.x + x, this.position.y + y);
+        if (e instanceof Character) {
+          return new Actions.AttackAction(this, e as Character); 
+        } else if (this.canMove({ x: fx, y: fy}, state.map)) {
+          return new Actions.MoveAction(this, { x: fx, y: fy });
         }
       }
     }
@@ -74,10 +64,15 @@ export class Player extends Character {
   }
 
   attack(): [number, number] {
-    return [0, 0];
+    return [75, 5];
   }
 
   defend(): [number, number] {
-    return [0, 0];
+    return [40, 0];
+  }
+
+  die(state: GameState): void {
+    console.log("DEATH");
+    state.running = false;
   }
 }

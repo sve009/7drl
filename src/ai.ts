@@ -1,15 +1,15 @@
 import { RNG } from "rot-js";
 import { dirMap } from "./constants";
 import type { GameState } from "./gamestate";
-import { Action, MoveAction } from "./action";
-import type { Entity } from "./entity";
+import { Action, MoveAction, AttackAction } from "./action";
+import type { Character } from "./entity";
 
 export abstract class AIProfile {
-  abstract update(state: GameState, entity: Entity): Action;
+  abstract update(state: GameState, character: Character): Action;
 }
 
 export class RandomProfile {
-  update(state: GameState, entity: Entity): Action {
+  update(state: GameState, character: Character): Action {
     let found = false;
     let pos;
     while (!found) {
@@ -18,15 +18,17 @@ export class RandomProfile {
       const dirPair = dirMap.get(dir);
       
       pos = {
-        x: entity.position.x + dirPair.x,
-        y: entity.position.y + dirPair.y,
+        x: character.position.x + dirPair.x,
+        y: character.position.y + dirPair.y,
       };
 
-      if (entity.canMove(pos, state.map)) {
+      if (character.canMove(pos, state.map) && !state.entityAt(pos.x, pos.y)) {
         found = true;
+      } else if (pos.x == state.player.position.x && pos.y == state.player.position.y) {
+        return new AttackAction(character, state.player);
       }
     } 
 
-    return new MoveAction(entity, pos);
+    return new MoveAction(character, pos);
   }
 }

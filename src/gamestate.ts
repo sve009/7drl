@@ -42,6 +42,16 @@ export class GameState {
       this.entityLayer.addDrawable(glyph);
     }
   }
+
+  entityAt(x: number, y: number): Entity | null {
+    for (const entity of this.entities) {
+      if (entity.position.x == x && entity.position.y == y) {
+        return entity;
+      }
+    }
+
+    return null;
+  }
 }
 
 export class GameMap {

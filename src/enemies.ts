@@ -32,10 +32,10 @@ export class Bat extends Enemy {
   }
 
   attack(): [number, number] {
-    return [0, 0];
+    return [50, 10];
   }
 
   defend(): [number, number] {
-    return [0, 0];
+    return [50, 0];
   }
 }

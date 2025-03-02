@@ -53,6 +53,12 @@ export class IOHandler {
         }
         break;
       } 
+      case KEYS.VK_PERIOD: {
+        if (!this.shifting) {
+          this.lastKey = ".";    
+        }
+        break;
+      } 
     }
 
     if (this.keyPressCallback && this.lastKey) {

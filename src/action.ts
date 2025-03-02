@@ -34,11 +34,17 @@ export class AttackAction extends Action {
   attacker: Character;
   defender: Character;
 
+  constructor(attacker: Character, defender: Character) {
+    super();
+    this.attacker = attacker;
+    this.defender = defender;
+  }
+
   run(state: GameState) {
     const [toHit, dmg] = this.attacker.attack();
     const [dodge, def] = this.defender.defend();
 
-    if (RNG.getPercentage() < toHit + dodge) {
+    if (RNG.getPercentage() < toHit - dodge) {
       this.defender.health -= (dmg - def);
       if (this.defender.health <= 0) {
         const i = state.entities.findIndex(e => e == this.defender);

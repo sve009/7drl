@@ -27,14 +27,14 @@ export class Game {
     this.generator.generateLevel();
     let { x, y } = this.state.map.openSpot();
 
+    this.state.player = new Player(x, y);
+    this.state.entities.push(this.state.player);
+
     for (let i = 0; i < 3; i++) {
       const { x, y } = this.state.map.openSpot();
       const bat = new Bat(x, y);
       this.state.entities.push(bat);
     }
-
-    this.state.player = new Player(x, y);
-    this.state.entities.push(this.state.player);
 
     this.gameLoop();
 
