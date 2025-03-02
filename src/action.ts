@@ -1,4 +1,5 @@
-import { Entity } from "./entity";
+import { RNG } from "rot-js";
+import { Entity, Character } from "./entity";
 import type { GameState } from "./gamestate";
 
 export abstract class Action {
@@ -27,5 +28,24 @@ export class MoveAction extends Action {
     state.map.setOpenness(this.position.x, this.position.y, true);
     state.map.setOpenness(oldPos.x, oldPos.y, false);
   }
+}
+
+export class AttackAction extends Action {
+  attacker: Character;
+  defender: Character;
+
+  run(state: GameState) {
+    const [toHit, dmg] = this.attacker.attack();
+    const [dodge, def] = this.defender.defend();
+
+    if (RNG.getPercentage() < toHit + dodge) {
+      this.defender.health -= (dmg - def);
+      if (this.defender.health <= 0) {
+        const i = state.entities.findIndex(e => e == this.defender);
+        state.entities.splice(i, 1);
+        this.defender.die(state);
+      }
+    }
+  } 
 }
 

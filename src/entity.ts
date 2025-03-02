@@ -20,3 +20,12 @@ export abstract class Entity {
     return map.passable(position.x, position.y);
   }
 }
+
+export abstract class Character extends Entity {
+  health: number;
+
+  abstract attack(): [number, number];
+  abstract defend(): [number, number];
+
+  die(state: GameState): void {}
+} 

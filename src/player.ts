@@ -1,17 +1,19 @@
-import { Entity } from "./entity";
+import { Character } from "./entity";
 import * as Actions from "./action";
 import { IOHandler } from "./io";
 import type { GameState, GameMap } from "./gamestate";
 import type { SightMap } from "./fov";
 import { Glyph } from "./renderer";
 
-export class Player extends Entity {
+export class Player extends Character {
   visionRadius: number;
   ioHandler: IOHandler;
+  health: number;
 
   constructor(x: number, y: number) {
     super();
     this.position = {x, y};
+    this.health = 10;
     this.visionRadius = 5;
     this.ioHandler = new IOHandler();
   }
@@ -69,5 +71,13 @@ export class Player extends Entity {
 
   updateColor(sightMap: SightMap) {
     return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
+  }
+
+  attack(): [number, number] {
+    return [0, 0];
+  }
+
+  defend(): [number, number] {
+    return [0, 0];
   }
 }
