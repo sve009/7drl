@@ -1,7 +1,7 @@
 import type { GameState, GameMap } from "./gamestate";
 import type { SightMap } from "./fov";
 import type { Action } from "./action";
-import { Display } from "rot-js";
+import { Glyph } from "./renderer";
 
 /**
  * Entities represent anything present on the map with dynamic behavior.
@@ -14,7 +14,7 @@ export abstract class Entity {
   abstract update(state: GameState): Promise<Action>;
 
   // Draw entity on the map
-  abstract draw(display: Display, sightMap: SightMap): void;
+  abstract updateColor(sightMap: SightMap): Glyph | null;
 
   canMove(position: { x: number; y: number; }, map: GameMap): boolean {
     return map.passable(position.x, position.y);

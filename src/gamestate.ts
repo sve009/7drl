@@ -1,7 +1,8 @@
 import { Entity } from "./entity"
-import { Display, RNG } from "rot-js";
+import { RNG } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
+import { Glyph, Layer } from "./renderer";
 
 export class GameState {
   running: boolean;
@@ -9,12 +10,37 @@ export class GameState {
   sightMap: SightMap;
   player?: Player;
   entities: Entity[];
+  entityLayer: Layer;
 
   constructor() {
     this.running = false;
     this.map = new GameMap(80, 40);
     this.sightMap = new SightMap(80, 40, this.map);
     this.entities = [];
+    this.entityLayer = new Layer(1);
+  }
+
+  async update () {
+    // Update FOV
+    this.sightMap.update(this.player);
+
+    // Update entities
+    for (let entity of this.entities) {
+      let action = await entity.update(this);
+      action.run();
+    }
+  }
+
+  updateColor() {
+    this.map.updateColor(this.sightMap);
+
+    for (const entity of this.entities) {
+      const glyph = entity.updateColor(this.sightMap);
+      if (!glyph) {
+        continue;
+      }
+      this.entityLayer.addDrawable(glyph);
+    }
   }
 }
 
@@ -22,6 +48,7 @@ export class GameMap {
   width: number;
   height: number;
   tiles: Tile[];
+  layer: Layer;
   
   constructor(width: number, height: number) {
     this.width = width;
@@ -31,6 +58,7 @@ export class GameMap {
       let tile = new Tile(0);
       this.tiles.push(tile);
     }
+    this.layer = new Layer(0);
   }
 
   openSpot(): { x: number; y: number; } {
@@ -58,17 +86,18 @@ export class GameMap {
     this.tiles[x + this.width*y] = tile;
   }
 
-  draw(display: Display, sightMap: SightMap) {
+  updateColor(sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) { 
         let tile = this.tiles[j + i*this.width];
         if (sightMap.isVisible(j, i)) {
+          let tile = this.tiles[j + i*this.width];
           tile.seen = true;
-          display.draw(j, i, tile.getSymbol(), "#fff", "#000");
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#fff", "#000"));
         } else if (tile.seen) {
-          display.draw(j, i, tile.getSymbol(), "#999", "#000");
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#999", "#000"));
         } else {
-          display.draw(j, i, tile.getSymbol(), "#000", "#000");
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#000", "#000"));
         }
       }
     }

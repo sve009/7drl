@@ -4,7 +4,7 @@ import { MapGenerator } from "./mapgen";
 import { IOHandler } from "./io";
 import { breakIndex, joinIndex } from "./utilities";
 
-let display = new ROT.Display({width:80, height:40, fontSize: 20});
+const display = new ROT.Display({width:80, height:40, fontSize: 20});
 document.body.appendChild(display.getContainer());
 display.getContainer().focus();
 
