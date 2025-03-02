@@ -14,7 +14,7 @@ export abstract class Entity {
   abstract update(state: GameState): Promise<Action>;
 
   // Draw entity on the map
-  abstract updateColor(sightMap: SightMap): { x: number; y: number; glyph: Glyph | null; };
+  abstract updateColor(sightMap: SightMap): Glyph | null;
 
   canMove(position: { x: number; y: number; }, map: GameMap): boolean {
     return map.passable(position.x, position.y);

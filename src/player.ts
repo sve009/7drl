@@ -68,6 +68,6 @@ export class Player extends Entity {
   }
 
   updateColor(sightMap: SightMap) {
-    return { x: this.position.x, y: this.position.y, glyph: new Glyph("@", "#4287f5", "#000")}
+    return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
   }
 }

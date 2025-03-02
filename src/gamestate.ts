@@ -17,18 +17,29 @@ export class GameState {
     this.map = new GameMap(80, 40);
     this.sightMap = new SightMap(80, 40, this.map);
     this.entities = [];
-    this.entityLayer = new Layer(1, 80, 40);
+    this.entityLayer = new Layer(1);
+  }
+
+  async update () {
+    // Update FOV
+    this.sightMap.update(this.player);
+
+    // Update entities
+    for (let entity of this.entities) {
+      let action = await entity.update(this);
+      action.run();
+    }
   }
 
   updateColor() {
     this.map.updateColor(this.sightMap);
 
     for (const entity of this.entities) {
-      const {x, y, glyph} = entity.updateColor(this.sightMap);
+      const glyph = entity.updateColor(this.sightMap);
       if (!glyph) {
         continue;
       }
-      this.entityLayer.board[y][x] = glyph;
+      this.entityLayer.addDrawable(glyph);
     }
   }
 }
@@ -47,7 +58,7 @@ export class GameMap {
       let tile = new Tile(0);
       this.tiles.push(tile);
     }
-    this.layer = new Layer(0, width, height);
+    this.layer = new Layer(0);
   }
 
   openSpot(): { x: number; y: number; } {
@@ -82,11 +93,11 @@ export class GameMap {
         if (sightMap.isVisible(j, i)) {
           let tile = this.tiles[j + i*this.width];
           tile.seen = true;
-          this.layer.board[i][j] = new Glyph(tile.getSymbol(), "#fff", "#000");
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#fff", "#000"));
         } else if (tile.seen) {
-          this.layer.board[i][j] = new Glyph(tile.getSymbol(), "#999", "#000");
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#999", "#000"));
         } else {
-          this.layer.board[i][j] = new Glyph(tile.getSymbol(), "#000", "#000");
+          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), "#000", "#000"));
         }
       }
     }

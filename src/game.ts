@@ -4,16 +4,20 @@ import { generateLevel } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
 import { Bat } from "./enemies";
+import { UIManager } from "./ui";
+import { Dialog } from "./dialog";
 
 export class Game {
   state: GameState;
+  uiManager: UIManager;
   renderer: Renderer;
 
   constructor(display: Display) {
     this.state = new GameState();
     this.renderer = new Renderer(display);
-    this.renderer.addLayer(this.state.map.layer);
-    this.renderer.addLayer(this.state.entityLayer);
+    this.uiManager = new UIManager;
+    this.renderer.addPermanentLayer(this.state.map.layer);
+    this.renderer.addPermanentLayer(this.state.entityLayer);
   }
 
   run() {
@@ -36,26 +40,23 @@ export class Game {
   }
 
   async gameLoop() {
+    this.state.updateColor();
+    this.uiManager.updateColor();
     this.renderer.draw();
     while (this.state.running) {
-      // Terrain Update
-      // Entity Update
+      // Update the GameState and the UIManager
+      await this.state.update();
+      await this.uiManager.update();
+      this.uiManager.uiObjects.push(new Dialog(12));
 
-      // Color Update
-
-      // Draw
-
-      // Update FOV
-      this.state.sightMap.update(this.state.player);
-
-      // Update entities
-      for (let entity of this.state.entities) {
-        let action = await entity.update(this.state);
-        action.run();
-      }
-
+      // Update the text/glyphs and add to layers
       this.state.updateColor();
+      this.uiManager.updateColor();
 
+      // Get any temporary layers
+      this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));
+
+      // Draw everything
       this.renderer.draw();
 
       console.log('loop complete');

@@ -25,8 +25,8 @@ export class Bat extends Enemy {
 
   updateColor(sightMap: SightMap) {
     if (this.visible) {
-      return { x: this.position.x, y: this.position.y, glyph: new Glyph("b", "#ba944e", "#000")};
+      return new Glyph(this.position.x, this.position.y, "b", "#ba944e", "#000");
     }
-    return { x: 0, y: 0, glyph: null };
+    return null;
   }
 }
