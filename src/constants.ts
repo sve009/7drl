@@ -9,3 +9,10 @@ map.set(5, { x: 1, y: 1 });
 map.set(6, { x: 1, y: -1 });
 map.set(7, { x: -1, y: -1 });
 export const dirMap = map;
+
+let oppMap = new Map();
+oppMap.set(0, 2);
+oppMap.set(1, 3);
+oppMap.set(2, 0);
+oppMap.set(3, 1);
+export const oppDir = oppMap;
