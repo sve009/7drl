@@ -45,6 +45,7 @@ export class Game {
     this.state.updateColor();
     this.uiManager.updateColor();
     this.renderer.draw();
+
     while (this.state.running) {
       // Update the GameState and the UIManager
       await this.state.update();

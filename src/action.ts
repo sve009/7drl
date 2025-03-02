@@ -1,11 +1,12 @@
 import { Entity } from "./entity";
+import type { GameState } from "./gamestate";
 
 export abstract class Action {
-  abstract run(): void;
+  abstract run(state: GameState): void;
 }
 
 export class NoAction extends Action {
-  run() {}
+  run(state: GameState) {}
 }
 
 export class MoveAction extends Action {
@@ -19,8 +20,12 @@ export class MoveAction extends Action {
     this.position = newPos;
   }
 
-  run() {
+  run(state: GameState) {
+    const oldPos = this.entity.position;
     this.entity.position = this.position;
+
+    state.map.setOpenness(this.position.x, this.position.y, true);
+    state.map.setOpenness(oldPos.x, oldPos.y, false);
   }
 }
 
