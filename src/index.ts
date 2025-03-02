@@ -1,7 +1,7 @@
 import * as ROT from "rot-js";
 import { Game } from "./game";
 
-let display = new ROT.Display({width:80, height:40, fontSize: 20});
+const display = new ROT.Display({width:80, height:40, fontSize: 20});
 document.body.appendChild(display.getContainer());
 display.getContainer().focus();
 

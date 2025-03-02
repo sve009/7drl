@@ -2,14 +2,16 @@ import { Display } from "rot-js";
 import { GameState } from "./gamestate";
 import { generateLevel } from "./mapgen";
 import { Player } from "./player";
+import { Renderer } from "./renderer";
 
 export class Game {
-  display: Display;
   state: GameState;
+  renderer: Renderer;
 
   constructor(display: Display) {
-    this.display = display;
     this.state = new GameState();
+    this.renderer = new Renderer(display);
+    this.renderer.addLayer(this.state.map.layer);
   }
 
   run() {
@@ -20,11 +22,18 @@ export class Game {
     this.state.entities.push(this.state.player);
     this.gameLoop();
 
-    this.state.map.draw(this.display, this.state.sightMap);
+    this.renderer.draw();
   }
 
   async gameLoop() {
     while (this.state.running) {
+      // Terrain Update
+      // Entity Update
+
+      // Color Update
+
+      // Draw
+
       // Update FOV
       this.state.sightMap.update(this.state.player);
 
@@ -35,19 +44,21 @@ export class Game {
       }
 
       // Draw map
-      this.state.map.draw(this.display, this.state.sightMap);
+      this.state.map.draw(this.state.sightMap);
       
       // Draw entitites
       for (let entity of this.state.entities) {
-        entity.draw(this.display);
+        entity.draw(this.renderer.display);
       }
-
+      
       console.log('loop complete');
-
+      
       // Pause
       await new Promise((resolve, reject) => {
         setTimeout(resolve, 100);
       });
+
+      this.renderer.draw();
     }
 
     this.finishGame();

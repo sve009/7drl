@@ -1,7 +1,7 @@
 import { Entity } from "./entity"
-import { Display } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
+import { Glyph, Layer } from "./renderer";
 
 export class GameState {
   running: boolean;
@@ -22,6 +22,7 @@ export class GameMap {
   width: number;
   height: number;
   tiles: Tile[];
+  layer: Layer;
   
   constructor(width: number, height: number) {
     this.width = width;
@@ -31,6 +32,7 @@ export class GameMap {
       let tile = new Tile(0);
       this.tiles.push(tile);
     }
+    this.layer = new Layer(0, width, height);
   }
 
   openSpot(): { x: number; y: number; } {
@@ -56,15 +58,23 @@ export class GameMap {
     this.tiles[x + this.width*y] = tile;
   }
 
-  draw(display: Display, sightMap: SightMap) {
+  draw(sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) {
         if (sightMap.isVisible(j, i)) {
           let tile = this.tiles[j + i*this.width];
-          display.draw(j, i, tile.getSymbol(), "#fff", "#000");
+          this.layer.board[i][j] = new Glyph(tile.getSymbol(), "#fff", "#000");
         }
       }
     }
+    // for (let i = 0; i < this.height; i++) {
+    //   for (let j = 0; j < this.width; j++) {
+    //     if (sightMap.isVisible(j, i)) {
+    //       let tile = this.tiles[j + i*this.width];
+    //       display.draw(j, i, tile.getSymbol(), "#fff", "#000");
+    //     }
+    //   }
+    // }
   }
 }
 
