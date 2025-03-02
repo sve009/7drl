@@ -3,6 +3,7 @@ import { GameState } from "./gamestate";
 import { generateLevel } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
+import { Bat } from "./enemies";
 
 export class Game {
   state: GameState;
@@ -18,8 +19,16 @@ export class Game {
     this.state.running = true;
     generateLevel(this.state.map);
     let { x, y } = this.state.map.openSpot();
+
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
+
+    for (let i = 0; i < 3; i++) {
+      const { x, y } = this.state.map.openSpot();
+      const bat = new Bat(x, y);
+      this.state.entities.push(bat);
+    }
+
     this.gameLoop();
 
     this.renderer.draw();
@@ -48,7 +57,7 @@ export class Game {
       
       // Draw entitites
       for (let entity of this.state.entities) {
-        entity.draw(this.renderer.display);
+        entity.draw(this.renderer.display, this.state.sightMap);
       }
       
       console.log('loop complete');

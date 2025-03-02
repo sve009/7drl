@@ -3,6 +3,7 @@ import * as Actions from "./action";
 import { IOHandler } from "./io";
 import { Display } from "rot-js";
 import type { GameState, GameMap } from "./gamestate";
+import type { SightMap } from "./fov";
 
 export class Player extends Entity {
   visionRadius: number;
@@ -66,11 +67,7 @@ export class Player extends Entity {
     }
   }
 
-  canMove(position: { x: number; y: number; }, map: GameMap): boolean {
-    return map.passable(position.x, position.y);
-  }
-
-  draw(display: Display) {
+  draw(display: Display, sightMap: SightMap) {
     display.draw(this.position.x, this.position.y, "@", "#4287f5", "#000");
   }
 }
