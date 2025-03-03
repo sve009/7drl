@@ -11,6 +11,8 @@ export class PlayerPanel extends UIComponent{
         `Player Statistics:\n` +
         `Health: ${this.player.health}/${this.player.maxHealth}\n` +
         `Distance Traveled: ${this.player.distanceTraveled}\n` +
+        `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
+        `Level: ${this.player.dungeonLevel}\n` +
         `Items Equipped:`;
 
         playerStats = ` %b{${this.layer.bg}}${playerStats}`;
