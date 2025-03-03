@@ -16,6 +16,7 @@ export class Player extends Character {
 
   constructor(x: number, y: number) {
     super();
+    this.name = "player";
     this.position = {x, y};
     this.dungeonLevel = 0;
     this.health = 10;

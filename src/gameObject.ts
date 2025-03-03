@@ -18,6 +18,7 @@ export abstract class GameEntity extends GameObject{
 }
 
 export abstract class Character extends GameEntity {
+    name: string; 
     health: number;
   
     abstract attack(): [number, number];

@@ -55,9 +55,9 @@ export class AttackAction extends Action {
         state.entities.splice(i, 1);
         this.defender.die(state);
       }
-      logMessage("Hit");
+      logMessage(`${this.attacker.name} hit ${this.defender.name} for ${dmg} damage`);
     } else {
-      logMessage("Miss");
+      logMessage(`${this.attacker.name} missed ${this.defender.name}`);
     }
   } 
 }

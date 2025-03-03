@@ -13,6 +13,7 @@ export class Enemy extends Character {
 
   constructor(name: string, x: number, y: number, z: number) {
     super();
+    this.name = name;
     this.position = { x, y };
     this.dungeonLevel = z;
     this.visible = false;
