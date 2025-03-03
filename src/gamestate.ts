@@ -74,6 +74,8 @@ export class GameMap {
   height: number;
   tiles: Tile[];
   layer: Layer;
+
+  // Convenience
   stairDown?: { x: number; y: number; };
   stairUp?: { x: number; y: number; };
   
@@ -92,8 +94,8 @@ export class GameMap {
     this.width = town.width;
     this.height = town.height;
     for (let i = 0; i < townMap.length; i++) {
-      const x = i % townMap.length;
-      const y = Math.floor(i / townMap.length);
+      const x = i % this.width;
+      const y = Math.floor(i / this.width);
       this.setTile(x, y, townMap[i]);
     }
   }
@@ -171,6 +173,16 @@ export class GameMap {
       }
       case 10: {
         t = TileTypeFactory.create("vshelf");
+        break;
+      }
+      case 11: {
+        t = TileTypeFactory.create(">");
+        this.stairDown = { x, y };
+        break;
+      }
+      case 12: {
+        t = TileTypeFactory.create("<");
+        this.stairUp = { x, y };
         break;
       }
     }
@@ -367,6 +379,24 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+        );
+      }
+      case ">": {
+        return new TileType(
+          ">",
+          "#f72811",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "<": {
+        return new TileType(
+          "<",
+          "#f72811",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
         );
       }
     }

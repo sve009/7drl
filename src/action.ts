@@ -97,7 +97,7 @@ export class DescendAction extends Action {
   }
 
   run(state: GameState) {
-    if (!(this.entity.dungeonLevel == 10)) {
+    if (this.entity.dungeonLevel == 10) {
       return;
     }
 
@@ -105,6 +105,7 @@ export class DescendAction extends Action {
 
     if (this.entity.dungeonLevel > state.maps.length - 1) {
       const map = new GameMap(state.boundaries);
+      state.maps.push(map);
       const generator = new MapGenerator(
         state.boundaries.width, 
         state.boundaries.height, 
