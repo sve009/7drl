@@ -22,7 +22,8 @@ export class Game {
 
   run() {
     this.state.running = true;
-    this.generator.generateLevel();
+    //this.generator.generateLevel();
+    this.state.map.loadTown();
     let { x, y } = this.state.map.openSpot();
 
     this.state.player = new Player(x, y);
@@ -43,6 +44,7 @@ export class Game {
 
     this.state.sightMap.update(this.state.player);
     this.state.refreshVisual();
+    this.state.map.refreshVisual(this.state.sightMap);
     this.uiManager.refreshVisual();
     this.renderer.draw();
 

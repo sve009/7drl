@@ -3,6 +3,9 @@ import { SightMap } from "./fov";
 import { Player } from "./player";
 import { Glyph, Layer, Position } from "./renderer";
 import { GameEntity } from "./gameObject";
+import town from "./data/town.json";
+
+const townMap = town.gameMap;
 
 export class GameState {
   boundaries: Position
@@ -72,6 +75,16 @@ export class GameMap {
     this.layer = new Layer(0, boundaries);
   }
 
+  loadTown(): void {
+    this.width = town.width;
+    this.height = town.height;
+    for (let i = 0; i < townMap.length; i++) {
+      const x = i % townMap.length;
+      const y = Math.floor(i / townMap.length);
+      this.setTile(x, y, townMap[i]);
+    }
+  }
+
   shuffledTiles(): number[] {
     const nums = [...Array(this.width*this.height).keys()];
     return RNG.shuffle(nums);
@@ -127,6 +140,26 @@ export class GameMap {
         t = TileTypeFactory.create("shrub");
         break;
       }
+      case 6: {
+        t = TileTypeFactory.create("altar");
+        break;
+      }
+      case 7: {
+        t = TileTypeFactory.create("leaf");
+        break;
+      }
+      case 8: {
+        t = TileTypeFactory.create("water");
+        break;
+      }
+      case 9: {
+        t = TileTypeFactory.create("hshelf");
+        break;
+      }
+      case 10: {
+        t = TileTypeFactory.create("vshelf");
+        break;
+      }
     }
 
     let tile = new Tile(t);
@@ -139,7 +172,7 @@ export class GameMap {
         const visible = sightMap.isVisible(j, i);
         const tile = this.tiles[j + i*this.width];
         const [fg, bg] = tile.getColor(visible);
-        if (visible) {
+        if (true /* visible */) {
           tile.seen = true;
           this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         } else if (tile.seen) {
@@ -273,6 +306,53 @@ class TileTypeFactory {
           "#31995e",
           "#000",
           (t: Tile) => true,
+          (t: Tile) => true,
+        );
+      }
+      case "altar": {
+        return new TileType(
+          "\u{2020}",
+          "#fff",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "water": {
+        return new TileType(
+          "\u{2248}",
+          "#4994de",
+          "#1939b0",
+          (t: Tile) => false,
+          (t: Tile) => false,
+        );
+        break;
+      }
+      case "leaf": {
+        return new TileType(
+          "\u{2042}",
+          "#18b85a",
+          "#186337",
+          (t: Tile) => false,
+          (t: Tile) => false,
+        );
+        break;
+      }
+      case "hshelf": {
+        return new TileType(
+          "\u{2550}",
+          "#966111",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "vshelf": {
+        return new TileType(
+          "\u{2551}",
+          "#966111",
+          "#000",
+          (t: Tile) => false,
           (t: Tile) => true,
         );
       }

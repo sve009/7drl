@@ -1,7 +1,7 @@
 import { RNG, FOV, Path } from "rot-js";
 import { dirMap } from "./constants";
 import type { GameState } from "./gamestate";
-import { Action, MoveAction, AttackAction } from "./action";
+import { Action, NoAction, MoveAction, AttackAction } from "./action";
 import type { Character } from "./gameObject";
 
 export abstract class AIProfile {
@@ -48,13 +48,10 @@ export class BasicMelee {
     this.seesPlayer = false;
   }
 
-  update(state: GameState, character: Character): Action {
+  updateSeesPlayer(state: GameState, character: Character): void {
     const lightPasses = (x: number, y: number) => {
       return !state.map.blocksSight(x, y);
     };
-    const passable = (x: number, y: number) => {
-      return state.map.passable(x, y);
-    }
     const fov = new FOV.RecursiveShadowcasting(lightPasses);
     fov.compute(
       character.position.x, 
@@ -66,7 +63,13 @@ export class BasicMelee {
         }
       }
     );
+  }
 
+  update(state: GameState, character: Character): Action {
+    const passable = (x: number, y: number) => {
+      return state.map.passable(x, y);
+    }
+    this.updateSeesPlayer(state, character);
     if (!this.seesPlayer) {
       if (this.path.length == 0) {
         let { x, y } = state.map.openSpot();
@@ -84,13 +87,7 @@ export class BasicMelee {
           }
         );
 
-        //@ts-ignore
-        if (this.path.length == 1) {
-          debugger;
-        }
-        
-        // Throw away current square
-        console.log(this.path.shift());
+        this.path.shift();
       } 
     } else {
       const [dist, dir] = d(character.position, state.player.position);
@@ -117,17 +114,53 @@ export class BasicMelee {
       }
     }
 
-    if (this.path.length == 0) {
-      debugger;
-    }
-    console.log(character.position);
-    console.log(this.seesPlayer);
-    console.log(this.path);
     const pos = this.path.shift();
-    console.log(pos);
-    if (!pos) {
-      debugger;
+    return new MoveAction(character, pos);
+  }
+}
+
+export class MeleeFollower extends BasicMelee {
+  leader: Character;
+
+  constructor(visionRange: number, leader: Character) {
+    super(visionRange);
+    this.leader = leader;
+  }
+
+  update(state: GameState, character: Character): Action {
+    this.updateSeesPlayer(state, character);
+
+    const passable = (x: number, y: number) => {
+      return state.map.passable(x, y);
     }
+
+    // Do its own thing
+    if (this.seesPlayer || this.leader.health <= 0) {
+      return super.update(state, character);
+    } else {
+      const [dist, dir] = d(character.position, this.leader.position);
+      if (dist <= 2) {
+        return new NoAction();
+      }
+      this.path = [];
+      const dijkstra = new Path.Dijkstra(
+        this.leader.position.x,
+        this.leader.position.y,
+        passable,
+        null,
+      );
+      dijkstra.compute(
+        character.position.x,
+        character.position.y,
+        (x: number, y: number) => {
+          this.path.push({ x, y });
+        }
+      );
+
+      this.path.shift();
+    }
+
+    const pos = this.path.shift();
     return new MoveAction(character, pos);
   }
 }
