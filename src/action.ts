@@ -3,6 +3,7 @@ import { Character } from "./gameObject";
 import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
+import { logMessage } from "./uiManager";
 
 export abstract class Action {
   abstract run(state: GameState): void;
@@ -54,6 +55,9 @@ export class AttackAction extends Action {
         state.entities.splice(i, 1);
         this.defender.die(state);
       }
+      logMessage("Hit");
+    } else {
+      logMessage("Miss");
     }
   } 
 }

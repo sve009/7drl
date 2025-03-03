@@ -33,6 +33,7 @@ export abstract class UIComponent extends GameObject {
         super();
         this.boundaries = boundaries;
         this.layer = new Layer(1000, boundaries);
+        this.layer.lazyDraw = false;
         getRenderer().addPermanentLayer(this.layer);
     }
     abstract updateContent(): void
