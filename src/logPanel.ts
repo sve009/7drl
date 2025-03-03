@@ -1,4 +1,3 @@
-import { SightMap } from "./fov";
 import { UIComponent } from "./gameObject";
 import { Position, TextDrawable } from "./renderer";
 
@@ -11,14 +10,18 @@ export class LogPanel extends UIComponent {
 
     refreshVisuals() {
         const numLogs = Math.max(Math.min(this.boundaries.getHeight() - 1, this.logs.length - 1), 0);
-        const logString = "Logs:\n" + this.logs.splice(0, numLogs).join("\n");
+        let logString = "Log:\n" + this.logs.splice(0, numLogs).join("\n");
+        logString = ` %b{${this.layer.bg}}${logString}`;
 
         this.layer.addDrawable(new TextDrawable(this.boundaries.getStartX(), this.boundaries.getStartY(), logString));
-
-        return new TextDrawable(this.boundaries.getStartX(), this.boundaries.getStartY(), logString);
     }
 
     addLogMessage (text: string) {
         this.logs.push(text);
+    }
+
+    constructor (boundary: Position) {
+        super(boundary);
+        this.layer.bg = "#2b3647";
     }
 }

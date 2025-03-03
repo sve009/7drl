@@ -86,10 +86,12 @@ export class Position {
 export class Layer {
     position: Position
     index: number;
+    lazyDraw: boolean = true;
     cacheLayer:Array<Array<Drawable>>;
     drawables: Array<Drawable>;
+    bg: string | null
 
-    constructor (layerIdx: number, position: Position) {
+    constructor (layerIdx: number, position: Position, bg: string | null = null) {
         this.position = position;
         this.index = layerIdx;
         this.reset();
@@ -104,13 +106,34 @@ export class Layer {
     }
 
     addDrawable (drawable: Drawable) {
-        // this.cacheLayer[drawable.y - this.position.getStartY()][drawable.x - this.position.getStartX()] = drawable;
+        this.cacheLayer[drawable.y - this.position.getStartY()][drawable.x - this.position.getStartX()] = drawable;
         this.drawables.push(drawable);
     }
 
     draw (display: Display): void {
-        this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
-        // this.drawables = new Array;
+        if (this.lazyDraw) {
+            this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+        } else {
+            this.drawBackground(display);
+            for (let i = 0; i < this.position.getHeight(); i++) {
+                for (let j = 0; j < this.position.getWidth(); j++) {
+                    if (this.cacheLayer[i][j]) {
+                        this.cacheLayer[i][j].draw(display);
+                    }
+                }
+            }
+        }
+    }
+
+    drawBackground (display: Display): void {
+        if (!this.bg) {
+            return;
+        }
+        for (let i = 0; i < this.position.getWidth(); i++) {
+            for (let j = 0; j < this.position.getHeight(); j++) {
+                display.draw(i + this.position.startX, j + this.position.startY, null, null, this.bg);
+            }
+        }
     }
 
     redrawAll (display: Display): void {

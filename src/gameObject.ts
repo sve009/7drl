@@ -12,10 +12,6 @@ export abstract class GameEntity extends GameObject{
     canMove(position: { x: number; y: number; }, map: GameMap): boolean {
         return map.passable(position.x, position.y);
     }
-
-    notifyUI(): void {
-
-    }
     abstract refreshVisuals(sightMap: SightMap): Drawable | null;
 }
 export abstract class Character extends GameEntity {
@@ -34,6 +30,7 @@ export abstract class UIComponent extends GameObject {
         super();
         this.boundaries = boundaries;
         this.layer = new Layer(1000, boundaries);
+        this.layer.lazyDraw = false;
         getRenderer().addPermanentLayer(this.layer);
     }
     abstract updateContent(): void
