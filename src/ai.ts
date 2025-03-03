@@ -22,7 +22,9 @@ export class RandomProfile {
         y: character.position.y + dirPair.y,
       };
 
-      if (character.canMove(pos, state.map) && !state.entityAt(pos.x, pos.y)) {
+      if (character.canMove(pos, state.maps[character.dungeonLevel]) && 
+          !state.entityAt(pos.x, pos.y, character.dungeonLevel)
+      ) {
         found = true;
       } else if (pos.x == state.player.position.x && pos.y == state.player.position.y) {
         return new AttackAction(character, state.player);
@@ -50,7 +52,7 @@ export class BasicMelee {
 
   updateSeesPlayer(state: GameState, character: Character): void {
     const lightPasses = (x: number, y: number) => {
-      return !state.map.blocksSight(x, y);
+      return !state.maps[character.dungeonLevel].blocksSight(x, y);
     };
     const fov = new FOV.RecursiveShadowcasting(lightPasses);
     fov.compute(
@@ -58,7 +60,10 @@ export class BasicMelee {
       character.position.y,
       this.visionRange,
       (x, y, r, visibility) => {
-        if (x == state.player.position.x && y == state.player.position.y) {
+        if (x == state.player.position.x && 
+            y == state.player.position.y &&
+            character.dungeonLevel == state.player.dungeonLevel
+        ) {
           this.seesPlayer = true;
         }
       }
@@ -66,15 +71,16 @@ export class BasicMelee {
   }
 
   update(state: GameState, character: Character): Action {
+    const map = state.maps[character.dungeonLevel];
     const passable = (x: number, y: number) => {
-      return state.map.passable(x, y);
+      return map.passable(x, y);
     }
     this.updateSeesPlayer(state, character);
     if (!this.seesPlayer) {
       if (this.path.length == 0) {
-        let { x, y } = state.map.openSpot();
+        let { x, y } = map.openSpot();
         while (x == character.position.x && y == character.position.y) {
-          const pos = state.map.openSpot();
+          const pos = map.openSpot();
           x = pos.x;
           y = pos.y;
         }
@@ -128,10 +134,12 @@ export class MeleeFollower extends BasicMelee {
   }
 
   update(state: GameState, character: Character): Action {
+    const map = state.maps[character.dungeonLevel];
+
     this.updateSeesPlayer(state, character);
 
     const passable = (x: number, y: number) => {
-      return state.map.passable(x, y);
+      return map.passable(x, y);
     }
 
     // Do its own thing

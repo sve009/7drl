@@ -1,4 +1,4 @@
-import { GameState } from "./gamestate";
+import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { getRenderer, Position, Renderer } from "./renderer";
@@ -9,42 +9,42 @@ export class Game {
   state: GameState;
   uiManager: UIManager;
   renderer: Renderer;
-  generator: MapGenerator;
 
   constructor() {
     this.state = new GameState(new Position(0, 0, 80, 40));
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
-    this.renderer.addPermanentLayer(this.state.map.layer);
+    this.renderer.addPermanentLayer(this.state.terrainLayer);
     this.renderer.addPermanentLayer(this.state.entityLayer);
-    this.generator = new MapGenerator(80, 40, this.state.map);
   }
 
   run() {
     this.state.running = true;
     //this.generator.generateLevel();
-    this.state.map.loadTown();
-    let { x, y } = this.state.map.openSpot();
+    const firstMap = new GameMap(this.state.boundaries);
+    firstMap.loadTown();
+    this.state.maps.push(firstMap);
+
+    let { x, y } = firstMap.openSpot();
 
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
     this.uiManager.playerPanel.player = this.state.player;
 
     for (let i = 0; i < 1; i++) {
-      const { x, y } = this.state.map.openSpot();
-      const bat = new Enemy("bat", x, y);
+      const { x, y } = firstMap.openSpot();
+      const bat = new Enemy("bat", x, y, 0);
       this.state.entities.push(bat);
     }
     
     for (let i = 0; i < 3; i++) {
-      const { x, y } = this.state.map.openSpot();
-      const goblin = new Enemy("goblin", x, y);
+      const { x, y } = firstMap.openSpot();
+      const goblin = new Enemy("goblin", x, y, 0);
       this.state.entities.push(goblin);
     }
 
     this.state.sightMap.update(this.state.player);
     this.state.refreshVisual();
-    this.state.map.refreshVisual(this.state.sightMap);
     this.uiManager.refreshVisual();
     this.renderer.draw();
 

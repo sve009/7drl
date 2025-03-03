@@ -27,8 +27,9 @@ export class MoveAction extends Action {
     const oldPos = this.entity.position;
     this.entity.position = this.position;
 
-    state.map.setOpenness(this.position.x, this.position.y, true);
-    state.map.setOpenness(oldPos.x, oldPos.y, false);
+    const dl = this.entity.dungeonLevel;
+    state.maps[dl].setOpenness(this.position.x, this.position.y, true);
+    state.maps[dl].setOpenness(oldPos.x, oldPos.y, false);
   }
 }
 
@@ -60,3 +61,50 @@ export class AttackAction extends Action {
   } 
 }
 
+export class AscendAction extends Action {
+  entity: GameEntity;
+  onStair: boolean;
+
+  constructor(entity: GameEntity, onStair: boolean = true) {
+    super();
+    this.entity = entity;
+    this.onStair = onStair;
+  }
+
+  run(state: GameState) {
+    if (!(this.entity.dungeonLevel > 0)) {
+      return;
+    }
+
+    this.entity.dungeonLevel -= 1;
+
+    if (this.onStair) {
+      const stairPos = state.maps[this.entity.dungeonLevel].stairDown;
+      this.entity.position = stairPos;
+    }
+  }
+}
+
+export class DescendAction extends Action {
+  entity: GameEntity;
+  onStair: boolean;
+
+  constructor(entity: GameEntity, onStair: boolean = true) {
+    super();
+    this.entity = entity;
+    this.onStair = onStair;
+  }
+
+  run(state: GameState) {
+    if (!(this.entity.dungeonLevel == 10)) {
+      return;
+    }
+
+    this.entity.dungeonLevel += 1;
+
+    if (this.onStair) {
+      const stairPos = state.maps[this.entity.dungeonLevel].stairUp;
+      this.entity.position = stairPos;
+    }
+  }
+}

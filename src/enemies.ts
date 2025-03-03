@@ -11,9 +11,10 @@ export class Enemy extends Character {
   visible: boolean;
   enemyType: EnemyType;
 
-  constructor(name: string, x: number, y: number) {
+  constructor(name: string, x: number, y: number, z: number) {
     super();
     this.position = { x, y };
+    this.dungeonLevel = z;
     this.visible = false;
     this.enemyType = EnemyTypeFactory.createEnemyType(name);
 
@@ -26,7 +27,7 @@ export class Enemy extends Character {
     return this.enemyType.ai.update(state, this);
   }
 
-  refreshVisuals(sightMap: SightMap) {
+  refreshVisuals() {
     if (this.visible) {
       return new Glyph(
         this.position.x, 

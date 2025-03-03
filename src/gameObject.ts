@@ -3,17 +3,20 @@ import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
 import { Drawable, getRenderer, Layer, Position } from "./renderer";
 
-abstract class GameObject {
-}
+abstract class GameObject {}
 
 export abstract class GameEntity extends GameObject{
     position: { x: number; y: number; };
+    dungeonLevel: number;
+
     abstract updateState(state: GameState): Promise<Action>;
+    abstract refreshVisuals(): Drawable | null;
+
     canMove(position: { x: number; y: number; }, map: GameMap): boolean {
-        return map.passable(position.x, position.y);
+      return map.passable(position.x, position.y);
     }
-    abstract refreshVisuals(sightMap: SightMap): Drawable | null;
 }
+
 export abstract class Character extends GameEntity {
     health: number;
   
@@ -21,7 +24,7 @@ export abstract class Character extends GameEntity {
     abstract defend(): [number, number];
   
     die(state: GameState): void {}
-  }   
+}   
 
 export abstract class UIComponent extends GameObject {
     boundaries: Position

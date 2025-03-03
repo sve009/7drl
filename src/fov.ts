@@ -5,23 +5,18 @@ import { GameMap } from "./gamestate";
 export class SightMap {
   width: number;
   height: number;
+
+  private maps: GameMap[];
   private visible: boolean[];
 
-  // Can't figure out this guy's type
-  private fov: any;
-
-  constructor(map: GameMap) {
-    this.width = map.width;
-    this.height = map.height;
+  constructor(width: number, height: number, maps: GameMap[]) {
+    this.width = width;
+    this.height = height;
+    this.maps = maps;
     this.visible = [];
     for (let i = 0; i < this.width*this.height; i++) {
       this.visible.push(false);
     }
-
-    let lightPasses = (x: number, y:number) => {
-      return !map.blocksSight(x, y);
-    };
-    this.fov = new FOV.RecursiveShadowcasting(lightPasses);
   }
 
   zeroOut(): void {
@@ -35,8 +30,15 @@ export class SightMap {
   }
 
   update(player: Player): void {
+    const map = this.maps[player.dungeonLevel];
+    const lightPasses = (x: number, y:number) => {
+      return !map.blocksSight(x, y);
+    };
+
+    const fov = new FOV.RecursiveShadowcasting(lightPasses);
+
     this.zeroOut();
-    this.fov.compute(
+    fov.compute(
       player.position.x, 
       player.position.y,
       player.visionRadius,

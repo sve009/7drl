@@ -10,18 +10,23 @@ const townMap = town.gameMap;
 export class GameState {
   boundaries: Position
   running: boolean;
-  map: GameMap;
+  maps: GameMap[];
+  dungeonLevel: number;
   sightMap: SightMap;
   player?: Player;
   entities: GameEntity[];
   entityLayer: Layer;
+  terrainLayer: Layer;
 
   constructor(boundaries: Position) {
+    this.boundaries = boundaries;
+
     this.running = false;
-    this.map = new GameMap(boundaries);
-    this.sightMap = new SightMap(this.map);
+    this.maps = [];
+    this.sightMap = new SightMap(80, 40, this.maps);
     this.entities = [];
     this.entityLayer = new Layer(1, boundaries);
+    this.terrainLayer = new Layer(0, boundaries);
   }
 
   async update () {
@@ -36,20 +41,26 @@ export class GameState {
   }
 
   refreshVisual() {
-    this.map.refreshVisual(this.sightMap);
+    const pdl = this.player.dungeonLevel;
+    this.maps[pdl].refreshVisual(this.terrainLayer, this.sightMap);
 
     for (const entity of this.entities) {
-      const glyph = entity.refreshVisuals(this.sightMap);
-      if (!glyph) {
-        continue;
+      if (entity.dungeonLevel == pdl) {
+        const glyph = entity.refreshVisuals();
+        if (!glyph) {
+          continue;
+        }
+        this.entityLayer.addDrawable(glyph);
       }
-      this.entityLayer.addDrawable(glyph);
     }
   }
 
-  entityAt(x: number, y: number): GameEntity | null {
+  entityAt(x: number, y: number, z: number): GameEntity | null {
     for (const entity of this.entities) {
-      if (entity.position.x == x && entity.position.y == y) {
+      if (entity.position.x == x && 
+          entity.position.y == y &&
+          entity.dungeonLevel == z
+         ) {
         return entity;
       }
     }
@@ -63,6 +74,8 @@ export class GameMap {
   height: number;
   tiles: Tile[];
   layer: Layer;
+  stairDown?: { x: number; y: number; };
+  stairUp?: { x: number; y: number; };
   
   constructor(boundaries: Position) {
     this.width = boundaries.getWidth();
@@ -166,19 +179,19 @@ export class GameMap {
     this.tiles[x + this.width*y] = tile;
   }
 
-  refreshVisual(sightMap: SightMap) {
+  refreshVisual(layer: Layer, sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) { 
         const visible = sightMap.isVisible(j, i);
         const tile = this.tiles[j + i*this.width];
         const [fg, bg] = tile.getColor(visible);
-        if (true /* visible */) {
+        if (visible) {
           tile.seen = true;
-          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
+          layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         } else if (tile.seen) {
-          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
+          layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         } else {
-          this.layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
+          layer.addDrawable(new Glyph(j, i, tile.getSymbol(), fg, bg));
         }
       }
     }
