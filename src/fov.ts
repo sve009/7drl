@@ -5,17 +5,16 @@ import { GameMap } from "./gamestate";
 export class SightMap {
   width: number;
   height: number;
-  private map: GameMap;
   private visible: boolean[];
 
   // Can't figure out this guy's type
   private fov: any;
 
-  constructor(width: number, height: number, map: GameMap) {
-    this.width = width;
-    this.height = height;
+  constructor(map: GameMap) {
+    this.width = map.width;
+    this.height = map.height;
     this.visible = [];
-    for (let i = 0; i < width*height; i++) {
+    for (let i = 0; i < this.width*this.height; i++) {
       this.visible.push(false);
     }
 

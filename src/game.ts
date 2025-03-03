@@ -1,9 +1,9 @@
 import { GameState } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
-import { Renderer } from "./renderer";
+import { getRenderer, Position, Renderer } from "./renderer";
 import { Enemy } from "./enemies";
-import { getUIManager, UIManager } from "./ui";
+import { getUIManager, UIManager } from "./uiManager";
 
 export class Game {
   state: GameState;
@@ -12,8 +12,8 @@ export class Game {
   generator: MapGenerator;
 
   constructor() {
-    this.state = new GameState();
-    this.renderer = new Renderer;
+    this.state = new GameState(new Position(0, 0, 80, 40));
+    this.renderer = getRenderer();
     this.uiManager = getUIManager();
     this.renderer.addPermanentLayer(this.state.map.layer);
     this.renderer.addPermanentLayer(this.state.entityLayer);
@@ -27,6 +27,7 @@ export class Game {
 
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
+    this.uiManager.playerPanel.player = this.state.player;
 
     for (let i = 0; i < 1; i++) {
       const { x, y } = this.state.map.openSpot();

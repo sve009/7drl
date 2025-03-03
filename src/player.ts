@@ -5,17 +5,22 @@ import type { GameState, GameMap } from "./gamestate";
 import type { SightMap } from "./fov";
 import { Glyph } from "./renderer";
 import { dirMap } from "./constants";
+import { getUIManager } from "./uiManager";
 
 export class Player extends Character {
   visionRadius: number;
   ioHandler: IOHandler;
   health: number;
+  maxHealth: number;
+  distanceTraveled: number;
 
   constructor(x: number, y: number) {
     super();
     this.position = {x, y};
     this.health = 10;
+    this.maxHealth = 10;
     this.visionRadius = 8;
+    this.distanceTraveled = 0;
     this.ioHandler = new IOHandler();
   }
 
@@ -66,6 +71,7 @@ export class Player extends Character {
         const fx = this.position.x + x;
         const fy = this.position.y + y;
         const e = state.entityAt(this.position.x + x, this.position.y + y);
+        this.distanceTraveled += 1;
         if (e instanceof Character) {
           return new Actions.AttackAction(this, e as Character); 
         } else if (this.canMove({ x: fx, y: fy}, state.map)) {

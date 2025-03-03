@@ -1,10 +1,11 @@
 import { RNG, Color } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
-import { Glyph, Layer } from "./renderer";
+import { Glyph, Layer, Position } from "./renderer";
 import { GameEntity } from "./gameObject";
 
 export class GameState {
+  boundaries: Position
   running: boolean;
   map: GameMap;
   sightMap: SightMap;
@@ -12,12 +13,12 @@ export class GameState {
   entities: GameEntity[];
   entityLayer: Layer;
 
-  constructor() {
+  constructor(boundaries: Position) {
     this.running = false;
-    this.map = new GameMap(80, 40);
-    this.sightMap = new SightMap(80, 40, this.map);
+    this.map = new GameMap(boundaries);
+    this.sightMap = new SightMap(this.map);
     this.entities = [];
-    this.entityLayer = new Layer(1);
+    this.entityLayer = new Layer(1, boundaries);
   }
 
   async update () {
@@ -60,15 +61,15 @@ export class GameMap {
   tiles: Tile[];
   layer: Layer;
   
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+  constructor(boundaries: Position) {
+    this.width = boundaries.getWidth();
+    this.height = boundaries.getHeight();
     this.tiles = [];
-    for (let i = 0; i < width * height; i++) {
+    for (let i = 0; i < this.width * this.height; i++) {
       let tile = new Tile(TileTypeFactory.create("#"));
       this.tiles.push(tile);
     }
-    this.layer = new Layer(0);
+    this.layer = new Layer(0, boundaries);
   }
 
   shuffledTiles(): number[] {

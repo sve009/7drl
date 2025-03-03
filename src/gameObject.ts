@@ -1,18 +1,9 @@
 import { Action } from "./action";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
-import { Glyph, Layer } from "./renderer";
-import { getUIManager, UIManager } from "./ui";
+import { Drawable, getRenderer, Layer, Position } from "./renderer";
 
 abstract class GameObject {
-    uiManager: UIManager
-
-    constructor() {
-        this.uiManager = getUIManager();
-    }
-
-    abstract refreshVisuals(sightMap: SightMap): Glyph | null;
-    abstract notifyUI(): void;
 }
 
 export abstract class GameEntity extends GameObject{
@@ -21,9 +12,11 @@ export abstract class GameEntity extends GameObject{
     canMove(position: { x: number; y: number; }, map: GameMap): boolean {
         return map.passable(position.x, position.y);
     }
+
     notifyUI(): void {
-        
+
     }
+    abstract refreshVisuals(sightMap: SightMap): Drawable | null;
 }
 export abstract class Character extends GameEntity {
     health: number;
@@ -35,9 +28,14 @@ export abstract class Character extends GameEntity {
   }   
 
 export abstract class UIComponent extends GameObject {
+    boundaries: Position
     layer: Layer
-    abstract updateContent(): void
-    notifyUI (): void {
-        
+    constructor (boundaries: Position) {
+        super();
+        this.boundaries = boundaries;
+        this.layer = new Layer(1000, boundaries);
+        getRenderer().addPermanentLayer(this.layer);
     }
+    abstract updateContent(): void
+    abstract refreshVisuals(): void;
 }
