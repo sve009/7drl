@@ -71,12 +71,16 @@ export class GameMap {
     this.layer = new Layer(0);
   }
 
+  shuffledTiles(): number[] {
+    const nums = [...Array(this.width*this.height).keys()];
+    return RNG.shuffle(nums);
+  }
+
   openSpot(): { x: number; y: number; } {
-    const offset = Math.floor(RNG.getUniform() * this.width * this.height);
-    for (let i = 0; i < this.width*this.height; i++) {
-      const j = (i + offset) % (this.width * this.height);
-      const x = j % this.width;
-      const y = Math.floor(j / this.width);
+    const tiles = this.shuffledTiles();
+    for (const tile of tiles) {
+      const x = tile % this.width;
+      const y = Math.floor(tile / this.width);
       if (this.passable(x, y)) {
         return { x, y };
       }
@@ -108,6 +112,18 @@ export class GameMap {
       }
       case 2: {
         t = TileTypeFactory.create("+");
+        break;
+      }
+      case 3: {
+        t = TileTypeFactory.create("grass");
+        break;
+      }
+      case 4: {
+        t = TileTypeFactory.create("bush");
+        break;
+      }
+      case 5: {
+        t = TileTypeFactory.create("shrub");
         break;
       }
     }
@@ -229,6 +245,34 @@ class TileTypeFactory {
           "##593909",
           (t: Tile) => true,
           (t: Tile) => !t.open,
+        );
+      }
+      case "grass": {
+        return new TileType(
+          "\u{0022}",
+          "#549e26",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+
+      }
+      case "bush": {
+        return new TileType(
+          "\u{2660}",
+          "#18c434",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => true,
+        );
+      }
+      case "shrub": {
+        return new TileType(
+          "\u{2663}",
+          "#31995e",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => true,
         );
       }
     }

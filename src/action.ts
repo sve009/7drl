@@ -22,7 +22,7 @@ export class MoveAction extends Action {
   }
 
   run(state: GameState) {
-    console.log('position', this.position);
+    console.log(this.entity);
     const oldPos = this.entity.position;
     this.entity.position = this.position;
 

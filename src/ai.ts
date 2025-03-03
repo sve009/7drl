@@ -69,7 +69,12 @@ export class BasicMelee {
 
     if (!this.seesPlayer) {
       if (this.path.length == 0) {
-        const { x, y } = state.map.openSpot();
+        let { x, y } = state.map.openSpot();
+        while (x == character.position.x && y == character.position.y) {
+          const pos = state.map.openSpot();
+          x = pos.x;
+          y = pos.y;
+        }
         const dijkstra = new Path.Dijkstra(x, y, passable, null);
         dijkstra.compute(
           character.position.x,
@@ -78,13 +83,18 @@ export class BasicMelee {
             this.path.push({ x, y });
           }
         );
+
+        //@ts-ignore
+        if (this.path.length == 1) {
+          debugger;
+        }
         
         // Throw away current square
-        this.path.shift();
+        console.log(this.path.shift());
       } 
     } else {
       const [dist, dir] = d(character.position, state.player.position);
-      if (dist < 2) {
+      if (dist <= 2) {
         return new AttackAction(character, state.player);
       } else {
         this.path = [];
@@ -107,7 +117,17 @@ export class BasicMelee {
       }
     }
 
+    if (this.path.length == 0) {
+      debugger;
+    }
+    console.log(character.position);
+    console.log(this.seesPlayer);
+    console.log(this.path);
     const pos = this.path.shift();
+    console.log(pos);
+    if (!pos) {
+      debugger;
+    }
     return new MoveAction(character, pos);
   }
 }

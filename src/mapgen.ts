@@ -44,6 +44,8 @@ export class MapGenerator {
         this.map.setTile(x, y, grid.values[i]);
       }
     }
+
+    this.addFoliage();
   }
 
   createFirstRoom(): Grid {
@@ -72,6 +74,36 @@ export class MapGenerator {
     return [room, doorPoints];
   }
 
+  addFoliage(): void {
+    for (let i = 0; i < randi(10, 25); i++) {
+      let { x, y } = this.map.openSpot();
+      let r = Math.pow(randi(2, 7), 2);
+
+      for (let y0 = 2; y0 < this.height-2; y0++) {
+        for (let x0 = 2; x0 < this.width-2; x0++) {
+          // 1/3 chance to erode map
+          if (!randi(0, 3) && !this.map.passable(x0, y0)) {
+            continue;
+          }
+          // 1/5 chance to not place
+          if (!randi(0, 5)) {
+            continue;
+          }
+          if (Math.pow(x - x0, 2) + Math.pow(y - y0, 2) < r) {
+            const p = ROT.RNG.getPercentage();
+            if (p < 5) {
+              this.map.setTile(x0, y0, 4);
+            } else if (p < 10) {
+              this.map.setTile(x0, y0, 5);
+            } else {
+              this.map.setTile(x0, y0, 3);
+            }
+          }
+        }
+      }
+    }
+  }
+
   createRectRoom(): Grid {
     const grid = new Grid(this.width, this.height);
 
@@ -93,11 +125,6 @@ export class MapGenerator {
     grid.drawCircle(x, y, r);
 
     return grid;
-  }
-
-  shuffledTiles(): number[] {
-    const nums = [...Array(this.width*this.height).keys()];
-    return ROT.RNG.shuffle(nums);
   }
 
   numberAdjacent(grid: Grid, index: number): number {
@@ -126,7 +153,7 @@ export class MapGenerator {
 
   findDoorPoints(grid: Grid): DoorPoints {
     const m: DoorPoints = new Map();
-    const tiles = this.shuffledTiles();
+    const tiles = this.map.shuffledTiles();
     for (const tile of tiles) {
       if (grid.values[tile]) {
         continue;
@@ -184,7 +211,7 @@ export class MapGenerator {
   }
 
   attachRoom (grid: Grid, room: Grid, doors: DoorPoints) {
-    const tiles = this.shuffledTiles();
+    const tiles = this.map.shuffledTiles();
     for (const tile of tiles) {
       if (grid.values[tile]) {
         continue;

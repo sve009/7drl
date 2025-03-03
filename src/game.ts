@@ -3,7 +3,7 @@ import { GameState } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
-import { Bat, Goblin } from "./enemies";
+import { Enemy } from "./enemies";
 import { UIManager } from "./ui";
 import { Dialog } from "./dialog";
 
@@ -30,15 +30,15 @@ export class Game {
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 1; i++) {
       const { x, y } = this.state.map.openSpot();
-      const bat = new Bat(x, y);
+      const bat = new Enemy("bat", x, y);
       this.state.entities.push(bat);
     }
     
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 3; i++) {
       const { x, y } = this.state.map.openSpot();
-      const goblin = new Goblin(x, y);
+      const goblin = new Enemy("goblin", x, y);
       this.state.entities.push(goblin);
     }
 
