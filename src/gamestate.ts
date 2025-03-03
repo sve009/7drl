@@ -117,11 +117,21 @@ export class GameMap {
   }
 
   passable(x: number, y: number): boolean {
-    return this.tiles[x + this.width*y].passable();
+    const index = x + this.width*y;
+    if (index < 0 || index > this.width*this.height) {
+      return false;
+    }
+
+    return this.tiles[index].passable();
   }
 
   blocksSight(x: number, y: number): boolean {
-    return this.tiles[x + this.width*y].blocksSight();
+    const index = x + this.width*y;
+    if (index < 0 || index > this.width*this.height) {
+      return false;
+    }
+    
+    return this.tiles[index].blocksSight();
   }
 
   setOpenness(x: number, y: number, val: boolean) {
@@ -384,7 +394,7 @@ class TileTypeFactory {
       case ">": {
         return new TileType(
           ">",
-          "#f72811",
+          "#fff",
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
@@ -393,7 +403,7 @@ class TileTypeFactory {
       case "<": {
         return new TileType(
           "<",
-          "#f72811",
+          "#fff",
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,

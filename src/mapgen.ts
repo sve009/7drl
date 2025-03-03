@@ -111,7 +111,8 @@ export class MapGenerator {
     let uy: number;
     for (const tile of this.map.shuffledTiles()) {
       if (this.map.tiles[tile].tileType.symbol == "#" &&
-          this.mapNumberAdjacent(tile) == 1
+          this.mapNumberAdjacent(tile, true) == 1 &&
+          this.mapNumberAdjacent(tile, false) == 1
       ) {
         let { x, y } = breakIndex(tile, this.width);
         ux = x;
@@ -126,28 +127,28 @@ export class MapGenerator {
       return (x == ux && y == uy) || this.map.passable(x, y);
     }
     let found = false;
-    for (const tile of this.map.shuffledTiles()) {
-      if (this.map.tiles[tile].tileType.symbol == "#" &&
-          this.mapNumberAdjacent(tile) == 1
-      ) {
-        const { x, y } = breakIndex(tile, this.width);
-        let d = 0;
-        const dijkstra = new ROT.Path.Dijkstra(x, y, passable, null);
-        dijkstra.compute(ux, uy, (px: number, py: number) => {
-          d += 1;
-        });
-        if (d > 50) {
-          found = true;
-          console.log(d);
-          console.log('x y', x, y);
-          this.map.setTile(x, y, 11);
-          break;
+    let minDistance = 50;
+    while (!found) {
+      for (const tile of this.map.shuffledTiles()) {
+        if (this.map.tiles[tile].tileType.symbol == "#" &&
+            this.mapNumberAdjacent(tile, true) == 1 &&
+            this.mapNumberAdjacent(tile, false) == 1
+        ) {
+          const { x, y } = breakIndex(tile, this.width);
+          let d = 0;
+          const dijkstra = new ROT.Path.Dijkstra(x, y, passable, null);
+          dijkstra.compute(ux, uy, (px: number, py: number) => {
+            d += 1;
+          });
+          if (d > minDistance) {
+            found = true;
+            console.log('x y', x, y);
+            this.map.setTile(x, y, 11);
+            break;
+          }
         }
       }
-    }
-
-    if (!found) {
-      console.log('could not place stair');
+      minDistance -= 10;
     }
   }
 
@@ -174,10 +175,10 @@ export class MapGenerator {
     return grid;
   }
 
-  mapNumberAdjacent(index: number): number {
+  mapNumberAdjacent(index: number, checkDiags: boolean = false): number {
     let sum = 0;
     const { x, y } = breakIndex(index, this.width);
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < (checkDiags ? 8 : 4); i++) {
       const point = dirMap.get(i);
       const newIndex = joinIndex(x + point.x, y + point.y, this.width);
       const tile = this.map.tiles[newIndex];
@@ -188,10 +189,10 @@ export class MapGenerator {
     return sum;
   }
 
-  numberAdjacent(grid: Grid, index: number): number {
+  numberAdjacent(grid: Grid, index: number, checkDiags: boolean = false): number {
     let sum = 0;
     const { x, y } = breakIndex(index, this.width);
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < (checkDiags ? 8 : 4); i++) {
       const point = dirMap.get(i); 
       const newIndex = joinIndex(x + point.x, y + point.y, this.width);
       sum = sum + (grid.values[newIndex] ? 1 : 0);
