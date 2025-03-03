@@ -1,50 +1,11 @@
 import { Display } from "rot-js";
-
-class Position {
-    startX: number
-    startY: number
-    width: number
-    height: number
-
-    constructor (x: number, y: number, width: number, height: number) {
-        this.startX = x;
-        this.startY = y;
-        this.width = width;
-        this.height = height;
-    }
-
-    getStartX () {
-        return this.startX;
-    }
-
-    getStartY () {
-        return this.startY;
-    }
-
-    getEndX () {
-        return this.startX + this.width - 1;
-    }
-
-    getEndY () {
-        return this.startY + this.height - 1;
-    }
-
-    getWidth () {
-        return this.width;
-    }
-
-    getHeight () {
-        return this.height;
-    }
-}
+import { cache } from "webpack";
 
 export class Renderer {
     display: Display;
     permanentLayers: Array<Layer>;
     temporaryLayers: Array<Layer>;
-    renderSize: Position = new Position(0, 0, 120, 40);
-    gameBoundaries: Position = new Position(0, 0, 80, 40);
-    dialogBoundaries: Position = new Position(80, 0, 40, 40);
+    renderSize: Position = new Position(0, 0, 120, 44);
     fontSize: number = 20;
 
     constructor () {
@@ -83,31 +44,85 @@ export class Renderer {
     }
 }
 
+export class Position {
+    startX: number
+    startY: number
+    width: number
+    height: number
+
+    constructor (x: number, y: number, width: number, height: number) {
+        this.startX = x;
+        this.startY = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    getStartX () {
+        return this.startX;
+    }
+
+    getStartY () {
+        return this.startY;
+    }
+
+    getEndX () {
+        return this.startX + this.width - 1;
+    }
+
+    getEndY () {
+        return this.startY + this.height - 1;
+    }
+
+    getWidth () {
+        return this.width;
+    }
+
+    getHeight () {
+        return this.height;
+    }
+}
+
+
 export class Layer {
+    position: Position
     index: number;
+    cacheLayer:Array<Array<Drawable>>;
     drawables: Array<Drawable>;
 
-    constructor (layerIdx: number) {
+    constructor (layerIdx: number, position: Position) {
+        this.position = position;
         this.index = layerIdx;
         this.reset();
     }
 
     reset () {
         this.drawables = new Array;
+        this.cacheLayer = new Array(this.position.getHeight());
+        for (let i = 0; i < this.cacheLayer.length; i++) {
+            this.cacheLayer[i] = new Array(this.position.getWidth());
+        }
     }
 
     addDrawable (drawable: Drawable) {
+        // this.cacheLayer[drawable.y - this.position.getStartY()][drawable.x - this.position.getStartX()] = drawable;
         this.drawables.push(drawable);
     }
 
     draw (display: Display): void {
-        for (const drawable of this.drawables) {
-            drawable.draw(display);
+        this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+        // this.drawables = new Array;
+    }
+
+    redrawAll (display: Display): void {
+        for (let i = 0; i < this.position.getHeight(); i++) {
+            for (let j = 0; j < this.position.getWidth(); j++) {
+                this.cacheLayer[i][j].draw(display);
+            }
         }
     }
 }
 
-abstract class Drawable {
+export abstract class Drawable {
     x: number;
     y: number;
 
@@ -119,7 +134,7 @@ abstract class Drawable {
     abstract draw(display: Display): void;
 }
 
-export class Text extends Drawable {
+export class TextDrawable extends Drawable {
     textString: string | null;
 
     constructor(
@@ -169,3 +184,9 @@ export class Glyph extends Drawable{
         }
     }
 }
+
+const renderer = new Renderer;
+export function getRenderer(): Renderer {
+    return renderer;
+}
+

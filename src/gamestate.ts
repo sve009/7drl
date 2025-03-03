@@ -1,13 +1,14 @@
 import { RNG, Color } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
-import { Glyph, Layer } from "./renderer";
+import { Glyph, Layer, Position } from "./renderer";
 import { GameEntity } from "./gameObject";
 import town from "./data/town.json";
 
 const townMap = town.gameMap;
 
 export class GameState {
+  boundaries: Position
   running: boolean;
   maps: GameMap[];
   dungeonLevel: number;
@@ -17,14 +18,15 @@ export class GameState {
   entityLayer: Layer;
   terrainLayer: Layer;
 
-  constructor() {
+  constructor(boundaries: Position) {
+    this.boundaries = boundaries;
+
     this.running = false;
     this.maps = [];
-
     this.sightMap = new SightMap(80, 40, this.maps);
     this.entities = [];
-    this.entityLayer = new Layer(1);
-    this.terrainLayer = new Layer(0);
+    this.entityLayer = new Layer(1, boundaries);
+    this.terrainLayer = new Layer(0, boundaries);
   }
 
   async update () {
@@ -75,15 +77,15 @@ export class GameMap {
   stairDown?: { x: number; y: number; };
   stairUp?: { x: number; y: number; };
   
-  constructor(width: number, height: number) {
-    this.width = width;
-    this.height = height;
+  constructor(boundaries: Position) {
+    this.width = boundaries.getWidth();
+    this.height = boundaries.getHeight();
     this.tiles = [];
-    for (let i = 0; i < width * height; i++) {
+    for (let i = 0; i < this.width * this.height; i++) {
       let tile = new Tile(TileTypeFactory.create("#"));
       this.tiles.push(tile);
     }
-    this.layer = new Layer(0);
+    this.layer = new Layer(0, boundaries);
   }
 
   loadTown(): void {

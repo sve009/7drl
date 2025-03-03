@@ -14,7 +14,7 @@ export class SightMap {
     this.height = height;
     this.maps = maps;
     this.visible = [];
-    for (let i = 0; i < width*height; i++) {
+    for (let i = 0; i < this.width*this.height; i++) {
       this.visible.push(false);
     }
   }
