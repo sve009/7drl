@@ -8,7 +8,7 @@ export abstract class UI {
 
     async update() {}
 
-    updateColor() {}
+    refreshVisual() {}
 }
 
 export class UIManager {
@@ -24,9 +24,9 @@ export class UIManager {
         }
     }
 
-    updateColor() {
+    refreshVisual() {
         for (const uiObj of this.uiObjects) {
-            uiObj.updateColor();
+            uiObj.refreshVisual();
         }
     }
 
@@ -38,3 +38,8 @@ export class UIManager {
         return layers;
     }
 }
+
+let uiManager = new UIManager;
+export function getUIManager() {
+    return uiManager;
+} 

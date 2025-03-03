@@ -43,8 +43,8 @@ export class Game {
     }
 
     this.state.sightMap.update(this.state.player);
-    this.state.updateColor();
-    this.uiManager.updateColor();
+    this.state.refreshVisual();
+    this.uiManager.refreshVisual();
     this.renderer.draw();
 
     this.gameLoop();
@@ -60,8 +60,8 @@ export class Game {
       this.uiManager.uiObjects.push(new Dialog(12));
 
       // Update the text/glyphs and add to layers
-      this.state.updateColor();
-      this.uiManager.updateColor();
+      this.state.refreshVisual();
+      this.uiManager.refreshVisual();
 
       // Get any temporary layers
       this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));

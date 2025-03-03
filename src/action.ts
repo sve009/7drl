@@ -1,6 +1,7 @@
 import { RNG } from "rot-js";
-import { Entity, Character } from "./entity";
+import { Character } from "./gameObject";
 import type { GameState } from "./gamestate";
+import { GameEntity } from "./gameObject";
 
 export abstract class Action {
   abstract run(state: GameState): void;
@@ -11,11 +12,11 @@ export class NoAction extends Action {
 }
 
 export class MoveAction extends Action {
-  entity: Entity;
+  entity: GameEntity;
   position: { x: number; y: number; };
 
   // No validation for now, need to decide responsibility
-  constructor(entity: Entity, newPos: {x: number; y: number}) {
+  constructor(entity: GameEntity, newPos: {x: number; y: number}) {
     super();
     this.entity = entity;
     this.position = newPos;

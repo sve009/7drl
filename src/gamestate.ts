@@ -1,15 +1,15 @@
-import { Entity } from "./entity"
 import { RNG, Color } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
 import { Glyph, Layer } from "./renderer";
+import { GameEntity } from "./gameObject";
 
 export class GameState {
   running: boolean;
   map: GameMap;
   sightMap: SightMap;
   player?: Player;
-  entities: Entity[];
+  entities: GameEntity[];
   entityLayer: Layer;
 
   constructor() {
@@ -23,7 +23,7 @@ export class GameState {
   async update () {
     // Update entities
     for (let entity of this.entities) {
-      let action = await entity.update(this);
+      let action = await entity.updateState(this);
       action.run(this);
     }
 
@@ -31,11 +31,11 @@ export class GameState {
     this.sightMap.update(this.player);
   }
 
-  updateColor() {
-    this.map.updateColor(this.sightMap);
+  refreshVisual() {
+    this.map.refreshVisual(this.sightMap);
 
     for (const entity of this.entities) {
-      const glyph = entity.updateColor(this.sightMap);
+      const glyph = entity.refreshVisuals(this.sightMap);
       if (!glyph) {
         continue;
       }
@@ -43,7 +43,7 @@ export class GameState {
     }
   }
 
-  entityAt(x: number, y: number): Entity | null {
+  entityAt(x: number, y: number): GameEntity | null {
     for (const entity of this.entities) {
       if (entity.position.x == x && entity.position.y == y) {
         return entity;
@@ -132,7 +132,7 @@ export class GameMap {
     this.tiles[x + this.width*y] = tile;
   }
 
-  updateColor(sightMap: SightMap) {
+  refreshVisual(sightMap: SightMap) {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) { 
         const visible = sightMap.isVisible(j, i);
