@@ -1,3 +1,5 @@
+import { breakIndex, joinIndex } from "./utilities";
+
 export class Grid {
   width: number;
   height: number;
@@ -31,6 +33,41 @@ export class Grid {
         const y0 = y + j;
         const k = x0 + y0*this.width;
         this.values[k] = 1;
+      }
+    }
+  }
+
+  fits(other: Grid, xOffset: number, yOffset: number): boolean {
+    for (let i = 0; i < other.width*other.height; i++) {
+      if (other.values[i]) {
+        const { x, y } = breakIndex(i, other.width);
+        const fx = x + xOffset;
+        const fy = y + yOffset;
+
+        if (fx < 2 || 
+            fx > this.width - 2 ||
+            fy < 2 ||
+            fy > this.height - 2 ||
+            this.values[joinIndex(fx, fy, this.width)]
+        ) {
+            return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  // @pre this.fits(other, xOffset, yOffset) == true
+  merge(other: Grid, xOffset: number, yOffset: number): void {
+    for (let i = 0; i < other.width*other.height; i++) {
+      if (other.values[i]) {
+        const { x, y } = breakIndex(i, other.width);
+        const fx = x + xOffset;
+        const fy = y + yOffset;
+
+        const j = joinIndex(fx, fy, this.width);
+        this.values[j] = other.values[i];
       }
     }
   }

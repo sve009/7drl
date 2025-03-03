@@ -21,38 +21,87 @@ export function generateLevel(gameMap: GameMap) {
 export class MapGenerator {
   width: number;
   height: number;
+  map: GameMap;
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, gameMap: GameMap) {
     this.width = width;
     this.height = height;
+    this.map = gameMap;
   }
 
   generateLevel(): void {
-      
+    const grid = this.createFirstRoom();  
+
+    // 20 rooms for now
+    for (let i = 0; i < 40; i++) {
+      const [room, doors] = this.createRoom();
+      this.attachRoom(grid, room, doors);
+    }
+
+    for (let i = 0; i < grid.width*grid.height; i++) {
+      if (grid.values[i]) {
+        const { x, y } = breakIndex(i, grid.width);
+        this.map.setTile(x, y, grid.values[i]);
+      }
+    }
+
+    this.addFoliage();
+  }
+
+  createFirstRoom(): Grid {
+    const grid = this.createRectRoom();
+    return grid;
   }
 
   createRoom(): [grid: Grid, doors: DoorPoints] {
     let room;
     switch(randi(0, 2)) {
       case 0: {
-        console.log('rect');
         room = this.createRectRoom();
         break;
       }
       case 1: {
-        console.log('circle');
         room = this.createCircleRoom();
         break;
       }
     }
     const doorPoints = this.findDoorPoints(room);
-    console.log('doorPoints', doorPoints);
 
     if (randi(0, 2)) {
       this.attachCorridor(room, doorPoints);
     }
 
     return [room, doorPoints];
+  }
+
+  addFoliage(): void {
+    for (let i = 0; i < randi(10, 25); i++) {
+      let { x, y } = this.map.openSpot();
+      let r = Math.pow(randi(2, 7), 2);
+
+      for (let y0 = 2; y0 < this.height-2; y0++) {
+        for (let x0 = 2; x0 < this.width-2; x0++) {
+          // 1/3 chance to erode map
+          if (!randi(0, 3) && !this.map.passable(x0, y0)) {
+            continue;
+          }
+          // 1/5 chance to not place
+          if (!randi(0, 5)) {
+            continue;
+          }
+          if (Math.pow(x - x0, 2) + Math.pow(y - y0, 2) < r) {
+            const p = ROT.RNG.getPercentage();
+            if (p < 5) {
+              this.map.setTile(x0, y0, 4);
+            } else if (p < 10) {
+              this.map.setTile(x0, y0, 5);
+            } else {
+              this.map.setTile(x0, y0, 3);
+            }
+          }
+        }
+      }
+    }
   }
 
   createRectRoom(): Grid {
@@ -76,11 +125,6 @@ export class MapGenerator {
     grid.drawCircle(x, y, r);
 
     return grid;
-  }
-
-  shuffledTiles(): number[] {
-    const nums = [...Array(this.width*this.height).keys()];
-    return ROT.RNG.shuffle(nums);
   }
 
   numberAdjacent(grid: Grid, index: number): number {
@@ -109,7 +153,7 @@ export class MapGenerator {
 
   findDoorPoints(grid: Grid): DoorPoints {
     const m: DoorPoints = new Map();
-    const tiles = this.shuffledTiles();
+    const tiles = this.map.shuffledTiles();
     for (const tile of tiles) {
       if (grid.values[tile]) {
         continue;
@@ -162,6 +206,29 @@ export class MapGenerator {
     for (const k of doorPoints.keys()) {
       if (k != dir) {
         doorPoints.delete(k);
+      }
+    }
+  }
+
+  attachRoom (grid: Grid, room: Grid, doors: DoorPoints) {
+    const tiles = this.map.shuffledTiles();
+    for (const tile of tiles) {
+      if (grid.values[tile]) {
+        continue;
+      }
+      if (this.numberAdjacent(grid, tile) == 1) {
+        const d = this.dirAdjacent(grid, tile);
+        if (!doors.has(d)) {
+          continue;
+        }
+
+        const rp = doors.get(d); 
+        const { x, y } = breakIndex(tile, room.width);
+        if (grid.fits(room, x - rp.x + 1, y - rp.y + 1)) {
+          grid.merge(room, x - rp.x, y - rp.y);
+          grid.values[tile] = 2;
+          break;
+        }
       }
     }
   }

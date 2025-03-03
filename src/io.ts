@@ -53,6 +53,36 @@ export class IOHandler {
         }
         break;
       } 
+      case KEYS.VK_Y: {
+        if (!this.shifting) {
+          this.lastKey = "y";    
+        }
+        break;
+      } 
+      case KEYS.VK_U: {
+        if (!this.shifting) {
+          this.lastKey = "u";    
+        }
+        break;
+      } 
+      case KEYS.VK_B: {
+        if (!this.shifting) {
+          this.lastKey = "b";    
+        }
+        break;
+      } 
+      case KEYS.VK_N: {
+        if (!this.shifting) {
+          this.lastKey = "n";    
+        }
+        break;
+      } 
+      case KEYS.VK_PERIOD: {
+        if (!this.shifting) {
+          this.lastKey = ".";    
+        }
+        break;
+      } 
     }
 
     if (this.keyPressCallback && this.lastKey) {

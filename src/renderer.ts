@@ -1,14 +1,14 @@
 import { Display } from "rot-js";
 
 export class Renderer {
-    display: Display
-    permanentLayers: Array<Layer>
-    temporaryLayers: Array<Layer>
+    display: Display;
+    permanentLayers: Array<Layer>;
+    temporaryLayers: Array<Layer>;
 
     constructor (display: Display) {
         this.display = display;
-        this.permanentLayers = new Array;
-        this.temporaryLayers = new Array;
+        this.permanentLayers = new Array();
+        this.temporaryLayers = new Array();
     }
 
     addPermanentLayer (layer: Layer) {
@@ -20,12 +20,17 @@ export class Renderer {
     }
 
     draw () {
-        const sortedLayers = [...this.permanentLayers, ...this.temporaryLayers].sort((layerA, layerB) => layerA.index - layerB.index);
+        const sortedLayers = [
+          ...this.permanentLayers, 
+          ...this.temporaryLayers
+        ].sort(
+          (layerA, layerB) => layerA.index - layerB.index
+        );
         sortedLayers.forEach(layer => {
             layer.draw(this.display);
             layer.reset();
         });
-        this.temporaryLayers = new Array;
+        this.temporaryLayers = new Array();
     }
 }
 
@@ -54,8 +59,8 @@ export class Layer {
 }
 
 abstract class Drawable {
-    x: number
-    y: number
+    x: number;
+    y: number;
 
     constructor (x: number, y: number) {
         this.x = x;
@@ -66,7 +71,7 @@ abstract class Drawable {
 }
 
 export class Text extends Drawable {
-    textString: string | null
+    textString: string | null;
 
     constructor(
         x: number,
@@ -84,12 +89,12 @@ export class Text extends Drawable {
 }
 
 export class Glyph extends Drawable{
-    x: number
-    y: number
-    ch: string | null
-    fg: string | null
-    bg: string | null
-    drawOver: boolean
+    x: number;
+    y: number;
+    ch: string | null;
+    fg: string | null;
+    bg: string | null;
+    drawOver: boolean;
 
     constructor (
         x: number,
@@ -115,5 +120,3 @@ export class Glyph extends Drawable{
         }
     }
 }
-
-
