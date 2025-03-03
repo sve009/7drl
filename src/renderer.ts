@@ -1,14 +1,20 @@
 import { Display } from "rot-js";
-
 export class Renderer {
     display: Display;
     permanentLayers: Array<Layer>;
     temporaryLayers: Array<Layer>;
 
-    constructor (display: Display) {
-        this.display = display;
+    constructor () {
+        this.createNewDisplay();
         this.permanentLayers = new Array();
         this.temporaryLayers = new Array();
+    }
+
+    createNewDisplay () {
+        delete this.display;
+        this.display = new Display({width:80, height:40, fontSize: 20});
+        document.body.appendChild(this.display.getContainer());
+        this.display.getContainer().focus();
     }
 
     addPermanentLayer (layer: Layer) {

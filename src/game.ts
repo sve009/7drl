@@ -1,4 +1,3 @@
-import { Display } from "rot-js";
 import { GameState } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
@@ -13,9 +12,9 @@ export class Game {
   renderer: Renderer;
   generator: MapGenerator;
 
-  constructor(display: Display) {
+  constructor() {
     this.state = new GameState();
-    this.renderer = new Renderer(display);
+    this.renderer = new Renderer;
     this.uiManager = new UIManager;
     this.renderer.addPermanentLayer(this.state.map.layer);
     this.renderer.addPermanentLayer(this.state.entityLayer);
