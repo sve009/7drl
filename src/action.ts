@@ -1,6 +1,7 @@
 import { RNG } from "rot-js";
 import { Character } from "./gameObject";
-import type { GameState } from "./gamestate";
+import { GameState, GameMap } from "./gamestate";
+import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 
 export abstract class Action {
@@ -97,6 +98,16 @@ export class DescendAction extends Action {
     }
 
     this.entity.dungeonLevel += 1;
+
+    if (this.entity.dungeonLevel > state.maps.length - 1) {
+      const map = new GameMap(state.boundaries);
+      const generator = new MapGenerator(
+        state.boundaries.width, 
+        state.boundaries.height, 
+        map
+      );
+      generator.generateLevel();
+    }
 
     if (this.onStair) {
       const stairPos = state.maps[this.entity.dungeonLevel].stairUp;
