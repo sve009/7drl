@@ -33,7 +33,7 @@ export class MapGenerator {
     const grid = this.createFirstRoom();  
 
     // 20 rooms for now
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 40; i++) {
       const [room, doors] = this.createRoom();
       this.attachRoom(grid, room, doors);
     }

@@ -22,7 +22,7 @@ export class Enemy extends Character {
 
   async update(state: GameState): Promise<Action> {
     const { x, y } = this.position;
-    this.visible = true;/* state.sightMap.isVisible(x, y); */
+    this.visible = state.sightMap.isVisible(x, y);
     return this.enemyType.ai.update(state, this);
   }
 

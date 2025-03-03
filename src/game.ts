@@ -42,16 +42,17 @@ export class Game {
       this.state.entities.push(goblin);
     }
 
+    this.state.sightMap.update(this.state.player);
+    this.state.updateColor();
+    this.uiManager.updateColor();
+    this.renderer.draw();
+
     this.gameLoop();
 
     this.renderer.draw();
   }
 
   async gameLoop() {
-    this.state.updateColor();
-    this.uiManager.updateColor();
-    this.renderer.draw();
-
     while (this.state.running) {
       // Update the GameState and the UIManager
       await this.state.update();
