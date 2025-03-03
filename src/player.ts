@@ -17,52 +17,35 @@ export class Player extends Entity {
   }
 
   async update(state: GameState) {
+    let pos = {
+      x: this.position.x,
+      y: this.position.y
+    };
     while (true) {
-    let key = await this.ioHandler.requestKey();
+      let key = await this.ioHandler.requestKey();
       switch (key) {
         case "h": {
-          let pos = {
-            x: this.position.x-1, 
-            y: this.position.y 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          pos.x -= 1;
           break;
         }
         case "j": {
-          let pos = {
-            x: this.position.x, 
-            y: this.position.y+1 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          pos.y += 1;
           break;
         }
         case "k": {
-          let pos = {
-            x: this.position.x, 
-            y: this.position.y-1 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          pos.y -= 1;
           break;
         }
         case "l": {
-          let pos = {
-            x: this.position.x+1, 
-            y: this.position.y 
-          };
-          if (this.canMove(pos, state.map)) {
-            return new Actions.MoveAction(this, pos);  
-          }
+          pos.x += 1;
           break;
         }
         default: {
           return new Actions.NoAction();
         }
+      }
+      if (this.canMove(pos, state.map)) {
+        return new Actions.MoveAction(this, pos);  
       }
     }
   }
