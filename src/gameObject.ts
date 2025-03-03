@@ -11,20 +11,23 @@ abstract class GameObject {
         this.uiManager = getUIManager();
     }
 
-    abstract refreshVisuals(sightMap: SightMap): Glyph | null;
+    abstract refreshVisuals(): Glyph | null;
     abstract notifyUI(): void;
 }
 
 export abstract class GameEntity extends GameObject{
     position: { x: number; y: number; };
+    dungeonLevel: number;
+
     abstract updateState(state: GameState): Promise<Action>;
+
     canMove(position: { x: number; y: number; }, map: GameMap): boolean {
-        return map.passable(position.x, position.y);
+      return map.passable(position.x, position.y);
     }
-    notifyUI(): void {
-        
-    }
+
+    notifyUI(): void {}
 }
+
 export abstract class Character extends GameEntity {
     health: number;
   
@@ -32,7 +35,7 @@ export abstract class Character extends GameEntity {
     abstract defend(): [number, number];
   
     die(state: GameState): void {}
-  }   
+}   
 
 export abstract class UIComponent extends GameObject {
     layer: Layer

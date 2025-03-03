@@ -14,6 +14,7 @@ export class Player extends Character {
   constructor(x: number, y: number) {
     super();
     this.position = {x, y};
+    this.dungeonLevel = 0;
     this.health = 10;
     this.visionRadius = 8;
     this.ioHandler = new IOHandler();
@@ -65,17 +66,21 @@ export class Player extends Character {
         const { x, y } = dirMap.get(dir);
         const fx = this.position.x + x;
         const fy = this.position.y + y;
-        const e = state.entityAt(this.position.x + x, this.position.y + y);
+        const e = state.entityAt(
+          this.position.x + x, 
+          this.position.y + y,
+          this.dungeonLevel
+        );
         if (e instanceof Character) {
           return new Actions.AttackAction(this, e as Character); 
-        } else if (this.canMove({ x: fx, y: fy}, state.map)) {
+        } else if (this.canMove({ x: fx, y: fy}, state.maps[this.dungeonLevel])) {
           return new Actions.MoveAction(this, { x: fx, y: fy });
         }
       }
     }
   }
 
-  refreshVisuals(sightMap: SightMap) {
+  refreshVisuals() {
     return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
   }
 

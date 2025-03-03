@@ -16,7 +16,7 @@ export class UIManager {
 
     refreshVisual() {
         for (const uiObj of this.uiObjects) {
-            uiObj.refreshVisuals(null);
+            uiObj.refreshVisuals();
         }
     }
 
