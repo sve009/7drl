@@ -1,5 +1,5 @@
 import * as AI from "./ai";
-import { Character } from "./entity";
+import { Character } from "./gameObject";
 import type { GameState } from "./gamestate";
 import type { SightMap } from "./fov";
 import type { Action } from "./action";
@@ -20,13 +20,13 @@ export class Enemy extends Character {
     this.health = this.enemyType.health;
   }
 
-  async update(state: GameState): Promise<Action> {
+  async updateState(state: GameState): Promise<Action> {
     const { x, y } = this.position;
     this.visible = state.sightMap.isVisible(x, y);
     return this.enemyType.ai.update(state, this);
   }
 
-  updateColor(sightMap: SightMap) {
+  refreshVisuals(sightMap: SightMap) {
     if (this.visible) {
       return new Glyph(
         this.position.x, 

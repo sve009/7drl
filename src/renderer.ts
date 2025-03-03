@@ -1,14 +1,63 @@
 import { Display } from "rot-js";
 
+class Position {
+    startX: number
+    startY: number
+    width: number
+    height: number
+
+    constructor (x: number, y: number, width: number, height: number) {
+        this.startX = x;
+        this.startY = y;
+        this.width = width;
+        this.height = height;
+    }
+
+    getStartX () {
+        return this.startX;
+    }
+
+    getStartY () {
+        return this.startY;
+    }
+
+    getEndX () {
+        return this.startX + this.width - 1;
+    }
+
+    getEndY () {
+        return this.startY + this.height - 1;
+    }
+
+    getWidth () {
+        return this.width;
+    }
+
+    getHeight () {
+        return this.height;
+    }
+}
+
 export class Renderer {
     display: Display;
     permanentLayers: Array<Layer>;
     temporaryLayers: Array<Layer>;
+    renderSize: Position = new Position(0, 0, 120, 40);
+    gameBoundaries: Position = new Position(0, 0, 80, 40);
+    dialogBoundaries: Position = new Position(80, 0, 40, 40);
+    fontSize: number = 20;
 
-    constructor (display: Display) {
-        this.display = display;
+    constructor () {
+        this.createNewDisplay();
         this.permanentLayers = new Array();
         this.temporaryLayers = new Array();
+    }
+
+    createNewDisplay () {
+        delete this.display;
+        this.display = new Display({width: this.renderSize.getWidth(), height: this.renderSize.getHeight(), fontSize: this.fontSize});
+        document.body.appendChild(this.display.getContainer());
+        this.display.getContainer().focus();
     }
 
     addPermanentLayer (layer: Layer) {

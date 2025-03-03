@@ -1,4 +1,4 @@
-import { Character } from "./entity";
+import { Character } from "./gameObject";
 import * as Actions from "./action";
 import { IOHandler } from "./io";
 import type { GameState, GameMap } from "./gamestate";
@@ -19,7 +19,7 @@ export class Player extends Character {
     this.ioHandler = new IOHandler();
   }
 
-  async update(state: GameState) {
+  async updateState(state: GameState) {
     while (true) {
     let key = await this.ioHandler.requestKey();
       let dir = -1;
@@ -75,7 +75,7 @@ export class Player extends Character {
     }
   }
 
-  updateColor(sightMap: SightMap) {
+  refreshVisuals(sightMap: SightMap) {
     return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
   }
 

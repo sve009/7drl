@@ -1,32 +1,22 @@
+import { UIComponent } from "./gameObject";
 import { Layer } from "./renderer";
 
-export abstract class UI {
-    layer: Layer
-    constructor (layerIdx: number) {
-        this.layer = new Layer(layerIdx);
-    }
-
-    async update() {}
-
-    updateColor() {}
-}
-
 export class UIManager {
-    uiObjects: Array<UI>
+    uiObjects: Array<UIComponent>
 
     constructor() {
         this.uiObjects = new Array;
     }
 
-    async update() {
+    async updateContent() {
         for (const uiObj of this.uiObjects) {
-            uiObj.update();
+            uiObj.updateContent();
         }
     }
 
-    updateColor() {
+    refreshVisual() {
         for (const uiObj of this.uiObjects) {
-            uiObj.updateColor();
+            uiObj.refreshVisuals(null);
         }
     }
 
@@ -38,3 +28,8 @@ export class UIManager {
         return layers;
     }
 }
+
+let uiManager = new UIManager;
+export function getUIManager() {
+    return uiManager;
+} 

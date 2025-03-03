@@ -1,11 +1,9 @@
-import { Display } from "rot-js";
 import { GameState } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
 import { Enemy } from "./enemies";
-import { UIManager } from "./ui";
-import { Dialog } from "./dialog";
+import { getUIManager, UIManager } from "./ui";
 
 export class Game {
   state: GameState;
@@ -13,10 +11,10 @@ export class Game {
   renderer: Renderer;
   generator: MapGenerator;
 
-  constructor(display: Display) {
+  constructor() {
     this.state = new GameState();
-    this.renderer = new Renderer(display);
-    this.uiManager = new UIManager;
+    this.renderer = new Renderer;
+    this.uiManager = getUIManager();
     this.renderer.addPermanentLayer(this.state.map.layer);
     this.renderer.addPermanentLayer(this.state.entityLayer);
     this.generator = new MapGenerator(80, 40, this.state.map);
@@ -24,7 +22,8 @@ export class Game {
 
   run() {
     this.state.running = true;
-    this.generator.generateLevel();
+    //this.generator.generateLevel();
+    this.state.map.loadTown();
     let { x, y } = this.state.map.openSpot();
 
     this.state.player = new Player(x, y);
@@ -43,8 +42,9 @@ export class Game {
     }
 
     this.state.sightMap.update(this.state.player);
-    this.state.updateColor();
-    this.uiManager.updateColor();
+    this.state.refreshVisual();
+    this.state.map.refreshVisual(this.state.sightMap);
+    this.uiManager.refreshVisual();
     this.renderer.draw();
 
     this.gameLoop();
@@ -52,19 +52,23 @@ export class Game {
     this.renderer.draw();
   }
 
+  refreshVisuals() {
+      // Update the text/glyphs and add to layers
+      this.state.refreshVisual();
+      this.uiManager.refreshVisual();
+
+      // Get any temporary layers
+      this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));
+
+  }
+
   async gameLoop() {
     while (this.state.running) {
       // Update the GameState and the UIManager
       await this.state.update();
-      await this.uiManager.update();
-      this.uiManager.uiObjects.push(new Dialog(12));
+      await this.uiManager.updateContent();
 
-      // Update the text/glyphs and add to layers
-      this.state.updateColor();
-      this.uiManager.updateColor();
-
-      // Get any temporary layers
-      this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));
+      this.refreshVisuals();
 
       // Draw everything
       this.renderer.draw();
