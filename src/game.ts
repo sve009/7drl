@@ -4,7 +4,6 @@ import { Player } from "./player";
 import { Renderer } from "./renderer";
 import { Enemy } from "./enemies";
 import { getUIManager, UIManager } from "./ui";
-import { Dialog } from "./dialog";
 
 export class Game {
   state: GameState;
@@ -65,8 +64,7 @@ export class Game {
     while (this.state.running) {
       // Update the GameState and the UIManager
       await this.state.update();
-      await this.uiManager.update();
-      this.uiManager.uiObjects.push(new Dialog(12));
+      await this.uiManager.updateContent();
 
       this.refreshVisuals();
 

@@ -1,7 +1,7 @@
 import { Action } from "./action";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
-import { Glyph } from "./renderer";
+import { Glyph, Layer } from "./renderer";
 import { getUIManager, UIManager } from "./ui";
 
 abstract class GameObject {
@@ -35,5 +35,9 @@ export abstract class Character extends GameEntity {
   }   
 
 export abstract class UIComponent extends GameObject {
+    layer: Layer
     abstract updateContent(): void
+    notifyUI (): void {
+        
+    }
 }
