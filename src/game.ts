@@ -3,7 +3,7 @@ import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
 import { Enemy } from "./enemies";
-import { UIManager } from "./ui";
+import { getUIManager, UIManager } from "./ui";
 import { Dialog } from "./dialog";
 
 export class Game {
@@ -15,7 +15,7 @@ export class Game {
   constructor() {
     this.state = new GameState();
     this.renderer = new Renderer;
-    this.uiManager = new UIManager;
+    this.uiManager = getUIManager();
     this.renderer.addPermanentLayer(this.state.map.layer);
     this.renderer.addPermanentLayer(this.state.entityLayer);
     this.generator = new MapGenerator(80, 40, this.state.map);
@@ -51,6 +51,16 @@ export class Game {
     this.renderer.draw();
   }
 
+  refreshVisuals() {
+      // Update the text/glyphs and add to layers
+      this.state.refreshVisual();
+      this.uiManager.refreshVisual();
+
+      // Get any temporary layers
+      this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));
+
+  }
+
   async gameLoop() {
     while (this.state.running) {
       // Update the GameState and the UIManager
@@ -58,12 +68,7 @@ export class Game {
       await this.uiManager.update();
       this.uiManager.uiObjects.push(new Dialog(12));
 
-      // Update the text/glyphs and add to layers
-      this.state.refreshVisual();
-      this.uiManager.refreshVisual();
-
-      // Get any temporary layers
-      this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));
+      this.refreshVisuals();
 
       // Draw everything
       this.renderer.draw();
