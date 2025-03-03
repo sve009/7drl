@@ -15,7 +15,7 @@ export class Player extends Character {
     super();
     this.position = {x, y};
     this.health = 10;
-    this.visionRadius = 5;
+    this.visionRadius = 8;
     this.ioHandler = new IOHandler();
   }
 
@@ -38,6 +38,22 @@ export class Player extends Character {
         }
         case "l": {
           dir = 2;
+          break;
+        }
+        case "y": {
+          dir = 7;
+          break;
+        }
+        case "u": {
+          dir = 6;
+          break;
+        }
+        case "b": {
+          dir = 4;
+          break;
+        }
+        case "n": {
+          dir = 5;
           break;
         }
         default: {

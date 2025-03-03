@@ -3,7 +3,7 @@ import { GameState } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { Renderer } from "./renderer";
-import { Bat } from "./enemies";
+import { Bat, Goblin } from "./enemies";
 import { UIManager } from "./ui";
 import { Dialog } from "./dialog";
 
@@ -35,6 +35,12 @@ export class Game {
       const bat = new Bat(x, y);
       this.state.entities.push(bat);
     }
+    
+    for (let i = 0; i < 1; i++) {
+      const { x, y } = this.state.map.openSpot();
+      const goblin = new Goblin(x, y);
+      this.state.entities.push(goblin);
+    }
 
     this.gameLoop();
 
@@ -62,11 +68,9 @@ export class Game {
       // Draw everything
       this.renderer.draw();
 
-      console.log('loop complete');
-
       // Pause
       await new Promise((resolve, reject) => {
-        setTimeout(resolve, 100);
+        setTimeout(resolve, 50);
       });
 
     }
