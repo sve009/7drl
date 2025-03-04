@@ -50,12 +50,13 @@ export class AttackAction extends Action {
 
     if (RNG.getPercentage() < toHit - dodge) {
       this.defender.health -= (dmg - def);
+      logMessage(`${this.attacker.name} hit ${this.defender.name} for ${dmg} damage`);
       if (this.defender.health <= 0) {
         const i = state.entities.findIndex(e => e == this.defender);
         state.entities.splice(i, 1);
+        logMessage(`${this.attacker.name} killed ${this.defender.name}`);
         this.defender.die(state);
       }
-      logMessage(`${this.attacker.name} hit ${this.defender.name} for ${dmg} damage`);
     } else {
       logMessage(`${this.attacker.name} missed ${this.defender.name}`);
     }
