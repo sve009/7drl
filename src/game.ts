@@ -14,13 +14,12 @@ export class Game {
     this.state = new GameState(new Position(0, 0, 80, 40));
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
-    this.renderer.addPermanentLayer(this.state.terrainLayer);
-    this.renderer.addPermanentLayer(this.state.entityLayer);
+    this.uiManager.gameState = this.state;
   }
 
   run() {
     this.state.running = true;
-    //this.generator.generateLevel();
+
     const firstMap = new GameMap(this.state.boundaries);
     firstMap.loadTown();
     this.state.maps.push(firstMap);
@@ -41,21 +40,26 @@ export class Game {
     this.renderer.draw();
   }
 
-  refreshVisuals() {
+  refreshVisuals () {
       // Update the text/glyphs and add to layers
-      this.state.refreshVisual();
+      if (!this.uiManager.focused) {
+        this.state.refreshVisual();
+      }
       this.uiManager.refreshVisual();
+  }
 
-      // Get any temporary layers
-      this.uiManager.getUILayers().forEach((layer) => this.renderer.addTemporaryLayer(layer));
-
+  async updateObjects () {
+    if (this.uiManager.focused) {
+      await this.uiManager.updateContent();
+    } else {
+      await this.state.update();
+    }
   }
 
   async gameLoop() {
     while (this.state.running) {
       // Update the GameState and the UIManager
-      await this.state.update();
-      await this.uiManager.updateContent();
+      await this.updateObjects();
 
       this.refreshVisuals();
 

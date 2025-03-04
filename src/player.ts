@@ -63,6 +63,10 @@ export class Player extends Character {
           dir = 5;
           break;
         }
+        case "i": {
+          getUIManager().openInventory();
+          return new Actions.NoAction();
+        }
         case ">": {
           const dstair = state.maps[this.dungeonLevel].stairDown;
           if (dstair) {
