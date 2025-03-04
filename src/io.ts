@@ -83,6 +83,24 @@ export class IOHandler {
         }
         break;
       } 
+      case KEYS.VK_I: {
+        if (!this.shifting) {
+          this.lastKey = "i";
+        }
+        break
+      }
+      case KEYS.VK_ENTER: {
+        if (!this.shifting) {
+          this.lastKey = "enter";
+        }
+        break
+      }
+      case KEYS.VK_ESCAPE: {
+        if (!this.shifting) {
+          this.lastKey = "escape";
+        }
+        break
+      }
     }
 
     if (this.keyPressCallback && this.lastKey) {

@@ -1,7 +1,7 @@
 import { RNG, Color } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
-import { Glyph, Layer, Position } from "./renderer";
+import { getRenderer, Glyph, Layer, Position } from "./renderer";
 import { GameEntity } from "./gameObject";
 import town from "./data/town.json";
 
@@ -27,6 +27,7 @@ export class GameState {
     this.entities = [];
     this.entityLayer = new Layer(1, boundaries);
     this.terrainLayer = new Layer(0, boundaries);
+    this.terrainLayer.bg = "#000";
   }
 
   async update () {
@@ -41,6 +42,7 @@ export class GameState {
   }
 
   refreshVisual() {
+    getRenderer().layers.push(this.entityLayer, this.terrainLayer);
     const pdl = this.player.dungeonLevel;
     this.maps[pdl].refreshVisual(this.terrainLayer, this.sightMap);
 
@@ -53,6 +55,10 @@ export class GameState {
         this.entityLayer.addDrawable(glyph);
       }
     }
+  }
+
+  fullRefresh () {
+    this.terrainLayer.refresh = true;
   }
 
   entityAt(x: number, y: number, z: number): GameEntity | null {

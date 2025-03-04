@@ -63,6 +63,10 @@ export class Player extends Character {
           dir = 5;
           break;
         }
+        case "i": {
+          getUIManager().openInventory();
+          return new Actions.NoAction();
+        }
         default: {
           return new Actions.NoAction();
         }

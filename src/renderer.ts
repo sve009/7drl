@@ -1,17 +1,13 @@
 import { Display } from "rot-js";
-import { cache } from "webpack";
 
 export class Renderer {
     display: Display;
-    permanentLayers: Array<Layer>;
-    temporaryLayers: Array<Layer>;
     renderSize: Position = new Position(0, 0, 120, 44);
     fontSize: number = 20;
+    layers: Array<Layer> = new Array;
 
     constructor () {
         this.createNewDisplay();
-        this.permanentLayers = new Array();
-        this.temporaryLayers = new Array();
     }
 
     createNewDisplay () {
@@ -21,26 +17,20 @@ export class Renderer {
         this.display.getContainer().focus();
     }
 
-    addPermanentLayer (layer: Layer) {
-        this.permanentLayers.push(layer);
-    }
-
-    addTemporaryLayer (layer: Layer) {
-        this.temporaryLayers.push(layer);
-    }
 
     draw () {
-        const sortedLayers = [
-          ...this.permanentLayers, 
-          ...this.temporaryLayers
-        ].sort(
+        const sortedLayers = this.layers.sort(
           (layerA, layerB) => layerA.index - layerB.index
         );
+        console.log(this.layers);
         sortedLayers.forEach(layer => {
             layer.draw(this.display);
-            layer.reset();
         });
-        this.temporaryLayers = new Array();
+        this.layers = new Array();
+    }
+
+    addLayer (layer: Layer) {
+        this.layers.push(layer);
     }
 }
 
@@ -90,6 +80,7 @@ export class Layer {
     cacheLayer:Array<Array<Drawable>>;
     drawables: Array<Drawable>;
     bg: string | null
+    refresh: boolean = false
 
     constructor (layerIdx: number, position: Position, bg: string | null = null) {
         this.position = position;
@@ -111,17 +102,13 @@ export class Layer {
     }
 
     draw (display: Display): void {
-        if (this.lazyDraw) {
+        if (this.lazyDraw && !this.refresh) {
             this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+            this.drawables = [];
         } else {
             this.drawBackground(display);
-            for (let i = 0; i < this.position.getHeight(); i++) {
-                for (let j = 0; j < this.position.getWidth(); j++) {
-                    if (this.cacheLayer[i][j]) {
-                        this.cacheLayer[i][j].draw(display);
-                    }
-                }
-            }
+            this.redrawAll(display);
+            this.refresh = false;
         }
     }
 
@@ -139,7 +126,9 @@ export class Layer {
     redrawAll (display: Display): void {
         for (let i = 0; i < this.position.getHeight(); i++) {
             for (let j = 0; j < this.position.getWidth(); j++) {
-                this.cacheLayer[i][j].draw(display);
+                if (this.cacheLayer[i][j]) {
+                    this.cacheLayer[i][j].draw(display);
+                }
             }
         }
     }
@@ -168,7 +157,6 @@ export class TextDrawable extends Drawable {
         super(x, y);
         this.textString = textString;
     }
-
 
     draw (display: Display): void {
         display.drawText(this.x, this.y, this.textString);
