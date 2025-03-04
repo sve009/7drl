@@ -80,6 +80,8 @@ export class IOHandler {
       case KEYS.VK_PERIOD: {
         if (!this.shifting) {
           this.lastKey = ".";    
+        } else {
+          this.lastKey = ">";
         }
         break;
       } 
@@ -101,6 +103,13 @@ export class IOHandler {
         }
         break
       }
+      case KEYS.VK_COMMA: {
+        if (!this.shifting) {
+        } else {
+          this.lastKey = "<";
+        }
+        break;
+      }
     }
 
     if (this.keyPressCallback && this.lastKey) {
@@ -111,7 +120,7 @@ export class IOHandler {
   handleKeyUp(event: KeyboardEvent) {
     let code = event.keyCode;
     if (code == KEYS.VK_SHIFT) {
-      this.shifting = true;
+      this.shifting = false;
     }
   }
 }

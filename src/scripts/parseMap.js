@@ -56,6 +56,14 @@ fs.readFile(file, 'utf8', (err, contents) => {
         mapArr.push(10);
         break;
       }
+      case ">": {
+        mapArr.push(11);
+        break;
+      }
+      case "<": {
+        mapArr.push(12);
+        break;
+      }
     }
   }
 

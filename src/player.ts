@@ -28,7 +28,7 @@ export class Player extends Character {
 
   async updateState(state: GameState) {
     while (true) {
-    let key = await this.ioHandler.requestKey();
+      let key = await this.ioHandler.requestKey();
       let dir = -1;
       switch (key) {
         case "h": {
@@ -66,6 +66,25 @@ export class Player extends Character {
         case "i": {
           getUIManager().openInventory();
           return new Actions.NoAction();
+        }
+        case ">": {
+          const dstair = state.maps[this.dungeonLevel].stairDown;
+          if (dstair) {
+            console.log('has dstair', dstair);
+            if (this.position.x == dstair.x && this.position.y == dstair.y) {
+              return new Actions.DescendAction(this);
+            }
+          }
+          break;
+        }
+        case "<": {
+          const ustair = state.maps[this.dungeonLevel].stairUp;
+          if (ustair) {
+            if (this.position.x == ustair.x && this.position.y == ustair.y) {
+              return new Actions.AscendAction(this);
+            }
+          }
+          break;
         }
         default: {
           return new Actions.NoAction();
