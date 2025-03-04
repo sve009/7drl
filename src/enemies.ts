@@ -114,7 +114,7 @@ class EnemyTypeFactory {
           "#db4809",
           new AI.BasicMelee(5),
           8,
-          50,
+          75,
           3,
           0,
           0,
