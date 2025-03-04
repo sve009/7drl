@@ -252,7 +252,7 @@ class Tile {
     let bg = Color.fromString(this.tileType.background);
 
     if (!visible) {
-      const multiplicant = Color.fromString("#333");
+      const multiplicant = Color.fromString("#555");
       fg = Color.multiply(fg, multiplicant);
       bg = Color.multiply(fg, multiplicant);
     }

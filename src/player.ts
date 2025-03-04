@@ -21,7 +21,7 @@ export class Player extends Character {
     this.dungeonLevel = 0;
     this.health = 10;
     this.maxHealth = 10;
-    this.visionRadius = 8;
+    this.visionRadius = 25;
     this.distanceTraveled = 0;
     this.ioHandler = new IOHandler();
   }

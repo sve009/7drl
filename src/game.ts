@@ -31,18 +31,6 @@ export class Game {
     this.state.entities.push(this.state.player);
     this.uiManager.playerPanel.player = this.state.player;
 
-    for (let i = 0; i < 1; i++) {
-      const { x, y } = firstMap.openSpot();
-      const bat = new Enemy("bat", x, y, 0);
-      this.state.entities.push(bat);
-    }
-    
-    for (let i = 0; i < 3; i++) {
-      const { x, y } = firstMap.openSpot();
-      const goblin = new Enemy("goblin", x, y, 0);
-      this.state.entities.push(goblin);
-    }
-
     this.state.sightMap.update(this.state.player);
     this.state.refreshVisual();
     this.uiManager.refreshVisual();
