@@ -13,6 +13,7 @@ export class Player extends Character {
   health: number;
   maxHealth: number;
   distanceTraveled: number;
+  visible: boolean = true;
 
   constructor(x: number, y: number) {
     super();
@@ -110,7 +111,7 @@ export class Player extends Character {
     }
   }
 
-  refreshVisuals() {
+  getGlyph(): Glyph {
     return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
   }
 

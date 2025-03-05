@@ -34,13 +34,13 @@ export class GameState {
   }
 
   async update () {
-    // Update entities
+    // Update entities. Player is always first.
     for (let entity of this.entities) {
       let action = await entity.updateState(this);
       action.run(this);
     }
 
-    // Update FOV
+    // Update fov
     this.sightMap.update(this.player);
   }
 
@@ -49,8 +49,10 @@ export class GameState {
     const pdl = this.player.dungeonLevel;
     this.maps[pdl].refreshVisual(this.terrainLayer, this.sightMap);
 
-    for (const entity of this.entities) {
+    // Draw player last
+    for (const entity of this.entities.slice().reverse()) {
       if (entity.dungeonLevel == pdl) {
+        entity.checkVisible(this.sightMap);
         const glyph = entity.refreshVisuals();
         if (!glyph) {
           continue;
@@ -75,6 +77,17 @@ export class GameState {
     }
 
     return null;
+  }
+
+  openSpot(z: number): { x: number; y: number; } {
+    let found = false;
+    let pos;
+    while (!found) {
+      pos = this.maps[z].openSpot();
+      found = !this.entityAt(pos.x, pos.y, z);
+    }
+
+    return pos;
   }
 }
 

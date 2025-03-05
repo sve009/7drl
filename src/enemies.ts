@@ -28,17 +28,14 @@ export class Enemy extends Character {
     return this.enemyType.ai.update(state, this);
   }
 
-  refreshVisuals() {
-    if (this.visible) {
-      return new Glyph(
-        this.position.x, 
-        this.position.y, 
-        this.enemyType.symbol, 
-        this.enemyType.color, 
-        "#000",
-      );
-    }
-    return null;
+  getGlyph() {
+    return new Glyph(
+      this.position.x, 
+      this.position.y, 
+      this.enemyType.symbol, 
+      this.enemyType.color, 
+      "#000",
+    );
   }
 
   attack(): [number, number] {

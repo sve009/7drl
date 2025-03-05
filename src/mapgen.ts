@@ -4,6 +4,7 @@ import { Grid } from "./grid";
 import { dirMap, oppDir } from "./constants";
 import { randi, joinIndex, breakIndex } from "./utilities";
 import { IOHandler } from "./io";
+import { ItemGenerator } from "./item";
 
 type DoorPoints = Map<number, { x: number; y: number; }>;
 

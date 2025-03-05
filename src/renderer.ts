@@ -26,7 +26,6 @@ export class Renderer {
     const sortedLayers = this.layers.sort(
       (layerA, layerB) => layerA.index - layerB.index
     );
-    console.log(this.layers);
     sortedLayers.forEach(layer => {
       layer.draw(this.display);
     });

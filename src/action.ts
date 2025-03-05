@@ -4,6 +4,7 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
+import { ItemGenerator } from "./item";
 
 export abstract class Action {
   abstract run(state: GameState): void;
@@ -113,6 +114,33 @@ export class DescendAction extends Action {
         map
       );
       generator.generateLevel();
+
+      // Code is here temporarily
+      // 5 Guaranteed
+      for (let i = 0; i < 5; i++) {
+        const pos = state.openSpot(this.entity.dungeonLevel);
+        const item = ItemGenerator.createItem(this.entity.dungeonLevel); 
+        console.log(pos);
+        item.position = pos;
+        item.dungeonLevel = this.entity.dungeonLevel;
+        state.entities.push(item);
+      }
+
+      const chance = 50;
+      let run = true;
+      while (run) {
+        const p = RNG.getPercentage();
+        if (p < chance) {
+          const pos = state.openSpot(this.entity.dungeonLevel);
+          console.log(pos);
+          const item = ItemGenerator.createItem(this.entity.dungeonLevel); 
+          item.position = pos;
+          item.dungeonLevel = this.entity.dungeonLevel;
+          state.entities.push(item);
+        } else {
+          run = false;
+        }
+      }
     }
 
     if (this.onStair) {

@@ -2,7 +2,7 @@ import { Action } from "./action";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
 import type { Item, Equippable } from "./item";
-import { Drawable, getRenderer, Layer, Position } from "./renderer";
+import { Drawable, getRenderer, Layer, Position, Glyph } from "./renderer";
 
 abstract class GameObject {}
 
@@ -17,9 +17,24 @@ const equipSlots: EquipSlot[] = [
 export abstract class GameEntity extends GameObject{
   position: { x: number; y: number; };
   dungeonLevel: number;
+  visible: boolean;
 
   abstract updateState(state: GameState): Promise<Action>;
-  abstract refreshVisuals(): Drawable | null;
+  abstract getGlyph(): Glyph;
+
+  checkVisible(sightMap: SightMap) {
+    this.visible = sightMap.isVisible(
+      this.position.x,
+      this.position.y,
+    );
+  }
+
+  refreshVisuals(): Drawable | null {
+    if (this.visible) {
+      return this.getGlyph();
+    }
+    return null;
+  }
 
   canMove(position: { x: number; y: number; }, map: GameMap): boolean {
     return map.passable(position.x, position.y);
