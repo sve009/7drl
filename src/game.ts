@@ -1,5 +1,4 @@
 import { GameState, GameMap } from "./gamestate";
-import { MapGenerator } from "./mapgen";
 import { Player } from "./player";
 import { getRenderer, Position, Renderer } from "./renderer";
 import { Enemy } from "./enemies";

@@ -11,12 +11,15 @@ export class GameState {
   boundaries: Position
   running: boolean;
   maps: GameMap[];
-  dungeonLevel: number;
   sightMap: SightMap;
   player?: Player;
   entities: GameEntity[];
   entityLayer: Layer;
   terrainLayer: Layer;
+
+  get currentMap (): GameMap {
+    return this.maps[this.player.dungeonLevel];
+  }
 
   constructor(boundaries: Position) {
     this.boundaries = boundaries;
@@ -224,6 +227,11 @@ export class GameMap {
       }
     }
   }
+
+  getFlavorText (x: number, y: number): string {
+    const t = this.tiles[x + y*this.width];
+    return t.getFlavorText();
+  }
 }
 
 class Tile {
@@ -268,6 +276,10 @@ class Tile {
       Color.toHex(bg),
     ];
   }
+
+  getFlavorText(): string {
+    return this.tileType.flavorText();
+  }
 }
 
 class TileType {
@@ -276,6 +288,7 @@ class TileType {
   background: string;
   passable: (t: Tile) => boolean;
   blocksSight: (t: Tile) => boolean;
+  flavorText: () => string;
 
   constructor(
     symbol: string, 
@@ -283,12 +296,14 @@ class TileType {
     background: string, 
     passable: (t: Tile) => boolean,
     blocksSight: (t: Tile) => boolean,
+    flavorText: () => string = () => ""
   ) {
       this.symbol = symbol;
       this.foreground = foreground;
       this.background = background;
       this.passable = passable;
       this.blocksSight = blocksSight;
+      this.flavorText = flavorText;
   }
 }
 
@@ -329,6 +344,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "This is grass"
         );
 
       }
@@ -339,6 +355,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => true,
+          () => "The bush sways in the wind"
         );
       }
       case "shrub": {
@@ -348,6 +365,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => true,
+          () => "We are the nights that say NEE"
         );
       }
       case "altar": {
@@ -357,6 +375,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "I don't believe in GOD"
         );
       }
       case "water": {
@@ -367,7 +386,6 @@ class TileTypeFactory {
           (t: Tile) => false,
           (t: Tile) => false,
         );
-        break;
       }
       case "leaf": {
         return new TileType(
@@ -377,7 +395,6 @@ class TileTypeFactory {
           (t: Tile) => false,
           (t: Tile) => false,
         );
-        break;
       }
       case "hshelf": {
         return new TileType(

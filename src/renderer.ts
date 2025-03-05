@@ -3,7 +3,7 @@ import { Display } from "rot-js";
 export class Renderer {
   display: Display;
   renderSize: Position = new Position(0, 0, 120, 44);
-  fontSize: number = 20;
+  fontSize: number = 19;
   layers: Array<Layer> = new Array;
 
   constructor () {
@@ -12,7 +12,11 @@ export class Renderer {
 
   createNewDisplay () {
     delete this.display;
-    this.display = new Display({width: this.renderSize.getWidth(), height: this.renderSize.getHeight(), fontSize: this.fontSize});
+    this.display = new Display({
+      width: this.renderSize.getWidth(),
+      height: this.renderSize.getHeight(),
+      fontSize: this.fontSize
+    });
     document.body.appendChild(this.display.getContainer());
     this.display.getContainer().focus();
   }
