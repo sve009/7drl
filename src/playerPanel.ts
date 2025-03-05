@@ -30,7 +30,7 @@ export class PlayerPanel extends UIComponent {
     return `Health: ${this.player.health}/${this.player.maxHealth}`;
   }
 
-  private get distTraveled () {
+  private distTraveled () {
 
   }
 }
