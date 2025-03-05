@@ -1,9 +1,18 @@
 import { Action } from "./action";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
+import type { Item, Equippable } from "./item";
 import { Drawable, getRenderer, Layer, Position } from "./renderer";
 
 abstract class GameObject {}
+
+type EquipSlot = [string, Equippable | null];
+
+const equipSlots: EquipSlot[] = [
+  ["weapon", null],
+  ["armor", null],
+  ["ring", null],
+];
 
 export abstract class GameEntity extends GameObject{
   position: { x: number; y: number; };
@@ -20,6 +29,8 @@ export abstract class GameEntity extends GameObject{
 export abstract class Character extends GameEntity {
   name: string; 
   health: number;
+  items: Item[];
+  equipment: Map<string, Equippable | null> = new Map(equipSlots);
   
   abstract attack(): [number, number];
   abstract defend(): [number, number];
@@ -38,11 +49,10 @@ export abstract class UIComponent extends GameObject {
   }
 
   async updateContent(): Promise<void> {
-    return
+    return;
   }
 
   refreshVisuals() {
-    console.log(this.constructor.name)
     getRenderer().addLayer(this.layer);
   }
 }
