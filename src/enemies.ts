@@ -7,6 +7,7 @@ import { Glyph } from "./renderer";
 
 export class Enemy extends Character {
   position: { x: number; y: number; };
+  maxHealth: number;
   health: number;
   visible: boolean;
   enemyType: EnemyType;
@@ -19,7 +20,8 @@ export class Enemy extends Character {
     this.visible = false;
     this.enemyType = EnemyTypeFactory.createEnemyType(name);
 
-    this.health = this.enemyType.health;
+    this.maxHealth = this.enemyType.health;
+    this.health = this.maxHealth;
   }
 
   async updateState(state: GameState): Promise<Action> {

@@ -43,6 +43,7 @@ export abstract class GameEntity extends GameObject{
 
 export abstract class Character extends GameEntity {
   name: string; 
+  maxHealth: number;
   health: number;
   items: Item[];
   equipment: Map<string, Equippable | null> = new Map(equipSlots);

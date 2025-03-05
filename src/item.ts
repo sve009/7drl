@@ -4,6 +4,8 @@ import { GameState } from "./gamestate";
 import { NoAction } from "./action";
 import { Glyph } from "./renderer";
 import { randi } from "./utilities";
+import { Enemy } from "./enemies";
+import { RandomProfile } from "./ai";
 
 export interface Throwable {
   range: number;
@@ -85,6 +87,136 @@ class PotionProfile {
     this.color = color;
     this.thrown = thrown;
     this.applied = applied;
+  }
+}
+
+const potionDropTable = {
+  confusion: 1,
+  healing: 1,
+  regen: 1,
+  invis: 1,
+  explosive: 1,
+  phasing: 0,
+  might: 1,
+  fireres: 0,
+  poisonres: 0,
+  coldres: 0,
+  speed: 0,
+  weakness: 0,
+  warding: 0
+};
+class PotionFactory {
+  static getRandomPotion(): Potion {
+    const key = RNG.getWeightedValue(potionDropTable);
+    return PotionFactory.createPotion(key);
+  }
+
+  static createPotion(name: string): Potion {
+    let profile;
+    switch (name) {
+      case "confusion": {
+        profile = new PotionProfile(
+          "potion of confusion",
+          2,
+          "#d4ac1c",
+          (entitiesHit: GameEntity[]) => {
+            for (const entity of entitiesHit) {
+              // To do, handle player being hit
+              if (entity instanceof Enemy) {
+                // To do, debuff timer so it's not permanent
+                entity.enemyType.ai = new RandomProfile();
+              }
+            }
+          },
+          (character: Character) => {
+            // Implemented when debuffs exist
+          }
+        );
+        break;
+      }
+      case "healing": {
+        profile = new PotionProfile(
+          "potion of healing",
+          2,
+          "#1ca9d4",
+          (entitiesHit: GameEntity[]) => {
+            for (const entity of entitiesHit) {
+              if (entity instanceof Character) {
+                entity.health = entity.maxHealth;
+              }
+            }
+          },
+          (character: Character) => {
+            character.health = character.maxHealth;  
+          }
+        );
+        break;
+      }
+      case "regen": {
+        profile = new PotionProfile(
+          "potion of regeneration",
+          2,
+          "#d41c71",
+          (entitiesHit: GameEntity[]) => {
+            // To do when buffs added
+          },
+          (character: Character) => {
+            // To do when buffs added
+          }
+        );
+        break;
+      }
+      case "invis": {
+        profile = new PotionProfile(
+          "potion of invisibility",
+          1,
+          "#07357d",
+          (entitiesHit: GameEntity[]) => {
+            // To do when buffs added
+          },
+          (character: Character) => {
+            // To do when buffs added
+          }
+        );
+        break;
+      }
+      case "explosive": {
+        profile = new PotionProfile(
+          "unstable potion",
+          4,
+          "#fc0303",
+          (entitiesHit: GameEntity[]) => {
+            for (const entity of entitiesHit) {
+              if (entity instanceof Character) {
+                entity.health -= 10;
+              }
+            }
+          },
+          (character: Character) => {
+            // Do something special
+          }
+        );
+        break;
+      }
+      case "might": {
+        profile = new PotionProfile(
+          "potion of might",
+          1,
+          "#47c949",
+          (entitiesHit: GameEntity[]) => {
+            // TODO buffs
+          },
+          (character: Character) => {
+            // TODO buffs
+          }
+        );
+        break;
+      }
+      default: {
+        throw new Error("Unimplemented potion");
+      }
+    }
+    return new Potion(profile);
   }
 }
 
@@ -387,7 +519,7 @@ export class ItemGenerator {
   static createItem(dungeonLevel: number): Item {
     let p = RNG.getPercentage();
     if (p < 40) {
-      return new Gold(50);
+      return PotionFactory.getRandomPotion();
     } else if (p < 60) {
       return new Gold(50);
     } else if (p < 80) {

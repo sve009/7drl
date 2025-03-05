@@ -10,8 +10,8 @@ import { getUIManager } from "./uiManager";
 export class Player extends Character {
   visionRadius: number;
   ioHandler: IOHandler;
-  health: number;
   maxHealth: number;
+  health: number;
   distanceTraveled: number;
   visible: boolean = true;
 
@@ -20,8 +20,8 @@ export class Player extends Character {
     this.name = "player";
     this.position = {x, y};
     this.dungeonLevel = 0;
-    this.health = 10;
     this.maxHealth = 10;
+    this.health = 10;
     this.visionRadius = 25;
     this.distanceTraveled = 0;
     this.ioHandler = new IOHandler();

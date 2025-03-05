@@ -132,7 +132,7 @@ export class GameMap {
     for (const tile of tiles) {
       const x = tile % this.width;
       const y = Math.floor(tile / this.width);
-      if (this.passable(x, y)) {
+      if (this.passable(x, y) && this.tiles[tile].getSymbol() != "+") {
         return { x, y };
       }
     }
