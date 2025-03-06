@@ -25,7 +25,7 @@ export class Player extends Character {
     this.maxHealth = 10;
     this.health = 10;
 
-    this.accuracy = 50;
+    this.accuracy = 75;
     this.damage = 3;
     this.dodge = 25;
     this.armor = 0;

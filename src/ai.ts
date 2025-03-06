@@ -2,7 +2,8 @@ import { RNG, FOV, Path } from "rot-js";
 import { dirMap } from "./constants";
 import type { GameState } from "./gamestate";
 import { Action, NoAction, MoveAction, AttackAction } from "./action";
-import type { Character } from "./gameObject";
+import { Character } from "./gameObject";
+import { Player } from "./player";
 
 export abstract class AIProfile {
   seesPlayer: boolean;
@@ -75,7 +76,16 @@ export class BasicMelee {
   update(state: GameState, character: Character): Action {
     const map = state.maps[character.dungeonLevel];
     const passable = (x: number, y: number) => {
-      return map.passable(x, y);
+      const entity = state.entityAt(x, y, character.dungeonLevel);
+      let blockingEntity;
+      if (entity instanceof Player) {
+        blockingEntity  = false;
+      } else if (entity instanceof Character) {
+        blockingEntity = entity == character ? false : true;
+      } else {
+        blockingEntity = false;
+      }
+      return map.passable(x, y) && !blockingEntity;
     }
     this.updateSeesPlayer(state, character);
     if (!this.seesPlayer) {
@@ -99,7 +109,7 @@ export class BasicMelee {
       } 
     } else {
       const [dist, dir] = d(character.position, state.player.position);
-      if (dist <= 2) {
+      if (dist <= 2 && character.dungeonLevel == state.player.dungeonLevel) {
         return new AttackAction(character, state.player);
       } else {
         this.path = [];
@@ -122,6 +132,10 @@ export class BasicMelee {
       }
     }
 
+    if (this.path.length == 0) {
+      return new NoAction();
+    }
+
     const pos = this.path.shift();
     return new MoveAction(character, pos);
   }
@@ -140,6 +154,7 @@ export class MeleeFollower extends BasicMelee {
 
     this.updateSeesPlayer(state, character);
 
+    // Fix this tomorrow
     const passable = (x: number, y: number) => {
       return map.passable(x, y);
     }

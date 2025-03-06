@@ -70,7 +70,7 @@ export abstract class Character extends GameEntity {
     }
 
     const weapon = this.equipment.get("weapon");
-    if ("attack" in weapon) {
+    if (weapon && "attack" in weapon) {
       const [acc, dam] = (weapon as Attackable).attack(state, this);
       accuracy += acc;
       damage += dam;
@@ -90,7 +90,7 @@ export abstract class Character extends GameEntity {
     }
 
     const equippedArmor = this.equipment.get("armor");
-    if ("defend" in equippedArmor) {
+    if (equippedArmor && "defend" in equippedArmor) {
       const [dod, arm] = (equippedArmor as Defendable).defend(state, this);
       dodge += dod;
       armor += arm;

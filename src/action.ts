@@ -5,6 +5,8 @@ import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
 import { Item, ItemGenerator } from "./item";
+import { EnemyGenerator } from "./enemies";
+import { randi } from "./utilities";
 
 export abstract class Action {
   abstract run(state: GameState): void;
@@ -142,6 +144,8 @@ export class DescendAction extends Action {
       generator.generateLevel();
 
       // Code is here temporarily
+
+      // Items
       // 5 Guaranteed
       for (let i = 0; i < 5; i++) {
         const pos = state.openSpot(this.entity.dungeonLevel);
@@ -164,6 +168,12 @@ export class DescendAction extends Action {
         } else {
           run = false;
         }
+      }
+
+      // Enemies
+      // 6 Guaranteed
+      for (let i = 0; i < randi(6, 11); i++) {
+        EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
     }
 
