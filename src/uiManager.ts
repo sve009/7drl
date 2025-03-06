@@ -29,7 +29,8 @@ export class UIManager {
   }
 
   async updateContent() {
-    await this.focusedObject.updateContent();
+    let gameEvent = await this.focusedObject.updateContent();
+    gameEvent.run(this.gameState);
   }
 
   refreshVisual() {

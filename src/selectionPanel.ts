@@ -5,7 +5,7 @@ import { GameEvent } from "./gameEvent";
 
 export abstract class SelectionPanel extends UIComponent {
   ioHandler: IOHandler = new IOHandler;
-  selectionIdx: number;
+  selectionIdx: number = 0
   numberOfRows: number;
 
   async updateContent(): Promise<GameEvent> {
