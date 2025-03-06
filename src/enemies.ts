@@ -1,9 +1,11 @@
+import { RNG } from "rot-js";
 import * as AI from "./ai";
 import { Character } from "./gameObject";
 import type { GameState } from "./gamestate";
 import type { SightMap } from "./fov";
 import type { Action } from "./gameEvent";
 import { Glyph } from "./renderer";
+import { randi } from "./utilities";
 
 export class Enemy extends Character {
   position: { x: number; y: number; };
@@ -18,10 +20,16 @@ export class Enemy extends Character {
     this.position = { x, y };
     this.dungeonLevel = z;
     this.visible = false;
+
     this.enemyType = EnemyTypeFactory.createEnemyType(name);
 
     this.maxHealth = this.enemyType.health;
     this.health = this.maxHealth;
+
+    this.accuracy = this.enemyType.accuracy;
+    this.damage = this.enemyType.damage;
+    this.dodge = this.enemyType.dodge;
+    this.armor = this.enemyType.armor;
   }
 
   async updateState(state: GameState): Promise<Action> {
@@ -38,20 +46,6 @@ export class Enemy extends Character {
       this.enemyType.color, 
       "#000",
     );
-  }
-
-  attack(): [number, number] {
-    return [
-      this.enemyType.accuracy,
-      this.enemyType.damage,
-    ];
-  }
-
-  defend(): [number, number] {
-    return [
-      this.enemyType.dodge,
-      this.enemyType.armor,
-    ];
   }
 }
 
@@ -112,12 +106,54 @@ class EnemyTypeFactory {
           "g",
           "#db4809",
           new AI.BasicMelee(5),
-          8,
+          5,
           75,
-          3,
+          2,
           0,
           0,
         );
+      }
+    }
+  }
+}
+
+const enemyTable = {
+  goblin: 100,
+  smallGoblinGroup: 0,
+  largeGoblinGroup: 0,
+};
+
+export class EnemyGenerator {
+  static createEnemyGroup(state: GameState, z: number) {
+    const key = RNG.getWeightedValue(enemyTable);     
+    switch (key) {
+      case "goblin": {
+        const position = state.openSpot(z);
+        const goblin = new Enemy("goblin", position.x, position.y, z);
+        state.entities.push(goblin);
+        break;
+      }
+      case "smallGoblinGroup": {
+        const position = state.openSpot(z);
+        const leader = new Enemy("goblin", position.x, position.y, z);
+        for (let i = 0; i < randi(2, 4); i++) {
+          const pos = state.openSpot(z);
+          const goblin = new Enemy("goblin", pos.x, pos.y, z);
+          goblin.enemyType.ai = new AI.MeleeFollower(5, leader);
+          state.entities.push(goblin);
+        }
+        break;
+      }
+      case "largeGoblinGroup": {
+        const position = state.openSpot(z);
+        const leader = new Enemy("goblin", position.x, position.y, z);
+        for (let i = 0; i < randi(4, 6); i++) {
+          const pos = state.openSpot(z);
+          const goblin = new Enemy("goblin", pos.x, pos.y, z);
+          goblin.enemyType.ai = new AI.MeleeFollower(5, leader);
+          state.entities.push(goblin);
+        }
+        break;
       }
     }
   }

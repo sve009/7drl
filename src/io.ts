@@ -105,6 +105,7 @@ export class IOHandler {
       }
       case KEYS.VK_COMMA: {
         if (!this.shifting) {
+          this.lastKey = ",";
         } else {
           this.lastKey = "<";
         }

@@ -4,7 +4,9 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
-import { ItemGenerator } from "./item";
+import { Item, ItemGenerator } from "./item";
+import { EnemyGenerator } from "./enemies";
+import { randi } from "./utilities";
 import { Action } from "./gameEvent";
 
 export class NoAction extends Action {
@@ -43,8 +45,8 @@ export class AttackAction extends Action {
   }
 
   run(state: GameState) {
-    const [toHit, dmg] = this.attacker.attack();
-    const [dodge, def] = this.defender.defend();
+    const [toHit, dmg] = this.attacker.attack(state);
+    const [dodge, def] = this.defender.defend(state);
 
     if (RNG.getPercentage() < toHit - dodge) {
       this.defender.health -= (dmg - def);
@@ -59,6 +61,32 @@ export class AttackAction extends Action {
       logMessage(`${this.attacker.name} missed ${this.defender.name}`);
     }
   } 
+}
+
+export class PickUpAction extends Action {
+  character: Character;
+
+  constructor (character: Character) {
+    super();
+    this.character = character;
+  }
+
+  run(state: GameState) {
+    for (let i = 0; i < state.entities.length; i++) {
+      const entity = state.entities[i];
+      if (entity instanceof Item) {
+        const { x, y } = entity.position;
+        if (
+          x == this.character.position.x &&
+          y == this.character.position.y &&
+          entity.dungeonLevel == this.character.dungeonLevel
+        ) {
+          state.entities.splice(i, 1);
+          this.character.items.push(entity);
+        }
+      }
+    }
+  }
 }
 
 export class AscendAction extends Action {
@@ -113,11 +141,12 @@ export class DescendAction extends Action {
       generator.generateLevel();
 
       // Code is here temporarily
+
+      // Items
       // 5 Guaranteed
       for (let i = 0; i < 5; i++) {
         const pos = state.openSpot(this.entity.dungeonLevel);
         const item = ItemGenerator.createItem(this.entity.dungeonLevel); 
-        console.log(pos);
         item.position = pos;
         item.dungeonLevel = this.entity.dungeonLevel;
         state.entities.push(item);
@@ -129,7 +158,6 @@ export class DescendAction extends Action {
         const p = RNG.getPercentage();
         if (p < chance) {
           const pos = state.openSpot(this.entity.dungeonLevel);
-          console.log(pos);
           const item = ItemGenerator.createItem(this.entity.dungeonLevel); 
           item.position = pos;
           item.dungeonLevel = this.entity.dungeonLevel;
@@ -137,6 +165,12 @@ export class DescendAction extends Action {
         } else {
           run = false;
         }
+      }
+
+      // Enemies
+      // 6 Guaranteed
+      for (let i = 0; i < randi(6, 11); i++) {
+        EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
     }
 

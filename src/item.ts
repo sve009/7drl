@@ -6,6 +6,7 @@ import { Glyph } from "./renderer";
 import { randi } from "./utilities";
 import { Enemy } from "./enemies";
 import { RandomProfile } from "./ai";
+import * as Buffs from "./buff";
 
 export interface Throwable {
   range: number;
@@ -25,10 +26,12 @@ export interface Equippable {
 
 export interface Attackable extends Equippable {
   attack(state: GameState, character: Character): [number, number];
+  onHit(state: GameState, hitter: Character, hit: Character): void; 
 }
 
 export interface Defendable extends Equippable {
   defend(state: GameState, character: Character): [number, number];
+  wasHit(state: GameState, hit: Character, hitter: Character): void; 
 }
 
 export abstract class Item extends GameEntity {
@@ -121,15 +124,13 @@ class PotionFactory {
           "#d4ac1c",
           (entitiesHit: GameEntity[]) => {
             for (const entity of entitiesHit) {
-              // To do, handle player being hit
-              if (entity instanceof Enemy) {
-                // To do, debuff timer so it's not permanent
-                entity.enemyType.ai = new RandomProfile();
+              if (entity instanceof Character) {
+                entity.addBuff(new Buffs.ConfusionDebuff(15));
               }
             }
           },
           (character: Character) => {
-            // Implemented when debuffs exist
+            character.addBuff(new Buffs.ConfusionDebuff(20));
           }
         );
         break;
@@ -158,10 +159,14 @@ class PotionFactory {
           2,
           "#d41c71",
           (entitiesHit: GameEntity[]) => {
-            // To do when buffs added
+            for (const entity of entitiesHit) {
+              if (entity instanceof Character) {
+                entity.addBuff(new Buffs.RegenerationBuff(5));
+              }
+            }
           },
           (character: Character) => {
-            // To do when buffs added
+            character.addBuff(new Buffs.RegenerationBuff(25));
           }
         );
         break;
@@ -172,10 +177,14 @@ class PotionFactory {
           1,
           "#07357d",
           (entitiesHit: GameEntity[]) => {
-            // To do when buffs added
+            for (const entity of entitiesHit) {
+              if (entity instanceof Character) {
+                entity.addBuff(new Buffs.InvisibilityBuff(20));
+              }
+            }
           },
           (character: Character) => {
-            // To do when buffs added
+            character.addBuff(new Buffs.InvisibilityBuff(50));
           }
         );
         break;
@@ -204,10 +213,14 @@ class PotionFactory {
           1,
           "#47c949",
           (entitiesHit: GameEntity[]) => {
-            // TODO buffs
+            for (const entity of entitiesHit) {
+              if (entity instanceof Character) {
+                entity.addBuff(new Buffs.MightBuff(20));
+              }
+            }
           },
           (character: Character) => {
-            // TODO buffs
+            character.addBuff(new Buffs.MightBuff(50));
           }
         );
         break;
@@ -260,6 +273,66 @@ class ScrollProfile {
   }
 }
 
+const scrollDropTable = {
+  teleportation: 1,
+  enchantment: 0,
+  mapping: 1,
+  poison: 1,
+  blinking: 0,
+  recall: 0,
+  repulsion: 0,
+  fire: 0,
+};
+class ScrollFactory {
+  static getRandomScroll(): Scroll {
+    const key = RNG.getWeightedValue(scrollDropTable);
+    return ScrollFactory.createScroll(key);
+  }
+
+  static createScroll(name: string): Scroll {
+    let profile;
+    switch (name) {
+      case "teleportation": {
+        profile = new ScrollProfile(
+          "scroll of teleportation",
+          "#9e47c9",
+          (state: GameState, character: Character) => {
+            character.position = state.openSpot(character.dungeonLevel);
+          }
+        );
+        break;
+      }
+      case "mapping": {
+        profile = new ScrollProfile(
+          "scroll of mapping",
+          "#47c5c9",
+          (state: GameState, character: Character) => {
+            const z = character.dungeonLevel;
+            for (const tile of state.maps[z].tiles) {
+              tile.seen = true;
+            }
+          }
+        );
+        break;
+      }
+      case "poison": {
+        profile = new ScrollProfile(
+          "scroll of poison",
+          "#35e82e",
+          (state: GameState, character: Character) => {
+            // TODO
+          }
+        );
+        break;
+      }
+      default: {
+        throw new Error("Unimplemented scroll");
+      }
+    }
+    return new Scroll(profile);
+  }
+}
+
 export abstract class Weapon extends Item implements Attackable, Equippable {
   equip(character: Character) {
     character.equipment.set("weapon", this);
@@ -268,6 +341,8 @@ export abstract class Weapon extends Item implements Attackable, Equippable {
   unequip(character: Character) {
     character.equipment.set("weapon", null);
   }
+
+  onHit(state: GameState, hitter: Character, hit: Character) {}
 
   updateEquipment() {}
 
@@ -300,6 +375,8 @@ export abstract class Armor extends Item implements Defendable, Equippable {
   unequip(character: Character) {
     character.equipment.set("armor", null);
   }
+
+  wasHit(state: GameState, hit: Character, hitter: Character) {}
 
   updateEquipment() {}
 
@@ -503,39 +580,38 @@ class BasicWeaponArmorFactory {
   }
 }
 
+const itemTable = {
+  potion: 40,
+  scroll: 20,
+  gold: 20,
+  equipment: 20,
+};
 export class ItemGenerator {
-  /**
-   * TODO put this in a table Sam you animal.
-   *   -- Only equipment will scale with depth
-   *
-   * Split:
-   * - 40% Potions
-   * - 20% Scrolls
-   * - 20% Gold
-   * - 20% Equipment
-   *   - 60% Basic equipment
-   *   - 40% Special equipment (not yet implemented)
-   */
   static createItem(dungeonLevel: number): Item {
-    let p = RNG.getPercentage();
-    if (p < 40) {
-      return PotionFactory.getRandomPotion();
-    } else if (p < 60) {
-      return new Gold(50);
-    } else if (p < 80) {
-      p = RNG.getPercentage();
-      if (p < 60) {
-        const options = ["dagger", "spear", "sword", "axe", "glaive"];
-        const opt = RNG.getItem(options);
-        return BasicWeaponArmorFactory.createBasicWeapon(opt);
-      } else {
-        const options = ["leather", "chain", "scale", "plate"];
-        const opt = RNG.getItem(options);
-        return BasicWeaponArmorFactory.createBasicArmor(opt);
+    let key = RNG.getWeightedValue(itemTable);
+    switch (key) {
+      case "potion": {
+        return PotionFactory.getRandomPotion();
       }
-    } else {
-      const amount = randi(60, 151);
-      return new Gold(amount);
+      case "scroll": {
+        return ScrollFactory.getRandomScroll();
+      }
+      case "gold": {
+        const amount = randi(60, 151);
+        return new Gold(amount);
+      }
+      case "equipment": {
+        const p = RNG.getPercentage();
+        if (p < 60) {
+          const options = ["dagger", "spear", "sword", "axe", "glaive"];
+          const opt = RNG.getItem(options);
+          return BasicWeaponArmorFactory.createBasicWeapon(opt);
+        } else {
+          const options = ["leather", "chain", "scale", "plate"];
+          const opt = RNG.getItem(options);
+          return BasicWeaponArmorFactory.createBasicArmor(opt);
+        }
+      }
     }
   }
 }

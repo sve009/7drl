@@ -1,8 +1,9 @@
 import { GameEvent } from "./gameEvent";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
-import type { Item, Equippable } from "./item";
+import { Item, Equippable, Attackable, Defendable } from "./item";
 import { Drawable, getRenderer, Layer, Position, Glyph } from "./renderer";
+import { Buff } from "./buff";
 
 abstract class GameObject {}
 
@@ -17,7 +18,9 @@ const equipSlots: EquipSlot[] = [
 export abstract class GameEntity extends GameObject{
   position: { x: number; y: number; };
   dungeonLevel: number;
+
   visible: boolean;
+  invisible: boolean = false;
 
   abstract updateState(state: GameState): Promise<GameEvent>;
   abstract getGlyph(): Glyph;
@@ -43,13 +46,74 @@ export abstract class GameEntity extends GameObject{
 
 export abstract class Character extends GameEntity {
   name: string; 
+
   maxHealth: number;
   health: number;
-  items: Item[];
+
+  accuracy: number;
+  damage: number;
+  dodge: number;
+  armor: number;
+
+  items: Item[] = [];
   equipment: Map<string, Equippable | null> = new Map(equipSlots);
+  buffs: Buff[] = [];
   
-  abstract attack(): [number, number];
-  abstract defend(): [number, number];
+  attack(state: GameState): [number, number] {
+    let accuracy = this.accuracy;
+    let damage = this.damage;
+
+    for (const buff of this.buffs) {
+      const [acc, dam] = buff.attack(state, this);
+      accuracy += acc;
+      damage += damage;
+    }
+
+    const weapon = this.equipment.get("weapon");
+    if (weapon && "attack" in weapon) {
+      const [acc, dam] = (weapon as Attackable).attack(state, this);
+      accuracy += acc;
+      damage += dam;
+    }
+
+    return [accuracy, damage];
+  }
+
+  defend(state: GameState): [number, number] {
+    let dodge = this.dodge;
+    let armor = this.armor;
+
+    for (const buff of this.buffs) {
+      const [dod, arm] = buff.defend(state, this);
+      dodge += dod;
+      armor += arm;
+    }
+
+    const equippedArmor = this.equipment.get("armor");
+    if (equippedArmor && "defend" in equippedArmor) {
+      const [dod, arm] = (equippedArmor as Defendable).defend(state, this);
+      dodge += dod;
+      armor += arm;
+    }
+
+    return [dodge, armor];
+  }
+
+  addBuff(buff: Buff) {
+    this.buffs.push(buff);
+  }
+
+  applyBuffs(state: GameState) {
+    for (let i = 0; i < this.buffs.length; i++) {
+      const buff = this.buffs[i];
+      buff.update(state, this);
+      buff.turnsRemaining -= 1;
+      if (buff.turnsRemaining == 0) {
+        buff.end(this);
+        this.buffs.splice(i, 1);
+      }
+    }
+  }
   
   die(state: GameState): void {}
 }

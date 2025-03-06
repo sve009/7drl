@@ -5,6 +5,7 @@ import { IOHandler } from "./io";
 import type { GameState } from "./gamestate";
 import { Glyph } from "./renderer";
 import { dirMap } from "./constants";
+import { Item } from "./item";
 
 export class Player extends Character {
   visionRadius: number;
@@ -19,8 +20,15 @@ export class Player extends Character {
     this.name = "player";
     this.position = {x, y};
     this.dungeonLevel = 0;
+
     this.maxHealth = 10;
     this.health = 10;
+
+    this.accuracy = 75;
+    this.damage = 3;
+    this.dodge = 25;
+    this.armor = 0;
+
     this.visionRadius = 25;
     this.distanceTraveled = 0;
     this.ioHandler = new IOHandler();
@@ -69,7 +77,6 @@ export class Player extends Character {
         case ">": {
           const dstair = state.maps[this.dungeonLevel].stairDown;
           if (dstair) {
-            console.log('has dstair', dstair);
             if (this.position.x == dstair.x && this.position.y == dstair.y) {
               return new Actions.DescendAction(this);
             }
@@ -82,6 +89,18 @@ export class Player extends Character {
             if (this.position.x == ustair.x && this.position.y == ustair.y) {
               return new Actions.AscendAction(this);
             }
+          }
+          break;
+        }
+        case ",": {
+          const entity = state.entityAt(
+            this.position.x,
+            this.position.y,
+            this.dungeonLevel,
+            false
+          );
+          if (entity instanceof Item) {
+            return new Actions.PickUpAction(this);
           }
           break;
         }
@@ -114,14 +133,6 @@ export class Player extends Character {
 
   getGlyph(): Glyph {
     return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
-  }
-
-  attack(): [number, number] {
-    return [75, 5];
-  }
-
-  defend(): [number, number] {
-    return [40, 0];
   }
 
   die(state: GameState): void {
