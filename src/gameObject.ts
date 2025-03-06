@@ -1,4 +1,4 @@
-import { Action } from "./action";
+import { GameEvent } from "./gameEvent";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
 import type { Item, Equippable } from "./item";
@@ -19,7 +19,7 @@ export abstract class GameEntity extends GameObject{
   dungeonLevel: number;
   visible: boolean;
 
-  abstract updateState(state: GameState): Promise<Action>;
+  abstract updateState(state: GameState): Promise<GameEvent>;
   abstract getGlyph(): Glyph;
 
   checkVisible(sightMap: SightMap) {
@@ -57,14 +57,16 @@ export abstract class Character extends GameEntity {
 export abstract class UIComponent extends GameObject {
   boundaries: Position
   layer: Layer
-  constructor (boundaries: Position) {
+  isTransparent: boolean
+  constructor (boundaries: Position, isTransparent: boolean = false) {
     super();
     this.boundaries = boundaries;
     this.layer = new Layer(1000, boundaries);
     this.layer.lazyDraw = false;
+    this.isTransparent = false;
   }
 
-  async updateContent(): Promise<void> {
+  async updateContent(): Promise<GameEvent> {
     return;
   }
 

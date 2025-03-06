@@ -1,7 +1,6 @@
 import { GameState, GameMap } from "./gamestate";
 import { Player } from "./player";
 import { getRenderer, Position, Renderer } from "./renderer";
-import { Enemy } from "./enemies";
 import { getUIManager, UIManager } from "./uiManager";
 
 export class Game {
@@ -14,6 +13,7 @@ export class Game {
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
     this.uiManager.gameState = this.state;
+    this.uiManager.lookModeComponent.gameState = this.state;
   }
 
   run() {

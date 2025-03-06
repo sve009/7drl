@@ -1,11 +1,10 @@
 import { Character } from "./gameObject";
 import * as Actions from "./action";
+import * as UIGameEvents from "./uiGameEvent"
 import { IOHandler } from "./io";
-import type { GameState, GameMap } from "./gamestate";
-import type { SightMap } from "./fov";
+import type { GameState } from "./gamestate";
 import { Glyph } from "./renderer";
 import { dirMap } from "./constants";
-import { getUIManager } from "./uiManager";
 
 export class Player extends Character {
   visionRadius: number;
@@ -65,8 +64,7 @@ export class Player extends Character {
           break;
         }
         case "i": {
-          getUIManager().openInventory();
-          return new Actions.NoAction();
+          return new UIGameEvents.OpenInventory();
         }
         case ">": {
           const dstair = state.maps[this.dungeonLevel].stairDown;
@@ -86,6 +84,9 @@ export class Player extends Character {
             }
           }
           break;
+        }
+        case ";": {
+          return new UIGameEvents.LookModeActivate();
         }
         default: {
           return new Actions.NoAction();

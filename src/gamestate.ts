@@ -38,6 +38,9 @@ export class GameState {
     for (let entity of this.entities) {
       let action = await entity.updateState(this);
       action.run(this);
+      if (action.isUIEvent) {
+        break
+      }
     }
 
     // Update fov
@@ -88,6 +91,11 @@ export class GameState {
     }
 
     return pos;
+  }
+
+  isWithinMapBoundaries(fx: number, fy: number): boolean {
+    return 0 <= fy && fy < this.currentMap.height &&
+      0 <= fx && fx < this.currentMap.width;
   }
 }
 

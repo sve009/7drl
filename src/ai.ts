@@ -1,8 +1,9 @@
 import { RNG, FOV, Path } from "rot-js";
 import { dirMap } from "./constants";
 import type { GameState } from "./gamestate";
-import { Action, NoAction, MoveAction, AttackAction } from "./action";
+import { NoAction, MoveAction, AttackAction } from "./action";
 import type { Character } from "./gameObject";
+import { Action } from "./gameEvent";
 
 export abstract class AIProfile {
   abstract update(state: GameState, character: Character): Action;

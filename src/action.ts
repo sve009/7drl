@@ -5,10 +5,7 @@ import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
 import { ItemGenerator } from "./item";
-
-export abstract class Action {
-  abstract run(state: GameState): void;
-}
+import { Action } from "./gameEvent";
 
 export class NoAction extends Action {
   run(state: GameState) {}
