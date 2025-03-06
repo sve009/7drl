@@ -8,6 +8,8 @@ export class InventoryPanel extends SelectionPanel {
 
   constructor (boundary: Position) {
     super(boundary);
-    this.layer.bg = "#9c2f6c";
+    this.layer.bg = "#000";
+    this.title = "Inventory";
+    this.showBorder = true;
   }
 }

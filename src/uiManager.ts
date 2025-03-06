@@ -7,13 +7,13 @@ import { GameState } from "./gamestate";
 import { LookModeCursor } from "./lookModeCursor";
 
 export class UIManager {
-  logPanel: LogPanel
-  playerPanel: PlayerPanel
-  inventoryPanel: InventoryPanel
-  lookModeComponent: LookModeCursor
+  logPanel: LogPanel;
+  playerPanel: PlayerPanel;
+  inventoryPanel: InventoryPanel;
+  lookModeComponent: LookModeCursor;
   gameState: GameState | null = null;
 
-  focusObjectQueue: Array<UIComponent> = new Array
+  focusObjectQueue: Array<UIComponent> = new Array;
   get focused (): boolean {
     return this.focusObjectQueue.length > 0; 
   }
