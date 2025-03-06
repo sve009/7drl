@@ -66,12 +66,20 @@ export class GameState {
     this.terrainLayer.refresh = true;
   }
 
-  entityAt(x: number, y: number, z: number): GameEntity | null {
+  entityAt(
+    x: number, 
+    y: number, 
+    z: number, 
+    includePlayer: boolean = true
+  ): GameEntity | null {
     for (const entity of this.entities) {
       if (entity.position.x == x && 
           entity.position.y == y &&
           entity.dungeonLevel == z
          ) {
+        if (!includePlayer && entity instanceof Player) {
+          continue;
+        }
         return entity;
       }
     }

@@ -6,6 +6,7 @@ import type { SightMap } from "./fov";
 import { Glyph } from "./renderer";
 import { dirMap } from "./constants";
 import { getUIManager } from "./uiManager";
+import { Item } from "./item";
 
 export class Player extends Character {
   visionRadius: number;
@@ -78,7 +79,6 @@ export class Player extends Character {
         case ">": {
           const dstair = state.maps[this.dungeonLevel].stairDown;
           if (dstair) {
-            console.log('has dstair', dstair);
             if (this.position.x == dstair.x && this.position.y == dstair.y) {
               return new Actions.DescendAction(this);
             }
@@ -91,6 +91,18 @@ export class Player extends Character {
             if (this.position.x == ustair.x && this.position.y == ustair.y) {
               return new Actions.AscendAction(this);
             }
+          }
+          break;
+        }
+        case ",": {
+          const entity = state.entityAt(
+            this.position.x,
+            this.position.y,
+            this.dungeonLevel,
+            false
+          );
+          if (entity instanceof Item) {
+            return new Actions.PickUpAction(this);
           }
           break;
         }

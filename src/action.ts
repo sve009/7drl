@@ -4,7 +4,7 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
-import { ItemGenerator } from "./item";
+import { Item, ItemGenerator } from "./item";
 
 export abstract class Action {
   abstract run(state: GameState): void;
@@ -64,6 +64,32 @@ export class AttackAction extends Action {
   } 
 }
 
+export class PickUpAction extends Action {
+  character: Character;
+
+  constructor (character: Character) {
+    super();
+    this.character = character;
+  }
+
+  run(state: GameState) {
+    for (let i = 0; i < state.entities.length; i++) {
+      const entity = state.entities[i];
+      if (entity instanceof Item) {
+        const { x, y } = entity.position;
+        if (
+          x == this.character.position.x &&
+          y == this.character.position.y &&
+          entity.dungeonLevel == this.character.dungeonLevel
+        ) {
+          state.entities.splice(i, 1);
+          this.character.items.push(entity);
+        }
+      }
+    }
+  }
+}
+
 export class AscendAction extends Action {
   entity: GameEntity;
   onStair: boolean;
@@ -120,7 +146,6 @@ export class DescendAction extends Action {
       for (let i = 0; i < 5; i++) {
         const pos = state.openSpot(this.entity.dungeonLevel);
         const item = ItemGenerator.createItem(this.entity.dungeonLevel); 
-        console.log(pos);
         item.position = pos;
         item.dungeonLevel = this.entity.dungeonLevel;
         state.entities.push(item);
@@ -132,7 +157,6 @@ export class DescendAction extends Action {
         const p = RNG.getPercentage();
         if (p < chance) {
           const pos = state.openSpot(this.entity.dungeonLevel);
-          console.log(pos);
           const item = ItemGenerator.createItem(this.entity.dungeonLevel); 
           item.position = pos;
           item.dungeonLevel = this.entity.dungeonLevel;

@@ -55,9 +55,9 @@ export abstract class Character extends GameEntity {
   dodge: number;
   armor: number;
 
-  items: Item[];
+  items: Item[] = [];
   equipment: Map<string, Equippable | null> = new Map(equipSlots);
-  buffs: Buff[];
+  buffs: Buff[] = [];
   
   attack(state: GameState): [number, number] {
     let accuracy = this.accuracy;
