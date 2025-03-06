@@ -273,6 +273,66 @@ class ScrollProfile {
   }
 }
 
+const scrollDropTable = {
+  teleportation: 1,
+  enchantment: 0,
+  mapping: 1,
+  poison: 1,
+  blinking: 0,
+  recall: 0,
+  repulsion: 0,
+  fire: 0,
+};
+class ScrollFactory {
+  static getRandomScroll(): Scroll {
+    const key = RNG.getWeightedValue(scrollDropTable);
+    return ScrollFactory.createScroll(key);
+  }
+
+  static createScroll(name: string): Scroll {
+    let profile;
+    switch (name) {
+      case "teleportation": {
+        profile = new ScrollProfile(
+          "scroll of teleportation",
+          "#9e47c9",
+          (state: GameState, character: Character) => {
+            character.position = state.openSpot(character.dungeonLevel);
+          }
+        );
+        break;
+      }
+      case "mapping": {
+        profile = new ScrollProfile(
+          "scroll of mapping",
+          "#47c5c9",
+          (state: GameState, character: Character) => {
+            const z = character.dungeonLevel;
+            for (const tile of state.maps[z].tiles) {
+              tile.seen = true;
+            }
+          }
+        );
+        break;
+      }
+      case "poison": {
+        profile = new ScrollProfile(
+          "scroll of poison",
+          "#35e82e",
+          (state: GameState, character: Character) => {
+            // TODO
+          }
+        );
+        break;
+      }
+      default: {
+        throw new Error("Unimplemented scroll");
+      }
+    }
+    return new Scroll(profile);
+  }
+}
+
 export abstract class Weapon extends Item implements Attackable, Equippable {
   equip(character: Character) {
     character.equipment.set("weapon", this);
@@ -520,39 +580,38 @@ class BasicWeaponArmorFactory {
   }
 }
 
+const itemTable = {
+  potion: 40,
+  scroll: 20,
+  gold: 20,
+  equipment: 20,
+};
 export class ItemGenerator {
-  /**
-   * TODO put this in a table Sam you animal.
-   *   -- Only equipment will scale with depth
-   *
-   * Split:
-   * - 40% Potions
-   * - 20% Scrolls
-   * - 20% Gold
-   * - 20% Equipment
-   *   - 60% Basic equipment
-   *   - 40% Special equipment (not yet implemented)
-   */
   static createItem(dungeonLevel: number): Item {
-    let p = RNG.getPercentage();
-    if (p < 40) {
-      return PotionFactory.getRandomPotion();
-    } else if (p < 60) {
-      return new Gold(50);
-    } else if (p < 80) {
-      p = RNG.getPercentage();
-      if (p < 60) {
-        const options = ["dagger", "spear", "sword", "axe", "glaive"];
-        const opt = RNG.getItem(options);
-        return BasicWeaponArmorFactory.createBasicWeapon(opt);
-      } else {
-        const options = ["leather", "chain", "scale", "plate"];
-        const opt = RNG.getItem(options);
-        return BasicWeaponArmorFactory.createBasicArmor(opt);
+    let key = RNG.getWeightedValue(itemTable);
+    switch (key) {
+      case "potion": {
+        return PotionFactory.getRandomPotion();
       }
-    } else {
-      const amount = randi(60, 151);
-      return new Gold(amount);
+      case "scroll": {
+        return ScrollFactory.getRandomScroll();
+      }
+      case "gold": {
+        const amount = randi(60, 151);
+        return new Gold(amount);
+      }
+      case "equipment": {
+        const p = RNG.getPercentage();
+        if (p < 60) {
+          const options = ["dagger", "spear", "sword", "axe", "glaive"];
+          const opt = RNG.getItem(options);
+          return BasicWeaponArmorFactory.createBasicWeapon(opt);
+        } else {
+          const options = ["leather", "chain", "scale", "plate"];
+          const opt = RNG.getItem(options);
+          return BasicWeaponArmorFactory.createBasicArmor(opt);
+        }
+      }
     }
   }
 }
