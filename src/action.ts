@@ -46,8 +46,8 @@ export class AttackAction extends Action {
   }
 
   run(state: GameState) {
-    const [toHit, dmg] = this.attacker.attack();
-    const [dodge, def] = this.defender.defend();
+    const [toHit, dmg] = this.attacker.attack(state);
+    const [dodge, def] = this.defender.defend(state);
 
     if (RNG.getPercentage() < toHit - dodge) {
       this.defender.health -= (dmg - def);

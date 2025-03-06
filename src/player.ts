@@ -20,8 +20,15 @@ export class Player extends Character {
     this.name = "player";
     this.position = {x, y};
     this.dungeonLevel = 0;
+
     this.maxHealth = 10;
     this.health = 10;
+
+    this.accuracy = 50;
+    this.damage = 3;
+    this.dodge = 25;
+    this.armor = 0;
+
     this.visionRadius = 25;
     this.distanceTraveled = 0;
     this.ioHandler = new IOHandler();
@@ -113,14 +120,6 @@ export class Player extends Character {
 
   getGlyph(): Glyph {
     return new Glyph(this.position.x, this.position.y, "@", "#4287f5", "#000")
-  }
-
-  attack(): [number, number] {
-    return [75, 5];
-  }
-
-  defend(): [number, number] {
-    return [40, 0];
   }
 
   die(state: GameState): void {

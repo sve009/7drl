@@ -5,10 +5,12 @@ import { Action, NoAction, MoveAction, AttackAction } from "./action";
 import type { Character } from "./gameObject";
 
 export abstract class AIProfile {
+  seesPlayer: boolean;
   abstract update(state: GameState, character: Character): Action;
 }
 
 export class RandomProfile {
+  seesPlayer: boolean = false;
   update(state: GameState, character: Character): Action {
     let found = false;
     let pos;

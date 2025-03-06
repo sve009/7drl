@@ -18,10 +18,16 @@ export class Enemy extends Character {
     this.position = { x, y };
     this.dungeonLevel = z;
     this.visible = false;
+
     this.enemyType = EnemyTypeFactory.createEnemyType(name);
 
     this.maxHealth = this.enemyType.health;
     this.health = this.maxHealth;
+
+    this.accuracy = this.enemyType.accuracy;
+    this.damage = this.enemyType.damage;
+    this.dodge = this.enemyType.dodge;
+    this.damage = this.enemyType.damage;
   }
 
   async updateState(state: GameState): Promise<Action> {
@@ -38,20 +44,6 @@ export class Enemy extends Character {
       this.enemyType.color, 
       "#000",
     );
-  }
-
-  attack(): [number, number] {
-    return [
-      this.enemyType.accuracy,
-      this.enemyType.damage,
-    ];
-  }
-
-  defend(): [number, number] {
-    return [
-      this.enemyType.dodge,
-      this.enemyType.armor,
-    ];
   }
 }
 
