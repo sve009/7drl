@@ -83,6 +83,13 @@ export class MapGenerator {
 
       for (let y0 = 2; y0 < this.height-2; y0++) {
         for (let x0 = 2; x0 < this.width-2; x0++) {
+          // If it's totally disconnected continue
+          if (
+            this.mapNumberAdjacent(joinIndex(x0, y0, this.width), true) == 0
+          ) {
+            continue;
+          }
+
           // 1/3 chance to erode map
           if (!randi(0, 3) && !this.map.passable(x0, y0)) {
             continue;
