@@ -5,8 +5,8 @@ import { Item } from "./item";
 export class InventoryPanel extends SelectionPanel {
   items?: Item[];
 
-  constructor (boundary: Position) {
-    super(boundary);
+  constructor (boundary: Position, layerIdx: number) {
+    super(boundary, layerIdx);
     this.layer.bg = "#000";
     this.title = "Inventory";
     this.showBorder = true;
