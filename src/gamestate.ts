@@ -118,7 +118,7 @@ export class GameMap {
   stairDown?: { x: number; y: number; };
   stairUp?: { x: number; y: number; };
   
-  constructor(boundaries: Position, isFullyVisible: boolean = false) {
+  constructor(boundaries: Position) {
     this.width = boundaries.getWidth();
     this.height = boundaries.getHeight();
     this.tiles = [];
@@ -127,7 +127,6 @@ export class GameMap {
       this.tiles.push(tile);
     }
     this.layer = new Layer(0, boundaries);
-    this.isFullyVisible = isFullyVisible;
   }
 
   loadTown(): void {
@@ -166,9 +165,6 @@ export class GameMap {
   }
 
   blocksSight(x: number, y: number): boolean {
-    if (this.isFullyVisible) {
-      return false;
-    }
     const index = x + this.width*y;
     if (index < 0 || index > this.width*this.height) {
       return false;

@@ -19,7 +19,7 @@ export class Game {
   run() {
     this.state.running = true;
 
-    const firstMap = new GameMap(this.state.boundaries, true);
+    const firstMap = new GameMap(this.state.boundaries);
     firstMap.loadTown();
     this.state.maps.push(firstMap);
 

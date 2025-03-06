@@ -8,12 +8,12 @@ import { dirMap } from "./constants";
 import { Item } from "./item";
 
 export class Player extends Character {
-  visionRadius: number;
   ioHandler: IOHandler;
   maxHealth: number;
   health: number;
   distanceTraveled: number;
   visible: boolean = true;
+  private visionRadiusByLevel: Array<number> = [200, 25, 25];
 
   constructor(x: number, y: number) {
     super();
@@ -29,7 +29,6 @@ export class Player extends Character {
     this.dodge = 25;
     this.armor = 0;
 
-    this.visionRadius = 25;
     this.distanceTraveled = 0;
     this.ioHandler = new IOHandler();
   }
@@ -129,6 +128,13 @@ export class Player extends Character {
         }
       }
     }
+  }
+
+  visionRadius(): number {
+    if (this.dungeonLevel >= this.visionRadiusByLevel.length) {
+      return 25;
+    }
+    return this.visionRadiusByLevel[this.dungeonLevel];
   }
 
   getGlyph(): Glyph {

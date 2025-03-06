@@ -31,12 +31,6 @@ export class SightMap {
 
   update(player: Player): void {
     const map = this.maps[player.dungeonLevel];
-    if (map.isFullyVisible) {
-      for (let i = 0; i < this.width*this.height; i++) {
-        this.visible[i] = true;
-      }
-      return;
-    }
     const lightPasses = (x: number, y:number) => {
       return !map.blocksSight(x, y);
     };
@@ -47,7 +41,7 @@ export class SightMap {
     fov.compute(
       player.position.x, 
       player.position.y,
-      player.visionRadius,
+      player.visionRadius(),
       (x: number, y: number, _r: number, _v: number) => {
         this.visible[x + this.width*y] = true;
       }
