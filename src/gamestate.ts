@@ -70,7 +70,6 @@ export class GameState {
   fullRefresh () {
     this.fullRefreshVisual = true;
     this.terrainLayer.refresh = true;
-    // this.entityLayer.refresh = true;
   }
 
   entityAt(
