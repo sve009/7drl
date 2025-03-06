@@ -28,6 +28,7 @@ export class Game {
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
     this.uiManager.playerPanel.player = this.state.player;
+    this.uiManager.inventoryPanel.items = this.state.player.items;
 
     this.state.sightMap.update(this.state.player);
     this.state.refreshVisual();
