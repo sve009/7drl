@@ -6,12 +6,14 @@ import type { GameState } from "./gamestate";
 import { Glyph } from "./renderer";
 import { dirMap } from "./constants";
 import { Item } from "./item";
+import { Inventory } from "./inventory";
 
 export class Player extends Character {
   ioHandler: IOHandler;
   maxHealth: number;
   health: number;
   distanceTraveled: number;
+
   visible: boolean = true;
   private visionRadiusByLevel: Array<number> = [200, 25, 25];
 
@@ -20,6 +22,8 @@ export class Player extends Character {
     this.name = "player";
     this.position = {x, y};
     this.dungeonLevel = 0;
+
+    this.items = new Inventory();
 
     this.maxHealth = 10;
     this.health = 10;

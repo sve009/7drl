@@ -1,9 +1,10 @@
 import { GameEvent } from "./gameEvent";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
-import { Item, Equippable, Attackable, Defendable } from "./item";
+import { Equippable, Attackable, Defendable } from "./item";
 import { Drawable, getRenderer, Layer, Position, TextDrawable, Glyph } from "./renderer";
 import { Buff } from "./buff";
+import { Inventory } from "./inventory";
 
 abstract class GameObject {}
 
@@ -55,7 +56,7 @@ export abstract class Character extends GameEntity {
   dodge: number;
   armor: number;
 
-  items: Item[] = [];
+  items: Inventory;
   equipment: Map<string, Equippable | null> = new Map(equipSlots);
   buffs: Buff[] = [];
   

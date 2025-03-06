@@ -49,6 +49,7 @@ export class Potion extends Item implements Throwable, Applyable {
 
   constructor(profile: PotionProfile) {
     super();
+    this.name = profile.name;
     this.range = 20;
     this.radius = profile.radius;
     this.profile = profile;
@@ -238,6 +239,7 @@ export class Scroll extends Item implements Applyable {
 
   constructor(profile: ScrollProfile) {
     super();
+    this.name = profile.name;
     this.profile = profile;
   }
 
@@ -406,7 +408,7 @@ export abstract class Ring extends Item implements Equippable {
   abstract updateEquipment(): void;
 }
 
-class Gold extends Item {
+export class Gold extends Item {
   amount: number;
 
   constructor(amount: number) {

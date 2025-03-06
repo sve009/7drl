@@ -1,7 +1,7 @@
+import { getUIManager, UIManager } from "./uiManager";
 import { GameState, GameMap } from "./gamestate";
 import { Player } from "./player";
 import { getRenderer, Position, Renderer } from "./renderer";
-import { getUIManager, UIManager } from "./uiManager";
 
 export class Game {
   state: GameState;

@@ -82,7 +82,7 @@ export class PickUpAction extends Action {
           entity.dungeonLevel == this.character.dungeonLevel
         ) {
           state.entities.splice(i, 1);
-          this.character.items.push(entity);
+          this.character.items.addItem(entity);
         }
       }
     }
