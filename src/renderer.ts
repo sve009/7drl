@@ -2,7 +2,7 @@ import { Display } from "rot-js";
 
 export class Renderer {
   display: Display;
-  renderSize: Position = new Position(0, 0, 120, 44);
+  renderSize: Position = new Position(0, 0, 100, 50);
   fontSize: number = 19;
   layers: Array<Layer> = new Array;
 

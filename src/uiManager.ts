@@ -22,8 +22,8 @@ export class UIManager {
   }
 
   constructor() {
-    this.logPanel = new LogPanel(new Position(0, 40, 80, 4));
-    this.playerPanel = new PlayerPanel(new Position(80, 10, 40, 10));
+    this.logPanel = new LogPanel(new Position(0, 40, 100, 10));
+    this.playerPanel = new PlayerPanel(new Position(80, 0, 20, 10));
     this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30));
     this.lookModeComponent = new LookModeCursor;
   }
@@ -59,7 +59,7 @@ export class UIManager {
 }
 
 
-let uiManager = new UIManager;
+let uiManager = new UIManager();
 export function getUIManager() {
   return uiManager;
 }
