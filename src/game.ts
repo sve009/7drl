@@ -12,7 +12,7 @@ export class Game {
     this.state = new GameState(new Position(0, 0, 80, 40));
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
-    this.uiManager.gameState = this.state;
+    this.uiManager.addGameState(this.state);
   }
 
   run() {

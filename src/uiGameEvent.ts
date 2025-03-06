@@ -28,8 +28,8 @@ export class LookModeActivate extends UIGameEvent {
     this.initPosition = position;
   }
 
-  run(state: GameState): void {
-    getUIManager().activateLookMode(state, this.initPosition);
+  run(_state: GameState): void {
+    getUIManager().activateLookMode(this.initPosition);
   }
 }
 

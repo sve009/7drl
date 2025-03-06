@@ -5,6 +5,7 @@ import { PlayerPanel } from "./playerPanel";
 import { InventoryPanel } from "./inventoryPanel";
 import { GameState } from "./gamestate";
 import { LookModeCursor } from "./lookModeCursor";
+import { DescriptorPanel } from "./descriptorPanel";
 
 export class UIManager {
   logPanel: LogPanel;
@@ -12,6 +13,7 @@ export class UIManager {
   inventoryPanel: InventoryPanel;
   lookModeCursor: LookModeCursor;
   gameState: GameState | null = null;
+  descriptorPanel: DescriptorPanel;
 
   focusObjectQueue: Array<UIComponent> = new Array;
   get focused (): boolean {
@@ -26,6 +28,7 @@ export class UIManager {
     this.playerPanel = new PlayerPanel(new Position(80, 10, 40, 10), 3);
     this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30), 11);
     this.lookModeCursor = new LookModeCursor(10);
+    this.descriptorPanel = new DescriptorPanel(new Position(80, 20, 40, 10), 3, this.lookModeCursor);
   }
 
   async updateContent() {
@@ -33,9 +36,16 @@ export class UIManager {
     gameEvent.run(this.gameState);
   }
 
+  addGameState (gameState: GameState): void {
+    this.gameState = gameState;
+    this.descriptorPanel.gameState = gameState;
+    this.lookModeCursor.gameState = gameState;
+  }
+
   refreshVisual() {
     this.logPanel.refreshVisuals();
     this.playerPanel.refreshVisuals();
+    this.descriptorPanel.refreshVisuals();
     if (this.focused) {
       this.focusedObject.refreshVisuals();
     }
@@ -45,9 +55,8 @@ export class UIManager {
     this.focusObjectQueue.push(this.inventoryPanel);
   }
 
-  activateLookMode(state: GameState, initPosition: { x: number, y: number }) {
+  activateLookMode(initPosition: { x: number, y: number }) {
     this.lookModeCursor.updatePosition(initPosition);
-    this.lookModeCursor.gameState = state;
     this.focusObjectQueue.push(this.lookModeCursor);
   }
 
