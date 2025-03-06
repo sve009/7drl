@@ -3,15 +3,16 @@ import { GameEvent } from "./gameEvent";
 import { UIComponent } from "./gameObject";
 import { GameState } from "./gamestate";
 import { IOHandler } from "./io";
-import { Position } from "./renderer";
+import { Glyph, Position } from "./renderer";
 import * as UIGameEvents from "./uiGameEvent"
 
 export class LookModeCursor extends UIComponent {
     ioHandler: IOHandler = new IOHandler;
     gameState: GameState | null = null
 
-    constructor () {
-      super(new Position(0, 0, 1, 1), true)
+    constructor (layerIdx: number) {
+      super(new Position(0, 0, 1, 1), layerIdx, true)
+      this.layer.lazyDraw = false;
     }
 
     updatePosition (pos: { x: number, y: number }): void {
@@ -57,8 +58,6 @@ export class LookModeCursor extends UIComponent {
         }
         case "escape":
           return new UIGameEvents.ExitUI;
-        default:
-          return;
       }
 
       if (dir != -1) {
@@ -76,6 +75,8 @@ export class LookModeCursor extends UIComponent {
     }
 
     refreshVisuals(): void {
-        
+        super.refreshVisuals();
+        this.layer.addDrawable(new Glyph(this.boundaries.startX, this.boundaries.startY, null, null, "#fff"))
+        this.gameState.fullRefresh();
     }
 }

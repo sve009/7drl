@@ -22,8 +22,6 @@ export abstract class SelectionPanel extends UIComponent {
         return new UIGameEvents.Select;
       case "escape":
         return new UIGameEvents.ExitUI;
-      default:
-        return;
     }
     idx = Math.min(Math.max(0, idx), this.numberOfRows - 1)
 

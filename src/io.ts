@@ -111,6 +111,18 @@ export class IOHandler {
         }
         break;
       }
+      case KEYS.VK_SEMICOLON: {
+        if (!this.shifting) {
+          this.lastKey = ";";
+        }
+        break;
+      }
+      case 186: {
+        if (!this.shifting) {
+          this.lastKey = ";";
+        }
+        break;
+      }
     }
 
     if (this.keyPressCallback && this.lastKey) {

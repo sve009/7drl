@@ -13,7 +13,6 @@ export class Game {
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
     this.uiManager.gameState = this.state;
-    this.uiManager.lookModeComponent.gameState = this.state;
   }
 
   run() {
@@ -42,8 +41,9 @@ export class Game {
 
   refreshVisuals () {
       // Update the text/glyphs and add to layers
-      if (!this.uiManager.focused) {
+      if (!this.uiManager.focused || this.state.fullRefreshVisual) {
         this.state.refreshVisual();
+        this.state.fullRefreshVisual = false;
       }
       this.uiManager.refreshVisual();
   }

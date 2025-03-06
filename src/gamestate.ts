@@ -16,6 +16,7 @@ export class GameState {
   entities: GameEntity[];
   entityLayer: Layer;
   terrainLayer: Layer;
+  fullRefreshVisual: boolean
 
   get currentMap (): GameMap {
     return this.maps[this.player.dungeonLevel];
@@ -31,6 +32,7 @@ export class GameState {
     this.entityLayer = new Layer(1, boundaries);
     this.terrainLayer = new Layer(0, boundaries);
     this.terrainLayer.bg = "#000";
+    this.fullRefreshVisual = false;
   }
 
   async update () {
@@ -66,7 +68,9 @@ export class GameState {
   }
 
   fullRefresh () {
+    this.fullRefreshVisual = true;
     this.terrainLayer.refresh = true;
+    this.entityLayer.refresh = true;
   }
 
   entityAt(
