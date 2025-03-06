@@ -38,10 +38,10 @@ export class Renderer {
 }
 
 export class Position {
-  startX: number
-  startY: number
-  width: number
-  height: number
+  startX: number;
+  startY: number;
+  width: number;
+  height: number;
 
   constructor (x: number, y: number, width: number, height: number) {
     this.startX = x;

@@ -2,7 +2,7 @@ import { GameEvent } from "./gameEvent";
 import { SightMap } from "./fov";
 import { GameMap, GameState } from "./gamestate";
 import { Item, Equippable, Attackable, Defendable } from "./item";
-import { Drawable, getRenderer, Layer, Position, Glyph } from "./renderer";
+import { Drawable, getRenderer, Layer, Position, TextDrawable, Glyph } from "./renderer";
 import { Buff } from "./buff";
 
 abstract class GameObject {}
@@ -119,22 +119,77 @@ export abstract class Character extends GameEntity {
 }
 
 export abstract class UIComponent extends GameObject {
-  boundaries: Position
-  layer: Layer
-  isTransparent: boolean
+  boundaries: Position;
+  layer: Layer;
+  isTransparent: boolean;
+
+  title: string | null;
+  showBorder: boolean;
+
   constructor (boundaries: Position, layerIdx: number = 0, isTransparent: boolean = false) {
     super();
     this.boundaries = boundaries;
     this.layer = new Layer(layerIdx, boundaries);
     this.layer.lazyDraw = false;
     this.isTransparent = isTransparent;
+    this.showBorder = false;
   }
 
   async updateContent(): Promise<GameEvent> {
     return;
   }
 
+  drawBorder(): void {
+    const titleLength = this.title ? this.title.length : 0;
+    const bottomLineLength = this.boundaries.width - 2;
+    const topLineLength = bottomLineLength - titleLength - 1;
+
+    // Start line
+    this.layer.addDrawable(
+      new TextDrawable(
+        this.boundaries.getStartX(),
+        this.boundaries.getStartY(),
+        `\u{250C}\u{2500}${this.title ? this.title : ""}` 
+        + "\u{2500}".repeat(topLineLength)
+        + "\u{2510}"
+      )
+    );
+
+    // End line
+    this.layer.addDrawable(
+      new TextDrawable(
+        this.boundaries.getStartX(),
+        this.boundaries.getEndY(),
+        "\u{2514}" 
+        + "\u{2500}".repeat(bottomLineLength)
+        + "\u{2518}"
+      )
+    );
+
+    // Middle lines
+    for (let i = 1; i < this.boundaries.height - 1; i++) {
+      const y = this.boundaries.getStartY() + i;
+      this.layer.addDrawable(
+        new TextDrawable(
+          this.boundaries.getStartX(),
+          y,
+          "\u{2502}"
+        )
+      );
+      this.layer.addDrawable(
+        new TextDrawable(
+          this.boundaries.getEndX(),
+          y,
+          "\u{2502}"
+        )
+      );
+    }
+  }
+
   refreshVisuals() {
+    if (this.showBorder) {
+      this.drawBorder();
+    }
     getRenderer().addLayer(this.layer);
   }
 }
