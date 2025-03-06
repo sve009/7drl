@@ -13,7 +13,6 @@ export class Game {
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
     this.uiManager.gameState = this.state;
-    this.uiManager.lookModeComponent.gameState = this.state;
   }
 
   run() {
