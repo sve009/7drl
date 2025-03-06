@@ -4,8 +4,8 @@ import { Position, TextDrawable } from "./renderer";
 export class LogPanel extends UIComponent {
   logs: Array<string> = []
 
-  constructor (boundaries: Position) {
-    super(boundaries);
+  constructor (boundaries: Position, layerIdx: number) {
+    super(boundaries, layerIdx);
     this.layer.bg = "#2b3647";
   }
 

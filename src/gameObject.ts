@@ -122,12 +122,12 @@ export abstract class UIComponent extends GameObject {
   boundaries: Position
   layer: Layer
   isTransparent: boolean
-  constructor (boundaries: Position, isTransparent: boolean = false) {
+  constructor (boundaries: Position, layerIdx: number = 0, isTransparent: boolean = false) {
     super();
     this.boundaries = boundaries;
-    this.layer = new Layer(1000, boundaries);
+    this.layer = new Layer(layerIdx, boundaries);
     this.layer.lazyDraw = false;
-    this.isTransparent = false;
+    this.isTransparent = isTransparent;
   }
 
   async updateContent(): Promise<GameEvent> {

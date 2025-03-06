@@ -6,8 +6,8 @@ import { Position, TextDrawable } from "./renderer"
 export class PlayerPanel extends UIComponent {
   player: Player
 
-  constructor (boundary: Position) {
-    super(boundary);
+  constructor (boundary: Position, layerIdx: number) {
+    super(boundary, layerIdx);
     this.layer.bg = "#9c2f6c";
   }
 

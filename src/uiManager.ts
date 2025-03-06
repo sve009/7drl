@@ -22,10 +22,10 @@ export class UIManager {
   }
 
   constructor() {
-    this.logPanel = new LogPanel(new Position(0, 40, 80, 4));
-    this.playerPanel = new PlayerPanel(new Position(80, 10, 40, 10));
-    this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30));
-    this.lookModeCursor = new LookModeCursor;
+    this.logPanel = new LogPanel(new Position(0, 40, 80, 4), 3);
+    this.playerPanel = new PlayerPanel(new Position(80, 10, 40, 10), 3);
+    this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30), 11);
+    this.lookModeCursor = new LookModeCursor(10);
   }
 
   async updateContent() {
@@ -49,6 +49,12 @@ export class UIManager {
     this.lookModeCursor.updatePosition(initPosition);
     this.lookModeCursor.gameState = state;
     this.focusObjectQueue.push(this.lookModeCursor);
+  }
+
+  addUIToFront (component: UIComponent) {
+    const newLayerIdx = Math.max(...this.focusObjectQueue.map((comp: UIComponent) => comp.layer.index));
+    component.layer.index = newLayerIdx + 1;
+    this.focusObjectQueue.push(component);
   }
 
   exitCurrentFocus (): void {

@@ -10,8 +10,8 @@ export class LookModeCursor extends UIComponent {
     ioHandler: IOHandler = new IOHandler;
     gameState: GameState | null = null
 
-    constructor () {
-      super(new Position(0, 0, 1, 1), true)
+    constructor (layerIdx: number) {
+      super(new Position(0, 0, 1, 1), layerIdx, true)
     }
 
     updatePosition (pos: { x: number, y: number }): void {
@@ -57,8 +57,6 @@ export class LookModeCursor extends UIComponent {
         }
         case "escape":
           return new UIGameEvents.ExitUI;
-        default:
-          return;
       }
 
       if (dir != -1) {
