@@ -4,7 +4,7 @@ import { UIComponent } from "./gameObject";
 import { PlayerPanel } from "./playerPanel";
 import { InventoryPanel } from "./inventoryPanel";
 import { GameState } from "./gamestate";
-import { LookModeCursor } from "./lookMode";
+import { LookModeCursor } from "./lookModeCursor";
 
 export class UIManager {
   logPanel: LogPanel
@@ -44,7 +44,8 @@ export class UIManager {
     this.focusObjectQueue.push(this.inventoryPanel);
   }
 
-  activateLookMode(state: GameState) {
+  activateLookMode(state: GameState, initPosition: { x: number, y: number }) {
+    this.lookModeComponent.updatePosition(initPosition);
     this.focusObjectQueue.push(this.lookModeComponent);
   }
 

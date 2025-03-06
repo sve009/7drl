@@ -21,8 +21,15 @@ export class OpenInventory extends UIGameEvent {
 }
 
 export class LookModeActivate extends UIGameEvent {
+  initPosition: { x: number, y: number }
+
+  constructor (position: { x: number, y: number }) {
+    super()
+    this.initPosition = position;
+  }
+
   run(state: GameState): void {
-    getUIManager().activateLookMode(state);
+    getUIManager().activateLookMode(state, this.initPosition);
   }
 }
 

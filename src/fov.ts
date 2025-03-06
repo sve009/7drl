@@ -31,6 +31,12 @@ export class SightMap {
 
   update(player: Player): void {
     const map = this.maps[player.dungeonLevel];
+    if (map.isFullyVisible) {
+      for (let i = 0; i < this.width*this.height; i++) {
+        this.visible[i] = true;
+      }
+      return;
+    }
     const lightPasses = (x: number, y:number) => {
       return !map.blocksSight(x, y);
     };

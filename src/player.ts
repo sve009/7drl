@@ -105,7 +105,7 @@ export class Player extends Character {
           break;
         }
         case ";": {
-          return new UIGameEvents.LookModeActivate();
+          return new UIGameEvents.LookModeActivate(this.position);
         }
         default: {
           return new Actions.NoAction();
