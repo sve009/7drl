@@ -24,7 +24,17 @@ export class InventoryPanel extends SelectionPanel {
     let event = await super.updateContent();
 
     if (event instanceof Select) {
-      console.log('select');
+      const uiItem = this.orderedStuff[this.selectionIdx];
+      if (typeof(uiItem) == "string") {
+        for (let i = 0; i < this.items.propsMap.length; i++) {
+          if (this.items.propsMap[i] == uiItem) {
+            this.items.expanded[i] = !this.items.expanded[i];
+            break;
+          }
+        }
+      } else {
+        // Dialog
+      }
       return new NoEvent();
     } else {
       return event;
@@ -76,7 +86,7 @@ export class InventoryPanel extends SelectionPanel {
             new TextDrawable(
               this.boundaries.getStartX() + 2,
               y,
-              menuChar + this.items[m[i]][j].name 
+              itemStr 
             )
           );
 
