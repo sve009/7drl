@@ -111,6 +111,9 @@ export class Player extends Character {
         case ";": {
           return new UIGameEvents.LookModeActivate(this.position);
         }
+        case "?": {
+          return new UIGameEvents.OpenHelp();
+        }
         default: {
           return new Actions.NoAction();
         }
