@@ -97,9 +97,26 @@ export class PickUpAction extends Action {
         ) {
           state.entities.splice(i, 1);
           this.character.items.addItem(entity);
+          logMessage(`Picked up ${entity.name}`);
         }
       }
     }
+  }
+}
+
+export class DropAction extends Action {
+  item: Item;
+
+  constructor(item: Item) {
+    super();
+    this.item = item;
+  }
+
+  run(state: GameState) {
+    // Only the player for now
+    this.item.position = state.player.position;
+    this.item.dungeonLevel = state.player.dungeonLevel;
+    state.entities.push(this.item);
   }
 }
 

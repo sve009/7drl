@@ -105,7 +105,7 @@ class EnemyTypeFactory {
           "goblin",
           "g",
           "#db4809",
-          new AI.BasicMelee(5),
+          new AI.BasicMelee(5, 3),
           5,
           75,
           2,
@@ -139,7 +139,7 @@ export class EnemyGenerator {
         for (let i = 0; i < randi(2, 4); i++) {
           const pos = state.openSpot(z);
           const goblin = new Enemy("goblin", pos.x, pos.y, z);
-          goblin.enemyType.ai = new AI.MeleeFollower(5, leader);
+          goblin.enemyType.ai = new AI.MeleeFollower(5, 3, leader);
           state.entities.push(goblin);
         }
         break;
@@ -150,7 +150,7 @@ export class EnemyGenerator {
         for (let i = 0; i < randi(4, 6); i++) {
           const pos = state.openSpot(z);
           const goblin = new Enemy("goblin", pos.x, pos.y, z);
-          goblin.enemyType.ai = new AI.MeleeFollower(5, leader);
+          goblin.enemyType.ai = new AI.MeleeFollower(5, 3, leader);
           state.entities.push(goblin);
         }
         break;

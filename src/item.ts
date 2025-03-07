@@ -6,6 +6,7 @@ import { Glyph } from "./renderer";
 import { randi } from "./utilities";
 import { Enemy } from "./enemies";
 import { RandomProfile } from "./ai";
+import { logMessage } from "./uiManager";
 import * as Buffs from "./buff";
 
 export interface Throwable {
@@ -145,11 +146,13 @@ class PotionFactory {
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
                 entity.health = entity.maxHealth;
+                logMessage(`${entity.name} looks much healthier!`);
               }
             }
           },
           (character: Character) => {
             character.health = character.maxHealth;  
+            logMessage("You feel much better!");
           }
         );
         break;
@@ -163,11 +166,13 @@ class PotionFactory {
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
                 entity.addBuff(new Buffs.RegenerationBuff(5));
+                logMessage(`${entity.name}'s wounds start to close`);
               }
             }
           },
           (character: Character) => {
             character.addBuff(new Buffs.RegenerationBuff(25));
+            logMessage("Your wounds start to close");
           }
         );
         break;
@@ -181,11 +186,13 @@ class PotionFactory {
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
                 entity.addBuff(new Buffs.InvisibilityBuff(20));
+                logMessage(`${entity.name} disappears!`);
               }
             }
           },
           (character: Character) => {
             character.addBuff(new Buffs.InvisibilityBuff(50));
+            logMessage("You can't see yourself anymore!");
           }
         );
         break;
@@ -196,14 +203,17 @@ class PotionFactory {
           4,
           "#fc0303",
           (entitiesHit: GameEntity[]) => {
+            logMessage("The potion explodes!");
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
                 entity.health -= 10;
+                logMessage(`The expolosion hits ${entity.name}!`);
               }
             }
           },
           (character: Character) => {
             // Do something special
+            logMessage("You feel uneasy for a moment, then the feeling passes");
           }
         );
         break;
@@ -217,11 +227,13 @@ class PotionFactory {
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
                 entity.addBuff(new Buffs.MightBuff(20));
+                logMessage(`${entity.name} looks stronger!`);
               }
             }
           },
           (character: Character) => {
             character.addBuff(new Buffs.MightBuff(50));
+            logMessage("You feel mighty!");
           }
         );
         break;
@@ -300,6 +312,7 @@ class ScrollFactory {
           "#9e47c9",
           (state: GameState, character: Character) => {
             character.position = state.openSpot(character.dungeonLevel);
+            logMessage("We're not in Kansas anymore Toto");
           }
         );
         break;
@@ -313,6 +326,7 @@ class ScrollFactory {
             for (const tile of state.maps[z].tiles) {
               tile.seen = true;
             }
+            logMessage("The floor's secrets reveal themselves to you");
           }
         );
         break;
@@ -323,6 +337,7 @@ class ScrollFactory {
           "#35e82e",
           (state: GameState, character: Character) => {
             // TODO
+            logMessage("A toxic aura radiates out from you");
           }
         );
         break;

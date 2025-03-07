@@ -48,6 +48,9 @@ export class InventoryPanel extends SelectionPanel {
           "equip" in item,
         ];
         const callbacks = {
+          drop: (inst: Item) => {
+            this.items.removeItem(inst);
+          },
           apply: (inst: Item) => {
             this.items.removeItem(inst);
           },
