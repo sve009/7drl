@@ -104,6 +104,22 @@ export class PickUpAction extends Action {
   }
 }
 
+export class DropAction extends Action {
+  item: Item;
+
+  constructor(item: Item) {
+    super();
+    this.item = item;
+  }
+
+  run(state: GameState) {
+    // Only the player for now
+    this.item.position = state.player.position;
+    this.item.dungeonLevel = state.player.dungeonLevel;
+    state.entities.push(this.item);
+  }
+}
+
 export class AscendAction extends Action {
   entity: GameEntity;
   onStair: boolean;

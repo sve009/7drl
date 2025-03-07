@@ -3,12 +3,13 @@ import { GameState } from "./gamestate";
 import type { Item, Applyable } from "./item";
 import { Position, TextDrawable } from "./renderer";
 import { Select, NoEvent, ExitUI } from "./uiGameEvent";
-import { ApplyAction } from "./action";
+import { ApplyAction, DropAction } from "./action";
 import { SelectionPanel } from "./selectionPanel";
 import { GameEvent } from "./gameEvent";
 import { getUIManager } from "./uiManager";
 
 export type DialogCallbacks = {
+  drop: (item: Item) => void;
   apply: (item: Item) => void;
   throw: (item: Item) => void;
   equip: (item: Item) => void;
@@ -83,8 +84,9 @@ export class DialogPanel extends SelectionPanel {
           return new ExitUI();
         case 1:
           // Drop
-          // TODO
-          return new NoEvent();
+          getUIManager().exitCurrentFocus();
+          this.callbacks.drop(this.item);
+          return new DropAction(this.item);
         case 2:
           // Apply
           getUIManager().exitCurrentFocus();
