@@ -6,7 +6,6 @@ Frame Narrative
 Enemies
 NPCs
 Shops
-Map Gen
 Health Bar
 Rings
 Armor Panel

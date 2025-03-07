@@ -70,7 +70,7 @@ export class Potion extends Item implements Throwable, Applyable {
       this.position.y,
       "!",
       this.profile.color,
-      null,
+      "#000",
       true,
     );
   }
@@ -267,7 +267,7 @@ export class Scroll extends Item implements Applyable {
       this.position.y,
       "?",
       this.profile.color,
-      null,
+      "#000",
       true
     );
   }
@@ -384,7 +384,7 @@ export abstract class Weapon extends Item implements Attackable, Equippable {
       this.position.y,
       "\u{2020}",
       "#ebbf2f",
-      null,
+      "#000",
       true
     );
   }
@@ -431,7 +431,7 @@ export abstract class Armor extends Item implements Defendable, Equippable {
       this.position.y,
       "[",
       "#ebbf2f",
-      null,
+      "#000",
       true
     );
   }
@@ -479,7 +479,7 @@ export class Gold extends Item {
       this.position.y,
       "$",
       "#ebbf2f",
-      null,
+      "#000",
       true
     );
   }

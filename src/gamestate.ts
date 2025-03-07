@@ -476,7 +476,7 @@ class TileTypeFactory {
         return new TileType(
           "\u{2248}",
           "#13166e",
-          "##020559",
+          "#242552",
           (t: Tile) => false,
           (t: Tile) => false,
         );
@@ -485,7 +485,7 @@ class TileTypeFactory {
         return new TileType(
           " ",
           "#101230",
-          "#181b7d",
+          "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
         );
@@ -584,7 +584,7 @@ class TileTypeFactory {
         return new TileType(
           "\u{230C}",
           "#2de346",
-          "#181b7d",
+          "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
         );
@@ -593,7 +593,7 @@ class TileTypeFactory {
         return new TileType(
           "\u{2300}",
           "#48bf11",
-          "#181b7d",
+          "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
         );
