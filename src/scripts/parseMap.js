@@ -44,7 +44,7 @@ fs.readFile(file, 'utf8', (err, contents) => {
         mapArr.push(7);
         break;
       }
-      case "=": {
+      case "w": {
         mapArr.push(8);
         break;
       }
@@ -62,6 +62,34 @@ fs.readFile(file, 'utf8', (err, contents) => {
       }
       case "<": {
         mapArr.push(12);
+        break;
+      }
+      case "s": {
+        mapArr.push(13);
+        break;
+      }
+      case "c": {
+        mapArr.push(14);
+        break;
+      }
+      case "x": {
+        mapArr.push(15);
+        break;
+      }
+      case "d": {
+        mapArr.push(16);
+        break;
+      }
+      case "t": {
+        mapArr.push(5);
+        break;
+      }
+      case "A": {
+        mapArr.push(17);
+        break;
+      }
+      case "o": {
+        mapArr.push(18);
         break;
       }
     }

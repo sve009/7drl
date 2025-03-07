@@ -241,6 +241,30 @@ export class GameMap {
         this.stairUp = { x, y };
         break;
       }
+      case 13: {
+        t = TileTypeFactory.create("swater");
+        break;
+      }
+      case 14: {
+        t = TileTypeFactory.create("carpet");
+        break;
+      }
+      case 15: {
+        t = TileTypeFactory.create("woodf");
+        break;
+      }
+      case 16: {
+        t = TileTypeFactory.create("path");
+        break;
+      }
+      case 17: {
+        t = TileTypeFactory.create("statue1");
+        break;
+      }
+      case 18: {
+        t = TileTypeFactory.create("statue2");
+        break;
+      }
     }
 
     let tile = new Tile(t);
@@ -418,9 +442,18 @@ class TileTypeFactory {
       case "water": {
         return new TileType(
           "\u{2248}",
-          "#4994de",
-          "#1939b0",
+          "#13166e",
+          "##020559",
           (t: Tile) => false,
+          (t: Tile) => false,
+        );
+      }
+      case "swater": {
+        return new TileType(
+          " ",
+          "#101230",
+          "#181b7d",
+          (t: Tile) => true,
           (t: Tile) => false,
         );
       }
@@ -466,6 +499,51 @@ class TileTypeFactory {
           "#fff",
           "#000",
           (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "carpet": {
+        return new TileType(
+          " ",
+          "#fff",
+          "#910707",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "woodf": {
+        return new TileType(
+          ".",
+          "#593b20",
+          "#362212",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "path": {
+        return new TileType(
+          ".",
+          "#403221",
+          "#5e4c35",
+          (t: Tile) =>  true,
+          (t: Tile) => false,
+        );
+      }
+      case "statue1": {
+        return new TileType(
+          "\u{2359}",
+          "#c79a12",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => false,
+        );
+      }
+      case "statue2": {
+        return new TileType(
+          "\u{235C}",
+          "#9195a3",
+          "#000",
+          (t: Tile) => false,
           (t: Tile) => false,
         );
       }
