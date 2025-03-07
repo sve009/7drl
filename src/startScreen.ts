@@ -35,7 +35,9 @@ export class StartScreen extends SelectionPanel {
       "",
       "The abbot has tasked you to enter the forbidden dungeon in search of artifacts of a forgotten time.",
       "",
-      "Are you ready?"
+      "Are you ready?",
+      "",
+      "Navigate using <h>, <j>, <k>, <l> keys. Select using <enter>."
     ].join("\n");
   }
 
