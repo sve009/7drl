@@ -85,7 +85,7 @@ export class InventoryPanel extends SelectionPanel {
         str += "] ";
         str += m[i];
 
-        this.layer.addDrawable(new TextDrawable(1, y, str));
+        this.layer.addDrawable(new TextDrawable(1, y, str, this.boundaries.getWidth() - 2));
 
         this.orderedStuff.push(m[i]);
         y += 1;
@@ -104,7 +104,7 @@ export class InventoryPanel extends SelectionPanel {
           );
           itemStr = menuChar + itemStr;
 
-          this.layer.addDrawable(new TextDrawable(2, y, itemStr));
+          this.layer.addDrawable(new TextDrawable(2, y, itemStr, this.boundaries.getWidth() - 3));
 
           this.orderedStuff.push(this.items[m[i]][j]);
           y += 1;

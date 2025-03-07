@@ -2,7 +2,7 @@ import { Display } from "rot-js";
 
 export class Renderer {
   display: Display;
-  renderSize: Position = new Position(0, 0, 100, 50);
+  renderSize: Position = new Position(0, 0, 105, 50);
   fontSize: number = 19;
   layers: Array<Layer> = new Array;
 
@@ -101,6 +101,7 @@ export class Layer {
   }
 
   addDrawable (drawable: Drawable) {
+    console.log(drawable)
     this.cacheLayer[drawable.y][drawable.x] = drawable;
     this.drawables.push(drawable);
   }
@@ -108,6 +109,7 @@ export class Layer {
   draw (display: Display): void {
     if (this.lazyDraw) {
       if (this.refresh) {
+        this.drawBackground(display);
         this.redrawAll(display);
         this.refresh = false;
       } else {
@@ -157,18 +159,21 @@ export abstract class Drawable {
 
 export class TextDrawable extends Drawable {
   textString: string | null;
+  maxWidth: number;
 
   constructor(
     x: number,
     y: number,
-    textString: string
+    textString: string,
+    maxWidth: number = 0
   ) {
     super(x, y);
     this.textString = textString;
+    this.maxWidth = maxWidth;
   }
 
   draw (display: Display, xOffset: number = 0, yOffset: number = 0): void {
-    display.drawText(this.x + xOffset, this.y + yOffset, this.textString);
+    display.drawText(this.x + xOffset, this.y + yOffset, this.textString, this.maxWidth);
   }
 }
 

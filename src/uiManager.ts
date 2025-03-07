@@ -13,9 +13,12 @@ export class UIManager {
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
   inventoryPanel: InventoryPanel;
+  descriptorPanel: DescriptorPanel;
   lookModeCursor: LookModeCursor;
   gameState: GameState | null = null;
-  descriptorPanel: DescriptorPanel;
+  playerPanelHeight: number = 10;
+  descPanelHeight: number = 10;
+  inventoryPanelInset: number = 10;
 
   focusObjectQueue: Array<UIComponent> = new Array;
   get focused (): boolean {
@@ -26,11 +29,11 @@ export class UIManager {
   }
 
   constructor() {
-    this.logPanel = new LogPanel(new Position(0, 40, 100, 10), 3);
-    this.playerPanel = new PlayerPanel(new Position(80, 0, 20, 10), 3);
+    this.logPanel = new LogPanel(new Position(0, 40, 105, 10), 3);
+    this.playerPanel = new PlayerPanel(new Position(80, 0, 25, 10), 3);
     this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30), 11);
     this.lookModeCursor = new LookModeCursor(10);
-    this.descriptorPanel = new DescriptorPanel(new Position(80, 20, 20, 10), 3, this.lookModeCursor);
+    this.descriptorPanel = new DescriptorPanel(new Position(80, 20, 25, 10), 3, this.lookModeCursor);
   }
 
   async updateContent() {
@@ -39,6 +42,23 @@ export class UIManager {
   }
 
   addGameState (gameState: GameState): void {
+    const renderPos = getRenderer().renderSize;
+    const endMapX = gameState.terrainLayer.position.getEndX() + 1;
+    const endMapY = gameState.terrainLayer.position.getEndY() + 1;
+    const logPanelPos = new Position(renderPos.getStartX(), endMapY, renderPos.getWidth(), renderPos.getHeight() - endMapY);
+    const rightPanelWidth = renderPos.getEndX() - endMapX + 1;
+    const playPanelPos = new Position(endMapX, renderPos.getStartY(), rightPanelWidth, this.playerPanelHeight);
+    const descPanelPos = new Position(endMapX, playPanelPos.getEndY() + 1, rightPanelWidth, this.descPanelHeight);
+    this.logPanel.setBoundaries(logPanelPos);
+    this.playerPanel.setBoundaries(playPanelPos);
+    this.descriptorPanel.setBoundaries(descPanelPos);
+
+    const invPanelPos = new Position(gameState.terrainLayer.position.getStartX() + this.inventoryPanelInset,
+                                     gameState.terrainLayer.position.getStartY() + this.inventoryPanelInset / 2,
+                                     gameState.terrainLayer.position.getWidth() - 2 * this.inventoryPanelInset,
+                                     gameState.terrainLayer.position.getHeight() - this.inventoryPanelInset);
+    this.inventoryPanel.layer.position = invPanelPos;
+
     this.gameState = gameState;
     this.descriptorPanel.gameState = gameState;
     this.lookModeCursor.gameState = gameState;
