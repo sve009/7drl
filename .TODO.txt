@@ -1,8 +1,6 @@
 TODO:
 Artifacts
 End Screen
-Pause
-Restart
 Descriptions
 Frame Narrative
 Enemies

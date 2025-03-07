@@ -51,6 +51,6 @@ export class OpenPauseMenu extends UIGameEvent {
 
 export class RestartGame extends UIGameEvent {
   run (_state: GameState): void {
-    // getUIManager().restartGame();
+    getUIManager().restartGame();
   }
 }

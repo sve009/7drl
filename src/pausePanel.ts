@@ -13,20 +13,47 @@ export class PausePanel extends SelectionPanel {
     "No"
   ];
   indexMap: number[];
+  confirmedRestart: boolean = false
 
   constructor ( boundaries: Position, layerIdx: number) {
     super(boundaries, layerIdx);
     this.showBorder = true;
     this.title = "Pause";
+
+    this.indexMap = [];
+    let count = 0;
+    for (let i = 0; i < this.buttonNames.length; i++) {
+        this.indexMap.push(count);
+        count++;
+    }
+    this.numberOfRows = count - 1;
   }
+
+  firstButton (): GameEvent {
+    if (this.confirmedRestart) {
+      this.confirmedRestart = false;
+      return new UIGameEvents.RestartGame();
+    } 
+    this.confirmedRestart = true;
+    return new UIGameEvents.NoEvent;
+  }
+
+  secondButton () {
+    if (!this.confirmedRestart) {
+      return new UIGameEvents.OpenHelp();
+    }
+    this.confirmedRestart = false;
+    return new UIGameEvents.NoEvent;
+  }
+
   async updateContent(): Promise<GameEvent> {
     const event = await super.updateContent();
     if (event instanceof UIGameEvents.Select) {
       switch (this.selectionIdx) {
         case 0:
-          return new UIGameEvents.RestartGame();
+          return this.firstButton();
         case 1:
-          return new UIGameEvents.OpenHelp();
+          return this.secondButton();
       }
       return new UIGameEvents.NoEvent();
     }
@@ -34,11 +61,16 @@ export class PausePanel extends SelectionPanel {
   }
 
     refreshVisuals(): void {
+      let buttons = this.buttonNames;
+      if (this.confirmedRestart) {
+        buttons = this.altButtonNames;
+        this.layer.addDrawable(new TextDrawable(6,2, "Are you sure?"));
+      }
       // Add buttons
-      for (let i = 0; i < this.buttonNames.length; i++) {
+      for (let i = 0; i < buttons.length; i++) {
   
         // Add button text
-        const bText = this.buttonNames[i];
+        const bText = buttons[i];
         const x = this.boundaries.getWidth() / 2 - 10 + 2 + i * 9;
         const y = this.boundaries.getHeight() - 3;
         this.layer.addDrawable(

@@ -21,6 +21,8 @@ export class UIManager {
   helpPanel: HelpPanel
   helpPanelInset: number = 14;
   pausePanel: PausePanel;
+  pauseHorizontalPanelInset: number = 40;
+  pauseVerticalPanelInset: number = 21;
 
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
@@ -54,6 +56,12 @@ export class UIManager {
     renderPos.getWidth() - 2 * this.helpPanelInset,
     renderPos.getHeight() - 2 * this.helpPanelInset);
     this.helpPanel = new HelpPanel(helpPos, Number.MAX_SAFE_INTEGER);
+
+    const pausePos = new Position(renderPos.getStartX() + this.pauseHorizontalPanelInset,
+    renderPos.getStartY() + this.pauseVerticalPanelInset,
+    renderPos.getWidth() - 2 * this.pauseHorizontalPanelInset,
+    renderPos.getHeight() - 2 * this.pauseVerticalPanelInset);
+    this.pausePanel = new PausePanel(pausePos, Number.MAX_SAFE_INTEGER);
 
 
     this.logPanel = new LogPanel(3);
@@ -168,12 +176,14 @@ export class UIManager {
   }
 
   openPauseMenu (): void {
-    // this.focusObjectQueue.push(this.pausePanel);
+    this.focusObjectQueue.push(this.pausePanel);
   }
 
-  // restartGame (): void {
-  //   this.game.restartGame();
-  // }
+  restartGame (): void {
+    this.focusObjectQueue = [];
+    this.gameState.fullRefresh();
+    this.game.restartGame();
+  }
 }
 
 
