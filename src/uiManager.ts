@@ -59,7 +59,7 @@ export class UIManager {
     const title = item ? item.name : null;
     const fText = item ? item.name : null;
     const dialog = new DialogPanel(
-      new Position(17, 15, 45, 10),
+      new Position(16, 15, 47, 10),
       0,
       title,
       fText,
