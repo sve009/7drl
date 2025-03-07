@@ -20,6 +20,8 @@ export interface Applyable {
 }
 
 export interface Equippable {
+  equippedTo: Character | null;
+
   equip(character: Character): void;
   unequip(character: Character): void;
   updateEquipment(): void;
@@ -351,12 +353,25 @@ class ScrollFactory {
 }
 
 export abstract class Weapon extends Item implements Attackable, Equippable {
+  equippedTo: Character | null;
+
   equip(character: Character) {
+    const old = character.equipment.get("armor");
+    if (old) {
+      old.unequip(character);
+    }
+
     character.equipment.set("weapon", this);
+    this.equippedTo = character;
+
+    logMessage(`Equipped ${this.name}`);
   }
 
   unequip(character: Character) {
     character.equipment.set("weapon", null);
+    this.equippedTo = null;
+
+    logMessage(`Unequipped ${this.name}`);
   }
 
   onHit(state: GameState, hitter: Character, hit: Character) {}
@@ -385,12 +400,25 @@ export abstract class RangedWeapon extends Weapon implements Throwable {
 }
 
 export abstract class Armor extends Item implements Defendable, Equippable {
+  equippedTo: Character | null;
+
   equip(character: Character) {
+    const old = character.equipment.get("armor");
+    if (old) {
+      old.unequip(character);
+    }
+
     character.equipment.set("armor", this);
+    this.equippedTo = character;
+
+    logMessage(`Equipped ${this.name}`);
   }
 
   unequip(character: Character) {
     character.equipment.set("armor", null);
+    this.equippedTo = null;
+
+    logMessage(`Unequipped ${this.name}`);
   }
 
   wasHit(state: GameState, hit: Character, hitter: Character) {}
@@ -412,12 +440,25 @@ export abstract class Armor extends Item implements Defendable, Equippable {
 }
 
 export abstract class Ring extends Item implements Equippable {
+  equippedTo: Character;
+
   equip(character: Character) {
+    const old = character.equipment.get("ring");
+    if (old) {
+      old.unequip(character);
+    }
+
     character.equipment.set("ring", this);
+    this.equippedTo = character;
+
+    logMessage(`Equipped ${this.name}`);
   }
 
   unequip(character: Character) {
     character.equipment.set("ring", null);
+    this.equippedTo = null;
+
+    logMessage(`Unequipped ${this.name}`);
   }
 
   abstract updateEquipment(): void;

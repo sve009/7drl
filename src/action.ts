@@ -4,7 +4,7 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
-import { Item, ItemGenerator, Applyable } from "./item";
+import { Item, ItemGenerator, Applyable, Equippable } from "./item";
 import { EnemyGenerator } from "./enemies";
 import { randi } from "./utilities";
 import { Action } from "./gameEvent";
@@ -45,6 +45,24 @@ export class ApplyAction extends Action {
   run(state: GameState) {
     // TODO: let enemies use items
     this.item.apply(state, state.player);  
+  }
+}
+
+export class EquipAction extends Action {
+  item: Equippable;
+
+  constructor(item: Equippable) {
+    super();
+    this.item = item;
+  }
+
+  run(state: GameState) {
+    // TODO: let enemies equip / unequip
+    if (this.item.equippedTo) {
+      this.item.unequip(state.player);
+    } else {
+      this.item.equip(state.player);
+    }
   }
 }
 

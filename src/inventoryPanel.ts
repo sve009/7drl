@@ -41,7 +41,7 @@ export class InventoryPanel extends SelectionPanel {
           boolean,
         ] = [
           true,
-          true,
+          "equippedTo" in item && item.equippedTo == null,
           "apply" in item,
           "throw" in item,
           "equip" in item,
@@ -100,8 +100,14 @@ export class InventoryPanel extends SelectionPanel {
           const menuChar = (j == this.items[m[i]].length - 1)
             ? "\u{2514} "
             : "\u{251C} ";
-          let itemStr = this.invertIfSelected(
-            this.items[m[i]][j].name,
+          let itemStr = this.items[m[i]][j].name; 
+          if ("equippedTo" in (this.items[m[i]][j])) {
+            if (this.items[m[i]][j].equippedTo) {
+              itemStr += " [Equipped]";
+            }
+          }
+          itemStr = this.invertIfSelected(
+            itemStr,
             y
           );
           itemStr = menuChar + itemStr;
