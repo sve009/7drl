@@ -49,4 +49,30 @@ export class Inventory {
       this.rings.push(item);
     }
   }
+
+  removeItem(item: Items.Item) {
+    console.log('remove item');
+    if (item instanceof Items.Potion) {
+      this.doRemoveItem(item, "potions");
+    } else if (item instanceof Items.Scroll) {
+      this.doRemoveItem(item, "scrolls");
+    } else if (item instanceof Items.Weapon) {
+      this.doRemoveItem(item, "weapons");
+    } else if (item instanceof Items.Armor) {
+      this.doRemoveItem(item, "armor");
+    } else if (item instanceof Items.Ring) {
+      this.doRemoveItem(item, "rings");
+    }
+  }
+
+  doRemoveItem(item: Items.Item, category: string) {
+    console.log('really remove item', item, category);
+    for (let i = 0; i < this[category].length; i++) {
+      if (this[category][i] == item) {
+        console.log('match', this[category]);
+        this[category].splice(i, 1);
+        console.log('after', this[category]);
+      }
+    }
+  }
 }

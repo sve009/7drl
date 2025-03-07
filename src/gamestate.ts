@@ -2,7 +2,7 @@ import { RNG, Color } from "rot-js";
 import { SightMap } from "./fov";
 import { Player } from "./player";
 import { getRenderer, Glyph, Layer, Position } from "./renderer";
-import { GameEntity } from "./gameObject";
+import { GameEntity, Character } from "./gameObject";
 import town from "./data/town.json";
 
 const townMap = town.gameMap;
@@ -38,6 +38,10 @@ export class GameState {
   async update () {
     // Update entities. Player is always first.
     for (let entity of this.entities) {
+      // Apply buffs / debuffs
+      if (entity instanceof Character) {
+        entity.applyBuffs(this);
+      }
       let action = await entity.updateState(this);
       action.run(this);
       if (action.isUIEvent) {

@@ -183,7 +183,7 @@ export class DescendAction extends Action {
 
       // Enemies
       // 6 Guaranteed
-      for (let i = 0; i < randi(6, 11); i++) {
+      for (let i = 0; i < randi(5, 9); i++) {
         EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
     }

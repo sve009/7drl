@@ -6,6 +6,13 @@ import { Select, NoEvent, ExitUI } from "./uiGameEvent";
 import { ApplyAction } from "./action";
 import { SelectionPanel } from "./selectionPanel";
 import { GameEvent } from "./gameEvent";
+import { getUIManager } from "./uiManager";
+
+export type DialogCallbacks = {
+  apply: (item: Item) => void;
+  throw: (item: Item) => void;
+  equip: (item: Item) => void;
+};
 
 export class DialogPanel extends SelectionPanel {
   text: string;
@@ -18,6 +25,7 @@ export class DialogPanel extends SelectionPanel {
     "Throw",
     "Equip",
   ];
+  callbacks: DialogCallbacks;
 
   indexMap: number[];
 
@@ -34,6 +42,7 @@ export class DialogPanel extends SelectionPanel {
       boolean,
     ],
     item: Item,
+    callbacks: DialogCallbacks,
   ) {
     super(boundaries, layerIdx);
     this.title = title;
@@ -43,6 +52,7 @@ export class DialogPanel extends SelectionPanel {
     this.text = text;
     this.buttons = buttons; 
     this.item = item;
+    this.callbacks = callbacks;
 
     this.indexMap = [];
     let count = 0;
@@ -77,6 +87,8 @@ export class DialogPanel extends SelectionPanel {
           return new NoEvent();
         case 2:
           // Apply
+          getUIManager().exitCurrentFocus();
+          this.callbacks.apply(this.item);
           return new ApplyAction(this.item as unknown as Applyable);
         case 3:
           // Throw
