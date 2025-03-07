@@ -261,9 +261,9 @@ export class GameMap {
     }
   }
 
-  getFlavorText (x: number, y: number): string {
+  getDescription (x: number, y: number): string {
     const t = this.tiles[x + y*this.width];
-    return t.getFlavorText();
+    return t.getDescription();
   }
 }
 
@@ -310,8 +310,8 @@ class Tile {
     ];
   }
 
-  getFlavorText(): string {
-    return this.tileType.flavorText();
+  getDescription(): string {
+    return this.tileType.description();
   }
 }
 
@@ -321,7 +321,7 @@ class TileType {
   background: string;
   passable: (t: Tile) => boolean;
   blocksSight: (t: Tile) => boolean;
-  flavorText: () => string;
+  description: () => string;
 
   constructor(
     symbol: string, 
@@ -329,14 +329,14 @@ class TileType {
     background: string, 
     passable: (t: Tile) => boolean,
     blocksSight: (t: Tile) => boolean,
-    flavorText: () => string = () => ""
+    description: () => string = () => "The swampy green bog invites you to play :)"
   ) {
       this.symbol = symbol;
       this.foreground = foreground;
       this.background = background;
       this.passable = passable;
       this.blocksSight = blocksSight;
-      this.flavorText = flavorText;
+      this.description = description;
   }
 }
 

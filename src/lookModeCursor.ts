@@ -9,13 +9,14 @@ import * as UIGameEvents from "./uiGameEvent"
 export class LookModeCursor extends UIComponent {
     ioHandler: IOHandler = new IOHandler;
     gameState: GameState | null = null
+    active: boolean = false
 
     constructor (layerIdx: number) {
       super(new Position(0, 0, 1, 1), layerIdx, true)
       this.layer.lazyDraw = false;
     }
 
-    updatePosition (pos: { x: number, y: number }): void {
+    activate (pos: { x: number, y: number }): void {
       this.boundaries.startX = pos.x;
       this.boundaries.startY = pos.y;
     }

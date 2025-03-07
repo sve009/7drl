@@ -11,11 +11,17 @@ export class DescriptorPanel extends UIComponent {
     super(boundaries, layerIdx);
     this.title = "Description";
     this.showBorder = true;
-    this.layer.bg = "#000";
     this.lookModeCursor = lookModeCursor;
   }
 
   refreshVisuals(): void {
+    let description: string = "";
+    if (this.lookModeCursor.active) {
+      const cursorLocation: Position = this.lookModeCursor.boundaries;
+      this.gameState.currentMap.getDescription(cursorLocation.startX, cursorLocation.startY);
+    } else {
+      this.gameState.currentMap.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
+    }
     super.refreshVisuals();
   }
 }

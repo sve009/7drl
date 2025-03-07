@@ -125,6 +125,7 @@ export abstract class UIComponent extends GameObject {
   isTransparent: boolean;
   title: string | null;
   showBorder: boolean;
+  active: boolean;
 
   constructor (boundaries: Position, layerIdx: number = 0, isTransparent: boolean = false) {
     super();
@@ -134,6 +135,7 @@ export abstract class UIComponent extends GameObject {
     this.isTransparent = isTransparent;
     this.showBorder = false;
     this.layer.bg = "#000";
+    this.active = false;
   }
 
   async updateContent(): Promise<GameEvent> {

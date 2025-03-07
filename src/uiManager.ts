@@ -56,7 +56,7 @@ export class UIManager {
   }
 
   activateLookMode(initPosition: { x: number, y: number }) {
-    this.lookModeCursor.updatePosition(initPosition);
+    this.lookModeCursor.activate(initPosition);
     this.focusObjectQueue.push(this.lookModeCursor);
   }
 
