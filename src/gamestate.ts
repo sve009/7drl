@@ -74,6 +74,7 @@ export class GameState {
   fullRefresh () {
     this.fullRefreshVisual = true;
     this.terrainLayer.refresh = true;
+    this.sightMap.update(this.player);
   }
 
   entityAt(

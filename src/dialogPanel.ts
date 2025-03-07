@@ -64,7 +64,7 @@ export class DialogPanel extends SelectionPanel {
         this.indexMap.push(0);
       }
     }
-    this.numberOfRows = count + 1;
+    this.numberOfRows = count - 1;
   }
 
   async updateContent(): Promise<GameEvent> {
