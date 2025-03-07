@@ -47,7 +47,6 @@ export class DialogPanel extends SelectionPanel {
   ) {
     super(boundaries, layerIdx);
     this.title = title;
-    this.layer.bg = "#000";
     this.showBorder = true;
 
     this.text = text;

@@ -7,8 +7,9 @@ export class DescriptorPanel extends UIComponent {
   lookModeCursor: LookModeCursor
   gameState: GameState
 
-  constructor(boundaries: Position, layerIdx: number, lookModeCursor: LookModeCursor) {
-    super(boundaries, layerIdx);
+  constructor(layerIdx: number, lookModeCursor: LookModeCursor) {
+    super();
+    this.layer.index = layerIdx;
     this.title = "Description";
     this.showBorder = true;
     this.lookModeCursor = lookModeCursor;
@@ -22,7 +23,7 @@ export class DescriptorPanel extends UIComponent {
     } else {
       description = this.gameState.currentMap.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
     }
-    this.layer.addDrawable(new TextDrawable(1, 1, description));
+    this.layer.addDrawable(new TextDrawable(1, 1, description, this.boundaries.getWidth() - 2));
     super.refreshVisuals();
   }
 }

@@ -12,16 +12,15 @@ export class InventoryPanel extends SelectionPanel {
   items?: Inventory;
   orderedStuff: OrderedElement[];
 
-  constructor (boundary: Position, layerIdx: number) {
-    super(boundary, layerIdx);
-    this.layer.bg = "#000";
+  constructor (layerIdx: number) {
+    super();
+    this.layer.index = layerIdx;
     this.title = "Inventory";
     this.showBorder = true;
-
-    this.numberOfRows = this.boundaries.height - 2;
   }
 
   async updateContent(): Promise<GameEvent> {
+    this.numberOfRows = this.orderedStuff.length - 1;
     const event = await super.updateContent();
     if (event instanceof Select) {
       const uiItem = this.orderedStuff[this.selectionIdx];
@@ -88,7 +87,7 @@ export class InventoryPanel extends SelectionPanel {
         str += "] ";
         str += m[i];
 
-        this.layer.addDrawable(new TextDrawable(1, y, str));
+        this.layer.addDrawable(new TextDrawable(1, y, str, this.boundaries.getWidth() - 2));
 
         this.orderedStuff.push(m[i]);
         y += 1;
@@ -107,7 +106,7 @@ export class InventoryPanel extends SelectionPanel {
           );
           itemStr = menuChar + itemStr;
 
-          this.layer.addDrawable(new TextDrawable(2, y, itemStr));
+          this.layer.addDrawable(new TextDrawable(2, y, itemStr, this.boundaries.getWidth() - 3));
 
           this.orderedStuff.push(this.items[m[i]][j]);
           y += 1;

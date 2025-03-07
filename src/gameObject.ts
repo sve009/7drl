@@ -127,7 +127,7 @@ export abstract class UIComponent extends GameObject {
   showBorder: boolean;
   active: boolean;
 
-  constructor (boundaries: Position, layerIdx: number = 0, isTransparent: boolean = false) {
+  constructor (boundaries: Position = new Position(0, 0, 0, 0), layerIdx: number = 0, isTransparent: boolean = false) {
     super();
     this.boundaries = boundaries;
     this.layer = new Layer(layerIdx, boundaries);
@@ -136,6 +136,12 @@ export abstract class UIComponent extends GameObject {
     this.showBorder = false;
     this.layer.bg = "#000";
     this.active = false;
+  }
+
+  setBoundaries(boundaries: Position) {
+    this.boundaries = boundaries;
+    this.layer.position = boundaries;
+    this.layer.reset();
   }
 
   async updateContent(): Promise<GameEvent> {

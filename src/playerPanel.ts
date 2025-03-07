@@ -6,9 +6,9 @@ import { Position, TextDrawable } from "./renderer"
 export class PlayerPanel extends UIComponent {
   player: Player
 
-  constructor (boundary: Position, layerIdx: number) {
-    super(boundary, layerIdx);
-    this.layer.bg = "#000";
+  constructor (layerIdx: number) {
+    super();
+    this.layer.index = layerIdx;
 
     this.title = "Player";
     this.showBorder = true;
@@ -25,7 +25,7 @@ export class PlayerPanel extends UIComponent {
 
     playerStats = ` %b{${this.layer.bg}}${playerStats}`;
 
-    this.layer.addDrawable(new TextDrawable(1, 1, playerStats));
+    this.layer.addDrawable(new TextDrawable(1, 1, playerStats, this.boundaries.getWidth() - 2));
   }
 
   private getHealth(): string {
