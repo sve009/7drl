@@ -66,10 +66,9 @@ export class RegenerationBuff extends Buff {
   }
 
   update(state: GameState, character: Character) {
-    // + 2 for now
     character.health = Math.min(
       character.maxHealth, 
-      Math.ceil(character.maxHealth / 10)
+      character.health + Math.ceil(character.maxHealth / 10)
     );
   }
 }

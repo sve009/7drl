@@ -47,10 +47,20 @@ export class InventoryPanel extends SelectionPanel {
           "throw" in item,
           "equip" in item,
         ];
+        const callbacks = {
+          apply: (inst: Item) => {
+            this.items.removeItem(inst);
+          },
+          throw: (inst: Item) => {
+            this.items.removeItem(inst);
+          },
+          equip: (inst: Item) => {}
+        };
         getUIManager().createDialogPanel(
           item, 
           null, 
-          buttons
+          buttons,
+          callbacks
         );
       }
       return new NoEvent();

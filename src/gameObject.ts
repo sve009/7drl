@@ -67,7 +67,7 @@ export abstract class Character extends GameEntity {
     for (const buff of this.buffs) {
       const [acc, dam] = buff.attack(state, this);
       accuracy += acc;
-      damage += damage;
+      damage += dam;
     }
 
     const weapon = this.equipment.get("weapon");

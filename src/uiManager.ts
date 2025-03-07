@@ -6,7 +6,7 @@ import { InventoryPanel } from "./inventoryPanel";
 import { GameState } from "./gamestate";
 import { LookModeCursor } from "./lookModeCursor";
 import { DescriptorPanel } from "./descriptorPanel";
-import { DialogPanel } from "./dialogPanel";
+import { DialogPanel, DialogCallbacks } from "./dialogPanel";
 import { Item } from "./item";
 
 export class UIManager {
@@ -54,6 +54,7 @@ export class UIManager {
       boolean,
       boolean,
     ],
+    callbacks: DialogCallbacks,
   ): void {
     const title = item ? item.name : null;
     const fText = item ? item.name : null;
@@ -63,7 +64,8 @@ export class UIManager {
       title,
       fText,
       buttons,
-      item
+      item,
+      callbacks
     );
     this.addUIToFront(dialog);
   }
