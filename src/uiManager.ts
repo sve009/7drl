@@ -9,8 +9,21 @@ import { DescriptorPanel } from "./descriptorPanel";
 import { DialogPanel, DialogCallbacks } from "./dialogPanel";
 import { Item } from "./item";
 import { BuffsPanel } from "./buffsPanel";
+import { Game } from "./game";
+import { StartScreen } from "./startScreen";
+import { HelpPanel } from "./helpPanel";
+import { PausePanel } from "./pausePanel";
 
 export class UIManager {
+  game: Game;
+  startScreen: StartScreen;
+  startScreenInset: number = 15;
+  helpPanel: HelpPanel
+  helpPanelInset: number = 14;
+  pausePanel: PausePanel;
+  pauseHorizontalPanelInset: number = 40;
+  pauseVerticalPanelInset: number = 21;
+
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
   inventoryPanel: InventoryPanel;
@@ -30,7 +43,27 @@ export class UIManager {
     return this.focused ? this.focusObjectQueue[this.focusObjectQueue.length - 1] : null;
   }
 
-  constructor() {
+  constructor () {
+    const renderPos = getRenderer().renderSize;
+    const startScreenPos = new Position(renderPos.getStartX() + this.startScreenInset,
+                                  renderPos.getStartY() + this.startScreenInset,
+                                  renderPos.getWidth() - 2 * this.startScreenInset,
+                                  renderPos.getHeight() - 2 * this.startScreenInset);
+    this.startScreen = new StartScreen(startScreenPos, Number.MAX_SAFE_INTEGER - 1);
+
+    const helpPos = new Position(renderPos.getStartX() + this.helpPanelInset,
+    renderPos.getStartY() + this.helpPanelInset,
+    renderPos.getWidth() - 2 * this.helpPanelInset,
+    renderPos.getHeight() - 2 * this.helpPanelInset);
+    this.helpPanel = new HelpPanel(helpPos, Number.MAX_SAFE_INTEGER);
+
+    const pausePos = new Position(renderPos.getStartX() + this.pauseHorizontalPanelInset,
+    renderPos.getStartY() + this.pauseVerticalPanelInset,
+    renderPos.getWidth() - 2 * this.pauseHorizontalPanelInset,
+    renderPos.getHeight() - 2 * this.pauseVerticalPanelInset);
+    this.pausePanel = new PausePanel(pausePos, Number.MAX_SAFE_INTEGER);
+
+
     this.logPanel = new LogPanel(3);
     this.playerPanel = new PlayerPanel(3);
     this.buffPanel = new BuffsPanel(3);
@@ -116,6 +149,10 @@ export class UIManager {
     this.focusObjectQueue.push(this.inventoryPanel);
   }
 
+  createStartScreen () {
+    this.focusObjectQueue.push(this.startScreen);
+  }
+
   activateLookMode(initPosition: { x: number, y: number }) {
     this.lookModeCursor.updatePosition(initPosition);
     this.focusObjectQueue.push(this.lookModeCursor);
@@ -131,9 +168,21 @@ export class UIManager {
   exitCurrentFocus (): void {
     const component = this.focusObjectQueue.pop();
     component.deactivate();
-    if (!this.focusObjectQueue.length && this.gameState) {
-      this.gameState.fullRefresh();
-    }
+    this.gameState.fullRefresh();
+  }
+
+  openHelp (): void {
+    this.focusObjectQueue.push(this.helpPanel);
+  }
+
+  openPauseMenu (): void {
+    this.focusObjectQueue.push(this.pausePanel);
+  }
+
+  restartGame (): void {
+    this.focusObjectQueue = [];
+    this.gameState.fullRefresh();
+    this.game.restartGame();
   }
 }
 

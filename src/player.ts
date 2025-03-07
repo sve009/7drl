@@ -111,6 +111,12 @@ export class Player extends Character {
         case ";": {
           return new UIGameEvents.LookModeActivate(this.position);
         }
+        case "?": {
+          return new UIGameEvents.OpenHelp();
+        }
+        case "escape": {
+          return new UIGameEvents.OpenPauseMenu();
+        }
         default: {
           return new Actions.NoAction();
         }

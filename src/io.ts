@@ -123,6 +123,14 @@ export class IOHandler {
         }
         break;
       }
+      case KEYS.VK_SLASH: {
+        if (!this.shifting) {
+          this.lastKey = "/";
+        } else {
+          this.lastKey = "?";
+        }
+        break;
+      }
     }
 
     if (this.keyPressCallback && this.lastKey) {

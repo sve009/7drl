@@ -1,32 +1,26 @@
-import { getUIManager, UIManager } from "./uiManager";
+import { getUIManager } from "./uiManager";
 import { GameState, GameMap } from "./gamestate";
 import { Player } from "./player";
-import { getRenderer, Position, Renderer } from "./renderer";
-import { StartScreen } from "./startScreen";
+import { getRenderer, Position } from "./renderer";
 
 export class Game {
   state: GameState;
-  uiManager: UIManager;
-  renderer: Renderer;
-  startScreen: StartScreen
 
-  constructor() {
-    this.renderer = getRenderer();
-    this.uiManager = getUIManager();
-  }
-  
-  run() {
-    this.createNewGameSession();
-    this.startGameSession();
+  constructor () {
+    const uiManager = getUIManager();
+    uiManager.game = this;
+    uiManager.createStartScreen();
   }
 
-  startGameSession (): void {
-    this.state.sightMap.update(this.state.player);
-    this.state.refreshVisual();
-    this.uiManager.refreshVisual();
-    this.renderer.draw();
+  async run() {
+    while (true) {
+      this.createNewGameSession();
+      await this.startGameSession();
+    }
+  }
 
-    this.gameLoop();
+  restartGame (): void {
+    this.state.running = false;
   }
 
   createNewGameSession (): void {
@@ -41,21 +35,33 @@ export class Game {
     
     this.state.player = new Player(x, y);
     this.state.entities.push(this.state.player);
-    this.uiManager.addGameState(this.state);
+    getUIManager().addGameState(this.state);
   }
 
+  async startGameSession () {
+    this.state.sightMap.update(this.state.player);
+    this.state.refreshVisual();
+    getUIManager().refreshVisual();
+    getRenderer().draw();
+
+    await this.gameLoop();
+  }
+
+
   refreshVisuals () {
-      // Update the text/glyphs and add to layers
-      if (!this.uiManager.focused || this.state.fullRefreshVisual) {
-        this.state.refreshVisual();
-        this.state.fullRefreshVisual = false;
-      }
-      this.uiManager.refreshVisual();
+    const uiManager = getUIManager();
+    // Update the text/glyphs and add to layers
+    if (!uiManager.focused || this.state.fullRefreshVisual) {
+      this.state.refreshVisual();
+      this.state.fullRefreshVisual = false;
+    }
+    uiManager.refreshVisual();
   }
 
   async updateObjects () {
-    if (this.uiManager.focused) {
-      await this.uiManager.updateContent();
+    const uiManager = getUIManager();
+    if (uiManager.focused) {
+      await uiManager.updateContent();
     } else {
       await this.state.update();
     }
@@ -70,7 +76,7 @@ export class Game {
       this.refreshVisuals();
 
       // Draw everything
-      this.renderer.draw();
+      getRenderer().draw();
 
       // Pause
       await new Promise((resolve, reject) => {
@@ -83,4 +89,8 @@ export class Game {
   }
 
   finishGame() {}
+}
+
+export function getGameName (): string {
+  return "Leibowitz's Canticle";
 }

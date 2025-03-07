@@ -1,0 +1,18 @@
+TODO:
+Artifacts
+End Screen
+Descriptions
+Frame Narrative
+Enemies
+NPCs
+Shops
+Map Gen
+Health Bar
+Rings
+Armor Panel
+Enemies and Items on look mode
+   Flavor text
+   Strategic Advice
+   Damage
+   Health (Maybe)
+   Items need to tell you what they do
