@@ -81,7 +81,8 @@ export class AttackAction extends Action {
     const [dodge, def] = this.defender.defend(state);
 
     if (RNG.getPercentage() < toHit - dodge) {
-      this.defender.health -= (dmg - def);
+      const dmgTkn = Math.max(1, dmg - def);
+      this.defender.health -= dmgTkn;
       logMessage(`${this.attacker.name} hit ${this.defender.name} for ${dmg} damage`);
       if (this.defender.health <= 0) {
         const i = state.entities.findIndex(e => e == this.defender);
