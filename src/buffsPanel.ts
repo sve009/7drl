@@ -14,11 +14,8 @@ export class BuffsPanel extends UIComponent {
   }
 
   refreshVisuals(): void {
-    const txtArr = Array<string>();
-    for (const buff of this.buffs) {
-      txtArr.push(buff.name);
-    }
-    this.layer.addDrawable(new TextDrawable(1,1, txtArr.join("\n")));
+    const txt = this.buffs.map((buff: Buff): string => `${buff.name}: ${buff.turnsRemaining} turns`).join("\n");
+    this.layer.addDrawable(new TextDrawable(1,1, txt, this.boundaries.getWidth() - 2));
     super.refreshVisuals();
   }
 }
