@@ -470,6 +470,7 @@ export class Gold extends Item {
   constructor(amount: number) {
     super();
     this.amount = amount;
+    this.name = `${amount} gold`;
   }
 
   getGlyph() {
