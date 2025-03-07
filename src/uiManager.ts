@@ -56,18 +56,20 @@ export class UIManager {
   }
 
   activateLookMode(initPosition: { x: number, y: number }) {
-    this.lookModeCursor.activate(initPosition);
+    this.lookModeCursor.updatePosition(initPosition);
     this.focusObjectQueue.push(this.lookModeCursor);
   }
 
   addUIToFront (component: UIComponent) {
+    component.activate();
     const newLayerIdx = Math.max(...this.focusObjectQueue.map((comp: UIComponent) => comp.layer.index));
     component.layer.index = newLayerIdx + 1;
     this.focusObjectQueue.push(component);
   }
 
   exitCurrentFocus (): void {
-    this.focusObjectQueue.pop();
+    const component = this.focusObjectQueue.pop();
+    component.deactivate();
     if (!this.focusObjectQueue.length && this.gameState) {
       this.gameState.fullRefresh();
     }

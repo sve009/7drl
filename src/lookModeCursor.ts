@@ -9,16 +9,20 @@ import * as UIGameEvents from "./uiGameEvent"
 export class LookModeCursor extends UIComponent {
     ioHandler: IOHandler = new IOHandler;
     gameState: GameState | null = null
-    active: boolean = false
 
     constructor (layerIdx: number) {
       super(new Position(0, 0, 1, 1), layerIdx, true)
       this.layer.lazyDraw = false;
     }
 
-    activate (pos: { x: number, y: number }): void {
+    updatePosition (pos: { x: number, y: number }): void {
+      this.activate();
       this.boundaries.startX = pos.x;
       this.boundaries.startY = pos.y;
+    }
+
+    currentPosition (): { x: number, y: number } {
+      return { x: this.boundaries.startX, y: this.boundaries.startY }
     }
 
     async updateContent(): Promise<GameEvent> {
@@ -77,7 +81,8 @@ export class LookModeCursor extends UIComponent {
 
     refreshVisuals(): void {
         super.refreshVisuals();
-        this.layer.addDrawable(new Glyph(this.boundaries.startX, this.boundaries.startY, null, null, "#fff"))
+        const position = this.currentPosition();
+        this.layer.addDrawable(new Glyph(position.x, position.y, null, null, "#fff"))
         this.gameState.fullRefresh();
     }
 }

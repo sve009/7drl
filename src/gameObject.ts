@@ -142,6 +142,14 @@ export abstract class UIComponent extends GameObject {
     return;
   }
 
+  activate () {
+    this.active = true;
+  }
+
+  deactivate () {
+    this.active = false;
+  }
+
   drawBorder(): void {
     const titleLength = this.title ? this.title.length : 0;
     const bottomLineLength = this.boundaries.width - 2;
