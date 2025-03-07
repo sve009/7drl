@@ -59,7 +59,7 @@ export class StartScreen extends SelectionPanel {
 
       // Add button text
       const bText = this.buttonNames[i];
-      const x = 2 + i * 9;
+      const x = this.boundaries.getWidth() / 2 - 10 + 2 + i * 9;
       const y = this.boundaries.getHeight() - 3;
       this.layer.addDrawable(
         new TextDrawable(x, y, bText)
