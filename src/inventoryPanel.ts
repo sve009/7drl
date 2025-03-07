@@ -64,7 +64,7 @@ export class InventoryPanel extends SelectionPanel {
     this.orderedStuff = [];
     const m = this.items.propsMap;
     if (this.items) {
-      let y = this.boundaries.getStartY() + 1;
+      let y = 1;
       for (let i = 0; i < m.length; i++) {
         const exp = this.invertIfSelected(
           this.items.expanded[i] ? "-" : "+",
@@ -75,13 +75,7 @@ export class InventoryPanel extends SelectionPanel {
         str += "] ";
         str += m[i];
 
-        this.layer.addDrawable(
-          new TextDrawable(
-            this.boundaries.getStartX() + 1,
-            y,
-            str
-          )
-        );
+        this.layer.addDrawable(new TextDrawable(1, y, str));
 
         this.orderedStuff.push(m[i]);
         y += 1;
@@ -100,13 +94,7 @@ export class InventoryPanel extends SelectionPanel {
           );
           itemStr = menuChar + itemStr;
 
-          this.layer.addDrawable(
-            new TextDrawable(
-              this.boundaries.getStartX() + 2,
-              y,
-              itemStr 
-            )
-          );
+          this.layer.addDrawable(new TextDrawable(2, y, itemStr));
 
           this.orderedStuff.push(this.items[m[i]][j]);
           y += 1;
@@ -117,8 +105,7 @@ export class InventoryPanel extends SelectionPanel {
   }
 
   invertIfSelected(str: string, y: number): string {
-    const idx = y - this.boundaries.getStartY() - 1;
-    if (idx == this.selectionIdx) {
+    if (y - 1 == this.selectionIdx) {
       str = `%c{#000}%b{#fff}${str}%c{}%b{}`; 
     }
     return str;

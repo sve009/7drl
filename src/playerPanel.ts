@@ -25,7 +25,7 @@ export class PlayerPanel extends UIComponent {
 
     playerStats = ` %b{${this.layer.bg}}${playerStats}`;
 
-    this.layer.addDrawable(new TextDrawable(this.boundaries.getStartX()+1, this.boundaries.getStartY()+1, playerStats));
+    this.layer.addDrawable(new TextDrawable(1, 1, playerStats));
   }
 
   private getHealth(): string {

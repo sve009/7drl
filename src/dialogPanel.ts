@@ -95,13 +95,7 @@ export class DialogPanel extends SelectionPanel {
 
   refreshVisuals() {
     // Display text first
-    this.layer.addDrawable(
-      new TextDrawable(
-        this.boundaries.getStartX() + 1,
-        this.boundaries.getStartY() + 1,
-        this.text
-      )
-    );
+    this.layer.addDrawable(new TextDrawable(1, 1, this.text));
 
     // Add buttons
     for (let i = 0; i < this.buttons.length; i++) {
@@ -111,8 +105,8 @@ export class DialogPanel extends SelectionPanel {
 
       // Add button text
       const bText = this.buttonNames[i];
-      const x = this.boundaries.getStartX() + 2 + i * 9;
-      const y = this.boundaries.getEndY() - 2;
+      const x = 2 + i * 9;
+      const y = this.boundaries.getHeight() - 3;
       this.layer.addDrawable(
         new TextDrawable(x, y, bText)
       );

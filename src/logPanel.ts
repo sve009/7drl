@@ -18,13 +18,7 @@ export class LogPanel extends UIComponent {
     const numLogs = Math.min(this.logs.length, maxShown);
     let logString = this.logs.slice(this.logs.length - numLogs, this.logs.length).join("\n");
 
-    this.layer.addDrawable(
-      new TextDrawable(
-      this.boundaries.getStartX() + 3, 
-      this.boundaries.getStartY() + 1, 
-      logString
-      )
-    );
+    this.layer.addDrawable(new TextDrawable(3, 1, logString));
   }
 
   addLogMessage(text: string) {

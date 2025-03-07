@@ -81,8 +81,7 @@ export class LookModeCursor extends UIComponent {
 
     refreshVisuals(): void {
         super.refreshVisuals();
-        const position = this.currentPosition();
-        this.layer.addDrawable(new Glyph(position.x, position.y, null, null, "#fff"))
+        this.layer.addDrawable(new Glyph(0, 0, null, null, "#fff"))
         this.gameState.fullRefresh();
     }
 }

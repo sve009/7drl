@@ -150,7 +150,6 @@ export class MapGenerator {
           });
           if (d > minDistance) {
             found = true;
-            console.log('x y', x, y);
             this.map.setTile(x, y, 11);
             break;
           }

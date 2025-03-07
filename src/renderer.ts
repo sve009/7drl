@@ -88,6 +88,7 @@ export class Layer {
   constructor (layerIdx: number, position: Position, bg: string | null = null) {
     this.position = position;
     this.index = layerIdx;
+    this.bg = bg;
     this.reset();
   }
 
@@ -100,7 +101,7 @@ export class Layer {
   }
 
   addDrawable (drawable: Drawable) {
-    this.cacheLayer[drawable.y - this.position.getStartY()][drawable.x - this.position.getStartX()] = drawable;
+    this.cacheLayer[drawable.y][drawable.x] = drawable;
     this.drawables.push(drawable);
   }
 
@@ -110,12 +111,12 @@ export class Layer {
         this.redrawAll(display);
         this.refresh = false;
       } else {
-        this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+        this.drawables.forEach((drawable: Drawable) => drawable.draw(display, this.position.getStartX(), this.position.getStartY()));
         this.drawables = [];  
       }
     } else {
       this.drawBackground(display);
-      this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+      this.drawables.forEach((drawable: Drawable) => drawable.draw(display, this.position.getStartX(), this.position.getStartY()));
       this.drawables = [];  
     }
   }
@@ -135,7 +136,7 @@ export class Layer {
     for (let i = 0; i < this.position.getHeight(); i++) {
       for (let j = 0; j < this.position.getWidth(); j++) {
         if (this.cacheLayer[i][j]) {
-          this.cacheLayer[i][j].draw(display);
+          this.cacheLayer[i][j].draw(display, this.position.getStartX(), this.position.getStartY());
         }
       }
     }
@@ -151,7 +152,7 @@ export abstract class Drawable {
     this.y = y;
   }
 
-  abstract draw(display: Display): void;
+  abstract draw(display: Display, xOffset: number, yOffset: number): void;
 }
 
 export class TextDrawable extends Drawable {
@@ -166,8 +167,8 @@ export class TextDrawable extends Drawable {
     this.textString = textString;
   }
 
-  draw (display: Display): void {
-    display.drawText(this.x, this.y, this.textString);
+  draw (display: Display, xOffset: number = 0, yOffset: number = 0): void {
+    display.drawText(this.x + xOffset, this.y + yOffset, this.textString);
   }
 }
 
@@ -194,12 +195,12 @@ export class Glyph extends Drawable{
     this.drawOver = drawOver;
   }
 
-  draw (display: Display) {
+  draw (display: Display, xOffset: number = 0, yOffset: number = 0) {
     if (this.drawOver) {
-      display.drawOver(this.x, this.y, this.ch, this.fg, this.bg);
+      display.drawOver(this.x + xOffset, this.y + yOffset, this.ch, this.fg, this.bg);
     }
     else {
-      display.draw(this.x, this.y, this.ch, this.fg, this.bg);
+      display.draw(this.x + xOffset, this.y + yOffset, this.ch, this.fg, this.bg);
     }
   }
 }

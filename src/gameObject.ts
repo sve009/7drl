@@ -157,9 +157,7 @@ export abstract class UIComponent extends GameObject {
 
     // Start line
     this.layer.addDrawable(
-      new TextDrawable(
-        this.boundaries.getStartX(),
-        this.boundaries.getStartY(),
+      new TextDrawable(0, 0,
         `\u{250C}\u{2500}${this.title ? this.title : ""}` 
         + "\u{2500}".repeat(topLineLength)
         + "\u{2510}"
@@ -169,8 +167,8 @@ export abstract class UIComponent extends GameObject {
     // End line
     this.layer.addDrawable(
       new TextDrawable(
-        this.boundaries.getStartX(),
-        this.boundaries.getEndY(),
+        0,
+        this.boundaries.getHeight() - 1,
         "\u{2514}" 
         + "\u{2500}".repeat(bottomLineLength)
         + "\u{2518}"
@@ -179,18 +177,17 @@ export abstract class UIComponent extends GameObject {
 
     // Middle lines
     for (let i = 1; i < this.boundaries.height - 1; i++) {
-      const y = this.boundaries.getStartY() + i;
       this.layer.addDrawable(
         new TextDrawable(
-          this.boundaries.getStartX(),
-          y,
+          0,
+          i,
           "\u{2502}"
         )
       );
       this.layer.addDrawable(
         new TextDrawable(
-          this.boundaries.getEndX(),
-          y,
+          this.boundaries.getWidth() - 1,
+          i,
           "\u{2502}"
         )
       );
