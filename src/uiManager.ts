@@ -44,7 +44,7 @@ export class UIManager {
     gameEvent.run(this.gameState);
   }
 
-  updateUICompBoundaries() {
+  updateUIComponentBoundaries() {
     const renderPos = getRenderer().renderSize;
     const endMapX = this.gameState.terrainLayer.position.getEndX() + 1;
     const endMapY = this.gameState.terrainLayer.position.getEndY() + 1;
@@ -69,8 +69,11 @@ export class UIManager {
     this.gameState = gameState;
     this.descriptorPanel.gameState = gameState;
     this.lookModeCursor.gameState = gameState;
+    this.playerPanel.player = gameState.player;
+    this.inventoryPanel.items = gameState.player.items;
+    this.buffPanel.buffs = gameState.player.buffs;
 
-    this.updateUICompBoundaries();
+    this.updateUIComponentBoundaries();
   }
 
   createDialogPanel(

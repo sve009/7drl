@@ -2,42 +2,46 @@ import { getUIManager, UIManager } from "./uiManager";
 import { GameState, GameMap } from "./gamestate";
 import { Player } from "./player";
 import { getRenderer, Position, Renderer } from "./renderer";
+import { StartScreen } from "./startScreen";
 
 export class Game {
   state: GameState;
   uiManager: UIManager;
   renderer: Renderer;
+  startScreen: StartScreen
 
   constructor() {
-    this.state = new GameState(new Position(0, 0, 80, 40));
     this.renderer = getRenderer();
     this.uiManager = getUIManager();
-    this.uiManager.addGameState(this.state);
+  }
+  
+  run() {
+    this.createNewGameSession();
+    this.startGameSession();
   }
 
-  run() {
-    this.state.running = true;
-
-    const firstMap = new GameMap(this.state.boundaries);
-    firstMap.loadTown();
-    this.state.maps.push(firstMap);
-
-    let { x, y } = firstMap.openSpot();
-
-    this.state.player = new Player(x, y);
-    this.state.entities.push(this.state.player);
-    this.uiManager.playerPanel.player = this.state.player;
-    this.uiManager.inventoryPanel.items = this.state.player.items;
-    this.uiManager.buffPanel.buffs = this.state.player.buffs;
-
+  startGameSession (): void {
     this.state.sightMap.update(this.state.player);
     this.state.refreshVisual();
     this.uiManager.refreshVisual();
     this.renderer.draw();
 
     this.gameLoop();
+  }
 
-    this.renderer.draw();
+  createNewGameSession (): void {
+    this.state = new GameState(new Position(0, 0, 80, 40));
+    this.state.running = true;
+
+    const firstMap = new GameMap(this.state.boundaries);
+    firstMap.loadTown();
+    this.state.maps.push(firstMap);
+    
+    let { x, y } = firstMap.openSpot();
+    
+    this.state.player = new Player(x, y);
+    this.state.entities.push(this.state.player);
+    this.uiManager.addGameState(this.state);
   }
 
   refreshVisuals () {

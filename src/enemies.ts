@@ -2,7 +2,6 @@ import { RNG } from "rot-js";
 import * as AI from "./ai";
 import { Character } from "./gameObject";
 import type { GameState } from "./gamestate";
-import type { SightMap } from "./fov";
 import type { Action } from "./gameEvent";
 import { Glyph } from "./renderer";
 import { randi } from "./utilities";
