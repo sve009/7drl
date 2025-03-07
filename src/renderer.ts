@@ -105,13 +105,18 @@ export class Layer {
   }
 
   draw (display: Display): void {
-    if (this.lazyDraw && !this.refresh) {
-      this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
-      this.drawables = [];
+    if (this.lazyDraw) {
+      if (this.refresh) {
+        this.redrawAll(display);
+        this.refresh = false;
+      } else {
+        this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+        this.drawables = [];  
+      }
     } else {
       this.drawBackground(display);
-      this.redrawAll(display);
-      this.refresh = false;
+      this.drawables.forEach((drawable: Drawable) => drawable.draw(display));
+      this.drawables = [];  
     }
   }
 
