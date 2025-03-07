@@ -28,7 +28,7 @@ export class UIManager {
     this.playerPanel = new PlayerPanel(new Position(80, 0, 20, 10), 3);
     this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30), 11);
     this.lookModeCursor = new LookModeCursor(10);
-    this.descriptorPanel = new DescriptorPanel(new Position(80, 20, 40, 10), 3, this.lookModeCursor);
+    this.descriptorPanel = new DescriptorPanel(new Position(80, 20, 20, 10), 3, this.lookModeCursor);
   }
 
   async updateContent() {

@@ -15,7 +15,7 @@ export class DescriptorPanel extends UIComponent {
     this.lookModeCursor = lookModeCursor;
   }
 
-  refreshVisuals(): void {
+  refreshVisuals() {
     super.refreshVisuals();
   }
 }
