@@ -11,11 +11,14 @@ import { Item } from "./item";
 import { BuffsPanel } from "./buffsPanel";
 import { Game } from "./game";
 import { StartScreen } from "./startScreen";
+import { HelpPanel } from "./helpPanel";
 
 export class UIManager {
   game: Game;
   startScreen: StartScreen;
   startScreenInset: number = 15;
+  helpPanel: HelpPanel
+  helpPanelInset: number = 14;
 
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
@@ -42,8 +45,13 @@ export class UIManager {
                                   renderPos.getStartY() + this.startScreenInset,
                                   renderPos.getWidth() - 2 * this.startScreenInset,
                                   renderPos.getHeight() - 2 * this.startScreenInset);
-    this.startScreen = new StartScreen(startScreenPos, Number.MAX_SAFE_INTEGER);
-    
+    this.startScreen = new StartScreen(startScreenPos, Number.MAX_SAFE_INTEGER - 1);
+
+    const helpPos = new Position(renderPos.getStartX() + this.helpPanelInset,
+    renderPos.getStartY() + this.helpPanelInset,
+    renderPos.getWidth() - 2 * this.helpPanelInset,
+    renderPos.getHeight() - 2 * this.helpPanelInset);
+    this.helpPanel = new HelpPanel(helpPos, Number.MAX_SAFE_INTEGER);
 
 
     this.logPanel = new LogPanel(3);
@@ -150,9 +158,11 @@ export class UIManager {
   exitCurrentFocus (): void {
     const component = this.focusObjectQueue.pop();
     component.deactivate();
-    if (!this.focusObjectQueue.length && this.gameState) {
-      this.gameState.fullRefresh();
-    }
+    this.gameState.fullRefresh();
+  }
+
+  openHelp (): void {
+    this.focusObjectQueue.push(this.helpPanel);
   }
 }
 

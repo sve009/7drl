@@ -1,4 +1,4 @@
-import { GameEvent, UIGameEvent } from "./gameEvent";
+import { GameEvent } from "./gameEvent";
 import { Position, TextDrawable } from "./renderer";
 import { SelectionPanel } from "./selectionPanel";
 import { getGameName } from "./game";
@@ -37,14 +37,20 @@ export class StartScreen extends SelectionPanel {
       "",
       "Are you ready?",
       "",
-      "Navigate using <h>, <j>, <k>, <l> keys. Select using <enter>."
+      "Navigate using <h>, <j>, <k>, <l> keys. Select using <enter>.",
+      "Press <?> for help."
     ].join("\n");
   }
 
   async updateContent(): Promise<GameEvent> {
     const event = await super.updateContent();
     if (event instanceof UIGameEvents.Select) {
-      getUIManager().exitCurrentFocus();
+      switch (this.selectionIdx) {
+        case 0:
+          return new UIGameEvents.ExitUI();
+        case 1:
+          return new UIGameEvents.OpenHelp();
+      }
       return new UIGameEvents.NoEvent();
     }
     return event;

@@ -36,3 +36,9 @@ export class LookModeActivate extends UIGameEvent {
 export class NoEvent extends UIGameEvent {
   run (_state: GameState): void {}
 }
+
+export class OpenHelp extends UIGameEvent {
+  run(_state: GameState): void {
+    getUIManager().openHelp();
+  }
+}
