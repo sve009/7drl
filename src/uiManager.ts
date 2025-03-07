@@ -9,8 +9,14 @@ import { DescriptorPanel } from "./descriptorPanel";
 import { DialogPanel, DialogCallbacks } from "./dialogPanel";
 import { Item } from "./item";
 import { BuffsPanel } from "./buffsPanel";
+import { Game } from "./game";
+import { StartScreen } from "./startScreen";
 
 export class UIManager {
+  game: Game;
+  startScreen: StartScreen;
+  startScreenInset: number = 15;
+
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
   inventoryPanel: InventoryPanel;
@@ -30,7 +36,16 @@ export class UIManager {
     return this.focused ? this.focusObjectQueue[this.focusObjectQueue.length - 1] : null;
   }
 
-  constructor() {
+  constructor () {
+    const renderPos = getRenderer().renderSize;
+    const startScreenPos = new Position(renderPos.getStartX() + this.startScreenInset,
+                                  renderPos.getStartY() + this.startScreenInset,
+                                  renderPos.getWidth() - 2 * this.startScreenInset,
+                                  renderPos.getHeight() - 2 * this.startScreenInset);
+    this.startScreen = new StartScreen(startScreenPos, Number.MAX_SAFE_INTEGER);
+    
+
+
     this.logPanel = new LogPanel(3);
     this.playerPanel = new PlayerPanel(3);
     this.buffPanel = new BuffsPanel(3);
@@ -114,6 +129,10 @@ export class UIManager {
 
   openInventory (): void {
     this.focusObjectQueue.push(this.inventoryPanel);
+  }
+
+  createStartScreen () {
+    this.focusObjectQueue.push(this.startScreen);
   }
 
   activateLookMode(initPosition: { x: number, y: number }) {

@@ -1,0 +1,11 @@
+TODO:
+Artifacts
+End Screen
+Pause
+Restart
+Help
+Descriptions
+Frame Narrative
+Enemies
+NPCs
+Shops
