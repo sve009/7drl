@@ -12,11 +12,11 @@ export class Game {
     uiManager.createStartScreen();
   }
 
-  run() {
-    // while (true) {
-    //   this.createNewGameSession();
-    //   this.startGameSession();
-    // }
+  async run() {
+    while (true) {
+      this.createNewGameSession();
+      await this.startGameSession();
+    }
   }
 
   restartGame (): void {
@@ -38,13 +38,13 @@ export class Game {
     getUIManager().addGameState(this.state);
   }
 
-  startGameSession (): void {
+  async startGameSession () {
     this.state.sightMap.update(this.state.player);
     this.state.refreshVisual();
     getUIManager().refreshVisual();
     getRenderer().draw();
 
-    this.gameLoop();
+    await this.gameLoop();
   }
 
 
