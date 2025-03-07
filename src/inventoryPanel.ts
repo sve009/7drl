@@ -12,16 +12,15 @@ export class InventoryPanel extends SelectionPanel {
   items?: Inventory;
   orderedStuff: OrderedElement[];
 
-  constructor (boundary: Position, layerIdx: number) {
-    super(boundary, layerIdx);
-    this.layer.bg = "#000";
+  constructor (layerIdx: number) {
+    super();
+    this.layer.index = layerIdx;
     this.title = "Inventory";
     this.showBorder = true;
-
-    this.numberOfRows = this.boundaries.height - 2;
   }
 
   async updateContent(): Promise<GameEvent> {
+    this.numberOfRows = this.orderedStuff.length - 1;
     const event = await super.updateContent();
     if (event instanceof Select) {
       const uiItem = this.orderedStuff[this.selectionIdx];

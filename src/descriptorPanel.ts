@@ -7,8 +7,9 @@ export class DescriptorPanel extends UIComponent {
   lookModeCursor: LookModeCursor
   gameState: GameState
 
-  constructor(boundaries: Position, layerIdx: number, lookModeCursor: LookModeCursor) {
-    super(boundaries, layerIdx);
+  constructor(layerIdx: number, lookModeCursor: LookModeCursor) {
+    super();
+    this.layer.index = layerIdx;
     this.title = "Description";
     this.showBorder = true;
     this.lookModeCursor = lookModeCursor;

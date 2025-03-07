@@ -8,12 +8,14 @@ import { LookModeCursor } from "./lookModeCursor";
 import { DescriptorPanel } from "./descriptorPanel";
 import { DialogPanel, DialogCallbacks } from "./dialogPanel";
 import { Item } from "./item";
+import { BuffsPanel } from "./buffsPanel";
 
 export class UIManager {
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
   inventoryPanel: InventoryPanel;
   descriptorPanel: DescriptorPanel;
+  buffPanel: BuffsPanel;
   lookModeCursor: LookModeCursor;
   gameState: GameState | null = null;
   playerPanelHeight: number = 10;
@@ -29,11 +31,12 @@ export class UIManager {
   }
 
   constructor() {
-    this.logPanel = new LogPanel(new Position(0, 40, 105, 10), 3);
-    this.playerPanel = new PlayerPanel(new Position(80, 0, 25, 10), 3);
-    this.inventoryPanel = new InventoryPanel(new Position(10, 5, 60, 30), 11);
+    this.logPanel = new LogPanel(3);
+    this.playerPanel = new PlayerPanel(3);
+    this.buffPanel = new BuffsPanel(3);
+    this.inventoryPanel = new InventoryPanel(11);
     this.lookModeCursor = new LookModeCursor(10);
-    this.descriptorPanel = new DescriptorPanel(new Position(80, 20, 25, 10), 3, this.lookModeCursor);
+    this.descriptorPanel = new DescriptorPanel(3, this.lookModeCursor);
   }
 
   async updateContent() {
@@ -41,27 +44,33 @@ export class UIManager {
     gameEvent.run(this.gameState);
   }
 
-  addGameState (gameState: GameState): void {
+  updateUICompBoundaries() {
     const renderPos = getRenderer().renderSize;
-    const endMapX = gameState.terrainLayer.position.getEndX() + 1;
-    const endMapY = gameState.terrainLayer.position.getEndY() + 1;
+    const endMapX = this.gameState.terrainLayer.position.getEndX() + 1;
+    const endMapY = this.gameState.terrainLayer.position.getEndY() + 1;
     const logPanelPos = new Position(renderPos.getStartX(), endMapY, renderPos.getWidth(), renderPos.getHeight() - endMapY);
     const rightPanelWidth = renderPos.getEndX() - endMapX + 1;
     const playPanelPos = new Position(endMapX, renderPos.getStartY(), rightPanelWidth, this.playerPanelHeight);
     const descPanelPos = new Position(endMapX, playPanelPos.getEndY() + 1, rightPanelWidth, this.descPanelHeight);
+    const buffPanelPos = new Position(endMapX, descPanelPos.getEndY() + 1, rightPanelWidth, endMapY - descPanelPos.getEndY() - 1);
     this.logPanel.setBoundaries(logPanelPos);
     this.playerPanel.setBoundaries(playPanelPos);
     this.descriptorPanel.setBoundaries(descPanelPos);
+    this.buffPanel.setBoundaries(buffPanelPos);
 
-    const invPanelPos = new Position(gameState.terrainLayer.position.getStartX() + this.inventoryPanelInset,
-                                     gameState.terrainLayer.position.getStartY() + this.inventoryPanelInset / 2,
-                                     gameState.terrainLayer.position.getWidth() - 2 * this.inventoryPanelInset,
-                                     gameState.terrainLayer.position.getHeight() - this.inventoryPanelInset);
-    this.inventoryPanel.layer.position = invPanelPos;
+    const invPanelPos = new Position(this.gameState.terrainLayer.position.getStartX() + this.inventoryPanelInset,
+                                     this.gameState.terrainLayer.position.getStartY() + this.inventoryPanelInset / 2,
+                                     this.gameState.terrainLayer.position.getWidth() - 2 * this.inventoryPanelInset,
+                                     this.gameState.terrainLayer.position.getHeight() - this.inventoryPanelInset);
+    this.inventoryPanel.setBoundaries(invPanelPos);
+  }
 
+  addGameState (gameState: GameState): void {
     this.gameState = gameState;
     this.descriptorPanel.gameState = gameState;
     this.lookModeCursor.gameState = gameState;
+
+    this.updateUICompBoundaries();
   }
 
   createDialogPanel(
@@ -94,6 +103,7 @@ export class UIManager {
     this.logPanel.refreshVisuals();
     this.playerPanel.refreshVisuals();
     this.descriptorPanel.refreshVisuals();
+    this.buffPanel.refreshVisuals();
     if (this.focused) {
       this.focusedObject.refreshVisuals();
     }

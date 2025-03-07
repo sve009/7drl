@@ -30,7 +30,7 @@ export abstract class SelectionPanel extends UIComponent {
     }
     this.selectionIdx = Math.min(
       Math.max(0, this.selectionIdx), 
-      this.numberOfRows - 2
+      this.numberOfRows
     );
 
     return new UIGameEvents.NoEvent;

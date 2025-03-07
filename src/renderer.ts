@@ -101,7 +101,6 @@ export class Layer {
   }
 
   addDrawable (drawable: Drawable) {
-    console.log(drawable)
     this.cacheLayer[drawable.y][drawable.x] = drawable;
     this.drawables.push(drawable);
   }
