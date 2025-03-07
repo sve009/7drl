@@ -10,3 +10,11 @@ Enemies
 NPCs
 Shops
 Map Gen
+Health Bar
+Rings
+Enemies and Items on look mode
+   Flavor text
+   Strategic Advice
+   Damage
+   Health (Maybe)
+   Items need to tell you what they do
