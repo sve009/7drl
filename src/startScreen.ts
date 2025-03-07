@@ -1,7 +1,9 @@
-import { GameEvent } from "./gameEvent";
+import { GameEvent, UIGameEvent } from "./gameEvent";
 import { Position, TextDrawable } from "./renderer";
 import { SelectionPanel } from "./selectionPanel";
 import { getGameName } from "./game";
+import * as UIGameEvents from "./uiGameEvent";
+import { getUIManager } from "./uiManager";
 
 export class StartScreen extends SelectionPanel {
   text: string = getGameName();
@@ -23,16 +25,32 @@ export class StartScreen extends SelectionPanel {
         count++;
     }
     this.numberOfRows = count - 1;
+
+    this.text = [
+      getGameName(),
+      "",
+      "    Created by: Sam Eagen && Alexandre Ait Ettajer",
+      "",
+      "2000 years after the end of civilization and 2000 years before the age of silicon. The church has been the only institution to survive the apocolypse and retain any memory of the fires and radiation.",
+      "",
+      "The abbot has tasked you to enter the forbidden dungeon in search of artifacts of a forgotten time.",
+      "",
+      "Are you ready?"
+    ].join("\n");
   }
 
-  updateContent(): Promise<GameEvent> {
-    const event = super.updateContent();
+  async updateContent(): Promise<GameEvent> {
+    const event = await super.updateContent();
+    if (event instanceof UIGameEvents.Select) {
+      getUIManager().exitCurrentFocus();
+      return new UIGameEvents.NoEvent();
+    }
     return event;
   }
 
   refreshVisuals(): void {
     // Display text first
-    this.layer.addDrawable(new TextDrawable(1, 1, this.text));
+    this.layer.addDrawable(new TextDrawable(1, 1, this.text, this.boundaries.getWidth() - 2));
 
     // Add buttons
     for (let i = 0; i < this.buttonNames.length; i++) {
