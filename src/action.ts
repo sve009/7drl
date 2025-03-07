@@ -4,7 +4,7 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
-import { Item, ItemGenerator } from "./item";
+import { Item, ItemGenerator, Applyable } from "./item";
 import { EnemyGenerator } from "./enemies";
 import { randi } from "./utilities";
 import { Action } from "./gameEvent";
@@ -31,6 +31,20 @@ export class MoveAction extends Action {
     const dl = this.entity.dungeonLevel;
     state.maps[dl].setOpenness(this.position.x, this.position.y, true);
     state.maps[dl].setOpenness(oldPos.x, oldPos.y, false);
+  }
+}
+
+export class ApplyAction extends Action {
+  item: Applyable;
+
+  constructor(item: Applyable) {
+    super();
+    this.item = item;
+  }
+
+  run(state: GameState) {
+    // TODO: let enemies use items
+    this.item.apply(state, state.player);  
   }
 }
 

@@ -7,6 +7,7 @@ import { Glyph } from "./renderer";
 import { dirMap } from "./constants";
 import { Item } from "./item";
 import { Inventory } from "./inventory";
+import { logMessage } from "./uiManager";
 
 export class Player extends Character {
   ioHandler: IOHandler;
@@ -146,7 +147,7 @@ export class Player extends Character {
   }
 
   die(state: GameState): void {
-    console.log("DEATH");
+    logMessage("Death comes for us all. GAME OVER");
     state.running = false;
   }
 }

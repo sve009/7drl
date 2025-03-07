@@ -1,11 +1,13 @@
 import { LogPanel } from "./logPanel";
-import { Position } from "./renderer";
+import { getRenderer, Position } from "./renderer";
 import { UIComponent } from "./gameObject";
 import { PlayerPanel } from "./playerPanel";
 import { InventoryPanel } from "./inventoryPanel";
 import { GameState } from "./gamestate";
 import { LookModeCursor } from "./lookModeCursor";
 import { DescriptorPanel } from "./descriptorPanel";
+import { DialogPanel } from "./dialogPanel";
+import { Item } from "./item";
 
 export class UIManager {
   logPanel: LogPanel;
@@ -40,6 +42,30 @@ export class UIManager {
     this.gameState = gameState;
     this.descriptorPanel.gameState = gameState;
     this.lookModeCursor.gameState = gameState;
+  }
+
+  createDialogPanel(
+    item: Item | null, 
+    text: string | null,
+    buttons: [
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+      boolean,
+    ],
+  ): void {
+    const title = item ? item.name : null;
+    const fText = item ? item.name : null;
+    const dialog = new DialogPanel(
+      new Position(17, 15, 45, 10),
+      0,
+      title,
+      fText,
+      buttons,
+      item
+    );
+    this.addUIToFront(dialog);
   }
 
   refreshVisual() {

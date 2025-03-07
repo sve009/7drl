@@ -11,14 +11,19 @@ export abstract class SelectionPanel extends UIComponent {
   async updateContent(): Promise<GameEvent> {
     let key = await this.ioHandler.requestKey();
     switch (key) {
+      case "h":
+        this.selectionIdx -= 1;
+        break;
       case "j":
         this.selectionIdx += 1;
         break;
       case "k":
         this.selectionIdx -= 1;
         break;
+      case "l":
+        this.selectionIdx += 1;
+        break;
       case "enter":
-        console.log('enter');
         return new UIGameEvents.Select;
       case "escape":
         return new UIGameEvents.ExitUI;

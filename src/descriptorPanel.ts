@@ -22,7 +22,6 @@ export class DescriptorPanel extends UIComponent {
     } else {
       description = this.gameState.currentMap.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
     }
-    console.log()
     this.layer.addDrawable(new TextDrawable(this.boundaries.startX + 1, this.boundaries.startY + 1, description));
     super.refreshVisuals();
   }

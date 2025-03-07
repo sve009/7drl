@@ -61,6 +61,7 @@ export class Game {
       // Update the GameState and the UIManager
       await this.updateObjects();
 
+      // Create buffers
       this.refreshVisuals();
 
       // Draw everything

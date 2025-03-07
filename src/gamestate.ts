@@ -377,7 +377,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "This is grass"
+          () => "This is grass. Touch it. We sure haven't in days."
         );
 
       }

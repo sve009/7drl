@@ -4,6 +4,7 @@ import type { Item } from "./item";
 import { Inventory } from "./inventory";
 import type { GameEvent } from "./gameEvent";
 import { Select, NoEvent } from "./uiGameEvent";
+import { getUIManager } from "./uiManager";
 
 type OrderedElement = string | Item;
 
@@ -21,8 +22,7 @@ export class InventoryPanel extends SelectionPanel {
   }
 
   async updateContent(): Promise<GameEvent> {
-    let event = await super.updateContent();
-
+    const event = await super.updateContent();
     if (event instanceof Select) {
       const uiItem = this.orderedStuff[this.selectionIdx];
       if (typeof(uiItem) == "string") {
@@ -33,7 +33,25 @@ export class InventoryPanel extends SelectionPanel {
           }
         }
       } else {
-        // Dialog
+        const item = uiItem as Item;
+        const buttons: [
+          boolean,
+          boolean,
+          boolean,
+          boolean,
+          boolean,
+        ] = [
+          true,
+          true,
+          "apply" in item,
+          "throw" in item,
+          "equip" in item,
+        ];
+        getUIManager().createDialogPanel(
+          item, 
+          null, 
+          buttons
+        );
       }
       return new NoEvent();
     } else {
