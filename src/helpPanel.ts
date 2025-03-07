@@ -39,6 +39,7 @@ export class HelpPanel extends UIComponent {
       "",
       "",
       "",
+      "",
       "h - left",
       "j - down",
       "k - up",

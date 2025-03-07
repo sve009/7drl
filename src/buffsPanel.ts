@@ -9,7 +9,7 @@ export class BuffsPanel extends UIComponent {
     super();
     this.layer.index = layerIdx;
     this.layer.bg
-    this.title = "Stati";
+    this.title = "Buffs/Debuffs";
     this.showBorder = true;
   }
 
