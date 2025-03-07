@@ -46,8 +46,12 @@ export class MapGenerator {
       }
     }
 
+    this.addCarpet();
     this.addFoliage();
+    this.addPuddles();
     this.addStairs();
+    this.addRuins();
+    this.addStatues();
   }
 
   createFirstRoom(): Grid {
@@ -74,6 +78,33 @@ export class MapGenerator {
     }
 
     return [room, doorPoints];
+  }
+
+  addCarpet(): void {
+    const numPaths = randi(4, 10);
+    for (let i = 0; i < numPaths; i++) {
+      const firstPos = this.map.openSpot();
+      const secondPos = this.map.openSpot();
+
+      const dijkstra = new ROT.Path.Dijkstra(
+        secondPos.x,
+        secondPos.y,
+        (x: number, y: number) => {
+          return this.map.passable(x, y);
+        },
+        null
+      );
+
+      dijkstra.compute(
+        firstPos.x,
+        firstPos.y,
+        (x: number, y: number) => {
+          if (randi(0, 3)) {
+            this.map.setTile(x, y, 14);
+          }
+        }
+      );
+    }
   }
 
   addFoliage(): void {
@@ -106,6 +137,31 @@ export class MapGenerator {
               this.map.setTile(x0, y0, 5);
             } else {
               this.map.setTile(x0, y0, 3);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  addPuddles(): void {
+    const numPuddles = randi(0, 8);
+    for (let i = 0; i < numPuddles; i++) {
+      const pos = this.map.openSpot();
+      const r = Math.pow(randi(3, 9), 2);
+      for (let y0 = 2; y0 < this.height - 2; y0++) {
+        for (let x0 = 2; x0 < this.width - 2; x0++) {
+          if (!this.map.passable(x0, y0)) {
+            continue;
+          }
+
+          if (Math.pow(pos.x - x0, 2) + Math.pow(pos.y - y0, 2) < r) {
+            const isFoliage = randi(0, 4);
+            if (!isFoliage) {
+              const val = randi(0, 2) ? 19 : 20;
+              this.map.setTile(x0, y0, val);
+            } else {
+              this.map.setTile(x0, y0, 13);
             }
           }
         }
@@ -157,6 +213,171 @@ export class MapGenerator {
       }
       minDistance -= 10;
     }
+  }
+
+  // @pre Call after this.map.upStair not null
+  addStatues() {
+    // Will skew towards bottom of range since 
+    // disconnected don't count
+    const numStatues = randi(0, 8);
+    for (let i = 0; i < numStatues; i++) {
+      for (const tile of this.map.shuffledTiles()) {
+        const { x, y } = breakIndex(tile, this.map.width);
+
+        // Only place in passable areas
+        if (!this.map.passable(x, y)) {
+          continue;
+        }
+
+        // Add statue
+        const old = this.map.tiles[tile];
+        const version = randi(0, 2) ? 17 : 18;
+        this.map.setTile(x, y, version);
+
+        // Check that nothing is disconnected
+        if (this.isNowDisconnected(x, y)) {
+          this.map.tiles[tile] = old;
+        }
+
+        break;
+      }
+    }
+  }
+
+  // @pre this.map.upStair not null
+  addRuins() {
+    const numRuins = randi(0, 4);
+    const maxLength = 10;
+    const dirToVal = (s: number, n: number) => {
+      switch (s) {
+        // left
+        case 0: {
+          switch (n) {
+            case 0: {
+              return 21;
+            }
+            case 1: {
+              return 23;
+            }
+            case 2: {
+              return 21;
+            }
+            case 3: {
+              return 26;
+            }
+          }
+        }
+        // down
+        case 1: {
+          switch (n) {
+            case 0: {
+              return 26;
+            }
+            case 1: {
+              return 22;
+            }
+            case 2: {
+              return 25;
+            }
+            case 3: {
+              return 22;
+            }
+          }
+        }
+        case 2: {
+          switch (n) {
+            case 0: {
+              return 21;
+            }
+            case 1: {
+              return 24;
+            }
+            case 2: {
+              return 21;
+            }
+            case 3: {
+              return 26;
+            }
+          }
+        }
+        case 3: {
+          switch (n) {
+            case 0: {
+              return 24;
+            }
+            case 1: {
+              return 22;
+            }
+            case 2: {
+              return 23;
+            }
+            case 3: {
+              return 22;
+            }
+          }
+        }
+      }
+    };
+
+    for (let i = 0; i < numRuins; i++) {
+      let { x, y }  = this.map.openSpot();
+      let sDir = randi(0, 4);
+      let go = true;
+      let count = 0;
+      while (go && count < maxLength) {
+        const nDir = randi(0, 4);
+        const dPos = dirMap.get(nDir);
+
+        const fx = x + dPos.x;
+        const fy = y + dPos.y;
+
+        if (!this.map.passable(x, y)) {
+          break;
+        }
+
+        const val = dirToVal(sDir, nDir);
+        const idx = joinIndex(fx, fy, this.width);
+        const old = this.map.tiles[idx];
+        this.map.setTile(x, y, val);
+
+        if (this.isNowDisconnected(x, y)) {
+          this.map.tiles[idx] = old;
+          go = false;
+        }
+
+        count++;
+        x = fx;
+        y = fy;
+        sDir = nDir;
+      }
+    }
+  }
+
+  isNowDisconnected(x: number, y: number): boolean {
+    const passable = (x: number, y: number) => {
+      return this.map.passable(x, y);
+    };
+    for (let dir = 0; dir < 8; dir++) {
+      const dPos = dirMap.get(dir);
+      const fx = x + dPos.x;
+      const fy = y + dPos.y;
+
+      if (this.map.passable(fx, fy)) {
+        let pathExists;
+        const dijkstra = new ROT.Path.Dijkstra(fx, fy, passable, null); 
+        dijkstra.compute(
+          this.map.stairUp.x, 
+          this.map.stairUp.y, 
+          (x: number, y: number) => {
+            pathExists = true;
+          }
+        );
+        if (!pathExists) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   createRectRoom(): Grid {

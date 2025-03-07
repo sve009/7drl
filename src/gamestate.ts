@@ -266,6 +266,38 @@ export class GameMap {
         t = TileTypeFactory.create("statue2");
         break;
       }
+      case 19: {
+        t = TileTypeFactory.create("lilypad");
+        break;
+      }
+      case 20: {
+        t = TileTypeFactory.create("reed");
+        break;
+      }
+      case 21: {
+        t = TileTypeFactory.create("ruin1");
+        break;
+      }
+      case 22: {
+        t = TileTypeFactory.create("ruin2");
+        break;
+      }
+      case 23: {
+        t = TileTypeFactory.create("ruin3");
+        break;
+      }
+      case 24: {
+        t = TileTypeFactory.create("ruin4");
+        break;
+      }
+      case 25: {
+        t = TileTypeFactory.create("ruin5");
+        break;
+      }
+      case 26: {
+        t = TileTypeFactory.create("ruin6");
+        break;
+      }
     }
 
     let tile = new Tile(t);
@@ -546,6 +578,78 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => false,
+        );
+      }
+      case "lilypad": {
+        return new TileType(
+          "\u{230C}",
+          "#2de346",
+          "#181b7d",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "reed": {
+        return new TileType(
+          "\u{2300}",
+          "#48bf11",
+          "#181b7d",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "ruin1": {
+        return new TileType(
+          "\u{2550}",
+          "#a99ff5",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "ruin2": {
+        return new TileType(
+          "\u{2551}",
+          "#a99ff5",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "ruin3": {
+        return new TileType(
+          "\u{2554}",
+          "#a99ff5",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "ruin4": {
+        return new TileType(
+          "\u{2557}",
+          "#a99ff5",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "ruin5": {
+        return new TileType(
+          "\u{255A}",
+          "#a99ff5",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "ruin6": {
+        return new TileType(
+          "\u{255D}",
+          "#a99ff5",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
         );
       }
     }
