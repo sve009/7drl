@@ -91,7 +91,7 @@ export class IOHandler {
         }
         break
       }
-      case KEYS.VK_ENTER: {
+      case KEYS.VK_RETURN: {
         if (!this.shifting) {
           this.lastKey = "enter";
         }
