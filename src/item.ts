@@ -640,11 +640,28 @@ class BasicWeaponArmorFactory {
 }
 
 const itemTable = {
-  potion: 40,
+  potion: 45,
   scroll: 20,
   gold: 20,
-  equipment: 20,
+  equipment: 15,
 };
+const weaponTable = {
+  dagger: 8,
+  spear: 5,
+  sword: 3,
+  axe: 2,
+  glaive: 1,
+};
+const armorTable = {
+  leather: 8,
+  chain: 6,
+  scale: 4,
+  plate: 2,
+}
+const equipmentTable = {
+  weapon: 60,
+  armor: 40,
+}
 export class ItemGenerator {
   static createItem(dungeonLevel: number): Item {
     let key = RNG.getWeightedValue(itemTable);
@@ -660,15 +677,17 @@ export class ItemGenerator {
         return new Gold(amount);
       }
       case "equipment": {
-        const p = RNG.getPercentage();
-        if (p < 60) {
-          const options = ["dagger", "spear", "sword", "axe", "glaive"];
-          const opt = RNG.getItem(options);
-          return BasicWeaponArmorFactory.createBasicWeapon(opt);
-        } else {
-          const options = ["leather", "chain", "scale", "plate"];
-          const opt = RNG.getItem(options);
-          return BasicWeaponArmorFactory.createBasicArmor(opt);
+        switch (RNG.getWeightedValue(equipmentTable)) {
+          case "weapon": {
+            const wep = RNG.getWeightedValue(weaponTable);
+            console.log(wep);
+            return BasicWeaponArmorFactory.createBasicWeapon(wep);
+          }
+          case "armor": {
+            const arm = RNG.getWeightedValue(armorTable);
+            console.log(arm);
+            return BasicWeaponArmorFactory.createBasicArmor(arm);
+          }
         }
       }
     }
