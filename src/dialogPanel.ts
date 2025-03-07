@@ -1,9 +1,9 @@
 import { UIComponent } from "./gameObject";
 import { GameState } from "./gamestate";
-import type { Item, Applyable } from "./item";
+import type { Item, Applyable, Equippable } from "./item";
 import { Position, TextDrawable } from "./renderer";
 import { Select, NoEvent, ExitUI } from "./uiGameEvent";
-import { ApplyAction, DropAction } from "./action";
+import { ApplyAction, EquipAction, DropAction } from "./action";
 import { SelectionPanel } from "./selectionPanel";
 import { GameEvent } from "./gameEvent";
 import { getUIManager } from "./uiManager";
@@ -97,8 +97,9 @@ export class DialogPanel extends SelectionPanel {
           return new NoEvent();
         case 4:
           // Equip / Unequip
-          // TODO
-          return new NoEvent();
+          getUIManager().exitCurrentFocus();
+          this.callbacks.equip(this.item);
+          return new EquipAction(this.item as unknown as Equippable);
         default:
           return new NoEvent();
       }
@@ -117,7 +118,13 @@ export class DialogPanel extends SelectionPanel {
       }
 
       // Add button text
-      const bText = this.buttonNames[i];
+      let bText = this.buttonNames[i];
+      if (bText == "Equip") {
+        bText = (this.item as unknown as Equippable).equippedTo
+        ? "Unequip"
+        : "Equip";
+      }
+
       const x = 2 + i * 9;
       const y = this.boundaries.getHeight() - 3;
       this.layer.addDrawable(

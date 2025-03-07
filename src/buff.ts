@@ -8,6 +8,7 @@ import { Attackable, Defendable } from "./item";
 export abstract class Buff implements Attackable, Defendable {
   name: string;
   turnsRemaining: number;
+  equippedTo: Character;
 
   abstract update(state: GameState, character: Character): void;
   end(character: Character): void {}

@@ -4,7 +4,7 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
-import { Item, ItemGenerator, Applyable } from "./item";
+import { Item, ItemGenerator, Applyable, Equippable } from "./item";
 import { EnemyGenerator } from "./enemies";
 import { randi } from "./utilities";
 import { Action } from "./gameEvent";
@@ -48,6 +48,24 @@ export class ApplyAction extends Action {
   }
 }
 
+export class EquipAction extends Action {
+  item: Equippable;
+
+  constructor(item: Equippable) {
+    super();
+    this.item = item;
+  }
+
+  run(state: GameState) {
+    // TODO: let enemies equip / unequip
+    if (this.item.equippedTo) {
+      this.item.unequip(state.player);
+    } else {
+      this.item.equip(state.player);
+    }
+  }
+}
+
 export class AttackAction extends Action {
   attacker: Character;
   defender: Character;
@@ -63,7 +81,8 @@ export class AttackAction extends Action {
     const [dodge, def] = this.defender.defend(state);
 
     if (RNG.getPercentage() < toHit - dodge) {
-      this.defender.health -= (dmg - def);
+      const dmgTkn = Math.max(1, dmg - def);
+      this.defender.health -= dmgTkn;
       logMessage(`${this.attacker.name} hit ${this.defender.name} for ${dmg} damage`);
       if (this.defender.health <= 0) {
         const i = state.entities.findIndex(e => e == this.defender);

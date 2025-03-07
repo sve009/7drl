@@ -20,6 +20,8 @@ export interface Applyable {
 }
 
 export interface Equippable {
+  equippedTo: Character | null;
+
   equip(character: Character): void;
   unequip(character: Character): void;
   updateEquipment(): void;
@@ -351,12 +353,25 @@ class ScrollFactory {
 }
 
 export abstract class Weapon extends Item implements Attackable, Equippable {
+  equippedTo: Character | null;
+
   equip(character: Character) {
+    const old = character.equipment.get("armor");
+    if (old) {
+      old.unequip(character);
+    }
+
     character.equipment.set("weapon", this);
+    this.equippedTo = character;
+
+    logMessage(`Equipped ${this.name}`);
   }
 
   unequip(character: Character) {
     character.equipment.set("weapon", null);
+    this.equippedTo = null;
+
+    logMessage(`Unequipped ${this.name}`);
   }
 
   onHit(state: GameState, hitter: Character, hit: Character) {}
@@ -385,12 +400,25 @@ export abstract class RangedWeapon extends Weapon implements Throwable {
 }
 
 export abstract class Armor extends Item implements Defendable, Equippable {
+  equippedTo: Character | null;
+
   equip(character: Character) {
+    const old = character.equipment.get("armor");
+    if (old) {
+      old.unequip(character);
+    }
+
     character.equipment.set("armor", this);
+    this.equippedTo = character;
+
+    logMessage(`Equipped ${this.name}`);
   }
 
   unequip(character: Character) {
     character.equipment.set("armor", null);
+    this.equippedTo = null;
+
+    logMessage(`Unequipped ${this.name}`);
   }
 
   wasHit(state: GameState, hit: Character, hitter: Character) {}
@@ -412,12 +440,25 @@ export abstract class Armor extends Item implements Defendable, Equippable {
 }
 
 export abstract class Ring extends Item implements Equippable {
+  equippedTo: Character;
+
   equip(character: Character) {
+    const old = character.equipment.get("ring");
+    if (old) {
+      old.unequip(character);
+    }
+
     character.equipment.set("ring", this);
+    this.equippedTo = character;
+
+    logMessage(`Equipped ${this.name}`);
   }
 
   unequip(character: Character) {
     character.equipment.set("ring", null);
+    this.equippedTo = null;
+
+    logMessage(`Unequipped ${this.name}`);
   }
 
   abstract updateEquipment(): void;
@@ -429,6 +470,7 @@ export class Gold extends Item {
   constructor(amount: number) {
     super();
     this.amount = amount;
+    this.name = `${amount} gold`;
   }
 
   getGlyph() {
@@ -598,11 +640,28 @@ class BasicWeaponArmorFactory {
 }
 
 const itemTable = {
-  potion: 40,
+  potion: 45,
   scroll: 20,
   gold: 20,
-  equipment: 20,
+  equipment: 15,
 };
+const weaponTable = {
+  dagger: 8,
+  spear: 5,
+  sword: 3,
+  axe: 2,
+  glaive: 1,
+};
+const armorTable = {
+  leather: 8,
+  chain: 6,
+  scale: 4,
+  plate: 2,
+}
+const equipmentTable = {
+  weapon: 60,
+  armor: 40,
+}
 export class ItemGenerator {
   static createItem(dungeonLevel: number): Item {
     let key = RNG.getWeightedValue(itemTable);
@@ -618,15 +677,17 @@ export class ItemGenerator {
         return new Gold(amount);
       }
       case "equipment": {
-        const p = RNG.getPercentage();
-        if (p < 60) {
-          const options = ["dagger", "spear", "sword", "axe", "glaive"];
-          const opt = RNG.getItem(options);
-          return BasicWeaponArmorFactory.createBasicWeapon(opt);
-        } else {
-          const options = ["leather", "chain", "scale", "plate"];
-          const opt = RNG.getItem(options);
-          return BasicWeaponArmorFactory.createBasicArmor(opt);
+        switch (RNG.getWeightedValue(equipmentTable)) {
+          case "weapon": {
+            const wep = RNG.getWeightedValue(weaponTable);
+            console.log(wep);
+            return BasicWeaponArmorFactory.createBasicWeapon(wep);
+          }
+          case "armor": {
+            const arm = RNG.getWeightedValue(armorTable);
+            console.log(arm);
+            return BasicWeaponArmorFactory.createBasicArmor(arm);
+          }
         }
       }
     }
