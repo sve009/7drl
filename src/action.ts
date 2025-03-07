@@ -97,6 +97,7 @@ export class PickUpAction extends Action {
         ) {
           state.entities.splice(i, 1);
           this.character.items.addItem(entity);
+          logMessage(`Picked up ${entity.name}`);
         }
       }
     }
