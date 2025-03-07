@@ -12,6 +12,7 @@ import { BuffsPanel } from "./buffsPanel";
 import { Game } from "./game";
 import { StartScreen } from "./startScreen";
 import { HelpPanel } from "./helpPanel";
+import { PausePanel } from "./pausePanel";
 
 export class UIManager {
   game: Game;
@@ -19,6 +20,7 @@ export class UIManager {
   startScreenInset: number = 15;
   helpPanel: HelpPanel
   helpPanelInset: number = 14;
+  pausePanel: PausePanel;
 
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
@@ -164,6 +166,14 @@ export class UIManager {
   openHelp (): void {
     this.focusObjectQueue.push(this.helpPanel);
   }
+
+  openPauseMenu (): void {
+    // this.focusObjectQueue.push(this.pausePanel);
+  }
+
+  // restartGame (): void {
+  //   this.game.restartGame();
+  // }
 }
 
 

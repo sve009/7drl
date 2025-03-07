@@ -42,3 +42,15 @@ export class OpenHelp extends UIGameEvent {
     getUIManager().openHelp();
   }
 }
+
+export class OpenPauseMenu extends UIGameEvent {
+  run (_state: GameState): void {
+    getUIManager().openPauseMenu();
+  }
+}
+
+export class RestartGame extends UIGameEvent {
+  run (_state: GameState): void {
+    // getUIManager().restartGame();
+  }
+}

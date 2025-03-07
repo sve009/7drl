@@ -3,10 +3,9 @@ import { Position, TextDrawable } from "./renderer";
 import { SelectionPanel } from "./selectionPanel";
 import { getGameName } from "./game";
 import * as UIGameEvents from "./uiGameEvent";
-import { getUIManager } from "./uiManager";
 
 export class StartScreen extends SelectionPanel {
-  text: string = getGameName();
+  text: string;
   buttonNames = [
     "Start",
     "Help"
@@ -15,7 +14,6 @@ export class StartScreen extends SelectionPanel {
 
   constructor (boundaries: Position, layerIdx: number) {
     super(boundaries, layerIdx);
-    this.layer.index = layerIdx;
     this.showBorder = true;
 
     this.indexMap = [];

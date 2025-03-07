@@ -13,8 +13,14 @@ export class Game {
   }
 
   run() {
-    this.createNewGameSession();
-    this.startGameSession();
+    // while (true) {
+    //   this.createNewGameSession();
+    //   this.startGameSession();
+    // }
+  }
+
+  restartGame (): void {
+    this.state.running = false;
   }
 
   createNewGameSession (): void {
