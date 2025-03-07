@@ -10,20 +10,23 @@ export abstract class SelectionPanel extends UIComponent {
 
   async updateContent(): Promise<GameEvent> {
     let key = await this.ioHandler.requestKey();
-    let idx = this.selectionIdx;
     switch (key) {
       case "j":
-        idx += 1;
+        this.selectionIdx += 1;
         break;
       case "k":
-        idx -= 1;
+        this.selectionIdx -= 1;
         break;
       case "enter":
+        console.log('enter');
         return new UIGameEvents.Select;
       case "escape":
         return new UIGameEvents.ExitUI;
     }
-    idx = Math.min(Math.max(0, idx), this.numberOfRows - 1)
+    this.selectionIdx = Math.min(
+      Math.max(0, this.selectionIdx), 
+      this.numberOfRows - 2
+    );
 
     return new UIGameEvents.NoEvent;
   }
