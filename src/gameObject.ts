@@ -123,7 +123,7 @@ export abstract class UIComponent extends GameObject {
   boundaries: Position;
   layer: Layer;
   isTransparent: boolean;
-
+  bg: string = "#000";
   title: string | null;
   showBorder: boolean;
 
@@ -138,6 +138,14 @@ export abstract class UIComponent extends GameObject {
 
   async updateContent(): Promise<GameEvent> {
     return;
+  }
+
+  drawBackground (): void {
+    for (let i = 0; i < this.boundaries.width; i++) {
+      for (let j = 0; j < this.boundaries.height; j++) {
+        this.layer.addDrawable(new Glyph(i + this.boundaries.startX, j + this.boundaries.startY, null, null, this.bg))
+      }
+    }
   }
 
   drawBorder(): void {
@@ -188,6 +196,7 @@ export abstract class UIComponent extends GameObject {
   }
 
   refreshVisuals() {
+    this.drawBackground();
     if (this.showBorder) {
       this.drawBorder();
     }
