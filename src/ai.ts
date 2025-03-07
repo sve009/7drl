@@ -7,11 +7,13 @@ import { Character } from "./gameObject";
 import { Player } from "./player";
 
 export abstract class AIProfile {
+  memory: number;
+  focus: number;
   seesPlayer: boolean;
   abstract update(state: GameState, character: Character): Action;
 }
 
-export class RandomProfile {
+export class RandomProfile extends AIProfile {
   seesPlayer: boolean = false;
   update(state: GameState, character: Character): Action {
     let found = false;
@@ -43,15 +45,18 @@ export class RandomProfile {
  * If unaware of the player, picks a random spot on the map and
  * travels to it. If aware of the player, approaches and attacks the player.
  */
-export class BasicMelee {
+export class BasicMelee extends AIProfile {
   path: Array<{ x: number, y: number }>;
   visionRange: number;
   seesPlayer: boolean;
 
-  constructor(visionRange: number) {
+  constructor(visionRange: number, memory: number) {
+    super();
     this.path = [];
     this.visionRange = visionRange;
     this.seesPlayer = false;
+    this.memory = memory;
+    this.focus = 0;
   }
 
   updateSeesPlayer(state: GameState, character: Character): void {
@@ -68,10 +73,18 @@ export class BasicMelee {
             y == state.player.position.y &&
             character.dungeonLevel == state.player.dungeonLevel
         ) {
-          this.seesPlayer = true;
+          this.focus = this.memory;
         }
       }
     );
+
+    this.focus--;
+
+    if (this.focus >= 0) {
+      this.seesPlayer = true;
+    } else {
+      this.seesPlayer = false;
+    }
   }
 
   update(state: GameState, character: Character): Action {
@@ -145,8 +158,8 @@ export class BasicMelee {
 export class MeleeFollower extends BasicMelee {
   leader: Character;
 
-  constructor(visionRange: number, leader: Character) {
-    super(visionRange);
+  constructor(visionRange: number, memory: number, leader: Character) {
+    super(visionRange, memory);
     this.leader = leader;
   }
 
