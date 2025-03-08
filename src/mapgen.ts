@@ -1,10 +1,11 @@
 import * as ROT from "rot-js";
-import { GameMap } from "./gamestate";
+import { GameState, GameMap } from "./gamestate";
 import { Grid } from "./grid";
 import { dirMap, oppDir } from "./constants";
 import { randi, joinIndex, breakIndex } from "./utilities";
 import { IOHandler } from "./io";
-import { ItemGenerator } from "./item";
+import { Artifact, ItemGenerator } from "./item";
+import { logMessage } from "./uiManager";
 
 type DoorPoints = Map<number, { x: number; y: number; }>;
 
@@ -30,7 +31,7 @@ export class MapGenerator {
     this.map = gameMap;
   }
 
-  generateLevel(): void {
+  generateLevel(state: GameState, z: number): void {
     const grid = this.createFirstRoom();  
 
     // 20 rooms for now
@@ -49,6 +50,31 @@ export class MapGenerator {
     this.addCarpet();
     this.addFoliage();
     this.addPuddles();
+
+    if (z % 2 == 0) {
+      const artifact = new Artifact();
+      const pos = this.map.openSpot(); 
+      artifact.position = pos;
+      artifact.dungeonLevel = z;
+      this.map.setTile(
+        pos.x,
+        pos.y,
+        27
+      );
+      for (let i = 0; i < 8; i++) {
+        const val = i < 4 ? 27 : 28; 
+        const dPos = dirMap.get(i);
+        this.map.setTile(
+          pos.x + dPos.x,
+          pos.y + dPos.y,
+          val
+        );
+      }
+      state.entities.push(artifact);
+
+      logMessage("A feeling of exultation runs through you");
+    }
+
     this.addStairs();
     this.addRuins();
     this.addStatues();

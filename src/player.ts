@@ -17,6 +17,7 @@ export class Player extends Character {
   regen: number;
   distanceTraveled: number;
   gold: number;
+  artifacts: number;
 
   visible: boolean = true;
   private visionRadiusByLevel: Array<number> = [200, 25, 25];
@@ -40,6 +41,7 @@ export class Player extends Character {
 
     this.distanceTraveled = 0;
     this.gold = 75;
+    this.artifacts = 0;
     this.ioHandler = new IOHandler();
   }
 
@@ -148,6 +150,22 @@ export class Player extends Character {
             if (e.name != "priest") {
               return new UIGameEvents.OpenShop(e.name);
             } else {
+              if (this.artifacts > 0) {
+                this.artifacts--;
+                this.regen++;
+                this.maxHealth += 5;
+                this.health = this.maxHealth;
+                this.damage += 1;
+                this.accuracy += 10;
+                this.dodge += 10;
+                this.armor += 1;
+
+                logMessage("You hand over an artifact");
+                logMessage("The priest blesses you");
+                logMessage("You feel stronger");
+
+              }
+
               return new Actions.NoAction();
             }
           }

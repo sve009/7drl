@@ -519,6 +519,24 @@ export class Gold extends Item {
   }
 }
 
+export class Artifact extends Item {
+  constructor() {
+    super();
+    this.name = "mysterious artifact";
+  }
+
+  getGlyph() {
+    return new Glyph(
+      this.position.x,
+      this.position.y,
+      "\u{26db}",
+      "#fcc90f",
+      "#31233b",
+      true
+    );
+  }
+}
+
 export class BasicWeapon extends Weapon {
   profile: BasicWeaponProfile;
 
