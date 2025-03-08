@@ -36,6 +36,7 @@ export class UIManager {
   inventoryPanelInset: number = 10;
 
   focusObjectQueue: Array<UIComponent> = new Array;
+  tempObjectQueue: Array<UIComponent> = new Array;
   get focused (): boolean {
     return this.focusObjectQueue.length > 0; 
   }
@@ -168,6 +169,10 @@ export class UIManager {
   exitCurrentFocus (): void {
     const component = this.focusObjectQueue.pop();
     component.deactivate();
+    if (!this.focusObjectQueue.length && this.tempObjectQueue.length) {
+      this.focusObjectQueue = this.tempObjectQueue;
+      this.tempObjectQueue = [];
+    }
     this.gameState.fullRefresh();
   }
 
@@ -183,6 +188,13 @@ export class UIManager {
     this.focusObjectQueue = [];
     this.gameState.fullRefresh();
     this.game.restartGame();
+  }
+
+  throwCursorMode (startPosition: { x: number, y: number }, radius: number): void {
+    this.lookModeCursor.updatePosition(startPosition);
+    this.lookModeCursor.lockToPlayer(radius);
+    this.tempObjectQueue = this.focusObjectQueue;
+    this.focusObjectQueue = [this.lookModeCursor];
   }
 }
 
