@@ -5,10 +5,11 @@ import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { Player } from "./player";
 import { logMessage } from "./uiManager";
-import { Item, Gold, ItemGenerator, Applyable, Equippable, Throwable } from "./item";
+import { Item, Gold, Artifact, ItemGenerator, Applyable, Equippable, Throwable } from "./item";
 import { EnemyGenerator } from "./enemies";
 import { randi } from "./utilities";
 import { Action } from "./gameEvent";
+import { dirMap } from "./constants";
 
 export class NoAction extends Action {
   run(state: GameState) {}
@@ -81,13 +82,12 @@ export class AttackAction extends Action {
     const [toHit, dmg] = this.attacker.attack(state);
     const [dodge, def] = this.defender.defend(state);
 
-    const atkrNme = this.attacker.visible ? this.attacker.name : "something";
     if (RNG.getPercentage() < toHit - dodge) {
       const dmgTkn = Math.max(1, dmg - def);
-      logMessage(`${atkrNme} hits ${this.defender.name} for ${dmgTkn} damage`);
+      logMessage(`${this.attacker.name} hits ${this.defender.name} for ${dmgTkn} damage`);
       this.defender.applyDamage(state, dmgTkn);
     } else {
-      logMessage(`${atkrNme} misses ${this.defender.name}`);
+      logMessage(`${this.attacker.name} misses ${this.defender.name}`);
     }
   } 
 }
@@ -131,6 +131,17 @@ export class PickUpAction extends Action {
           // Bad bad bad bad
           if (entity instanceof Gold) {
             (this.character as Player).gold += entity.amount;
+          } else if (entity instanceof Artifact) { 
+            this.character.position = {
+              x: 26,
+              y: 3,
+            };
+            this.character.dungeonLevel = 0;
+            (this.character as Player).artifacts++;
+
+            logMessage("The world spins around you");
+
+            return;
           } else {
             this.character.items.addItem(entity);
           }
@@ -206,14 +217,11 @@ export class DescendAction extends Action {
         state.boundaries.height, 
         map
       );
-      generator.generateLevel();
+      generator.generateLevel(state, this.entity.dungeonLevel);
       
-      if (this.onStair) {
-        const stairPos = state.maps[this.entity.dungeonLevel].stairUp;
-        this.entity.position = stairPos;
-      }
 
       // Code is here temporarily
+
 
       // Items
       // 5 Guaranteed
@@ -245,6 +253,11 @@ export class DescendAction extends Action {
       for (let i = 0; i < randi(5, 9); i++) {
         EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
+    }
+
+    if (this.onStair) {
+      const stairPos = state.maps[this.entity.dungeonLevel].stairUp;
+      this.entity.position = stairPos;
     }
   }
 }

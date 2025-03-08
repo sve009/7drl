@@ -380,6 +380,14 @@ export class GameMap {
         t = TileTypeFactory.create("ruin6");
         break;
       }
+      case 27: {
+        t = TileTypeFactory.create("artfloor");
+        break;
+      }
+      case 28: {
+        t = TileTypeFactory.create("artpill");
+        break;
+      }
     }
 
     let tile = new Tile(t);
@@ -754,6 +762,24 @@ class TileTypeFactory {
           (t: Tile) => false,
           (t: Tile) => true,
           () => "ruin"
+        );
+      }
+      case "artfloor": {
+        return new TileType(
+          "\u{2394}",
+          "#91781f",
+          "#31233b",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "artpill": {
+        return new TileType(
+          "\u{3152}",
+          "#91781f",
+          "#31233b",
+          (t: Tile) => true,
+          (t: Tile) => false,
         );
       }
     }
