@@ -1,132 +1,134 @@
 export function descriptionCatalogue (key: string): string {
   switch (key) {
     case "#":
-      return "Wall: Just regular old stone";
+      return "A rough-hewn stone wall, with pocks running all through it";
     case ".":
-      return "Ground: Unimpressive if you ask me"
+      return "A bare and uneven stone floor";
     case "+":
-      return "Door: What could be on the other side?"
+      return "A simple but sturdy door. What awaits on the other side?"
     case "grass":
-      return "Grass: The blades sway in the soft wind."
+      return "A matted tuft of grass, its blades swaying in the a gentle breeze"
     case "bush":
-      return "Bush: Is it rustling slightly, I hope there isn't a goblin hiding in there.";
+      return "A squat bush, rustling slightly. Hopefully there aren't any goblins lurking within";
     case "shrub":
-      return "Shrub: We are the knights that say NEE!";
+      return "Shrubbery, NEE!";
     case "altar":
-      return "Altar: The priest talks about artifacts and "
+      return "A plain altarpiece, fitting for its humber surroundings";
     case "water":
-      return "Deep Water: A little too deep for someone who doesn't know how to swim to enter."
+      return "A swarth of deep water. Anything could lurk beneath its calm surface";
     case "swater":
-      return "Shallow Water: The water only reaches to your knees."
+      return "A shallow puddle. The water reaches to your knees at its deepest";
     case "leaf":
-      return "Leaves: The birds tweet from the branches."
+      return "A dense mesh of leaves and branches. Birds tweet from atop its branches";
     case "hshelf":
-      return "Shelf: The shelves seem older than the priest, and word is they're at least 100 years old."
+      return "An ancient shelf, its wood grain detailing its life's saga";
     case "vshelf":
-      return "Shelf: Where do these books come from, they're all written in languages unknown to you."
+      return "A shelf filled with tomes. Each is unique, and they're all written in languages unknown to you";
     case ">":
-      return "Descending Stairs: What is hidden in the depths of the dungeon?"
+      return "Stairs descending into a thick pool of darkness";
     case "<":
-      return "Ascending Stairs: Brings you back to safety!"
+      return "Stairs ascending up into a lighter realm";
     case "carpet":
-      return "Carpet: Red interesting choice."
+      return "Tattered red carpet, far removed its once pristine glory";
     case "woodf":
-      return "Wood Floor: "
+      return "A scratched and stained wooden floor panel";
     case "path":
-      return "Path: Leads you around the monastery."
+      return "A dirt path, kept clear via constant food traffic";
     case "statue1":
-      return "Statue: "
+      return "A regal statue, its significance lost to time";
     case "statue2":
-      return "Statue: "
+      return "A glittering statue, casting prismlike reflections upon the ground";
     case "lilypad":
-      return "Lilypad: "
+      return "A lilypad, eking out an existance atop the surface of the grimy puddle";
     case "reed":
-      return "Reed: "
+      return "Swaying reeds, bending but never breaking";
     case "ruin1":
-      return "Ruin: "
+      return "A partially broken down ruin, yet to fully be reclaimed by the dungeon";
     case "ruin2":
-      return "Ruin: "
+      return "A partially broken down ruin, yet to fully be reclaimed by the dungeon";
     case "ruin3":
-      return "Ruin: "
+      return "A partially broken down ruin, yet to fully be reclaimed by the dungeon";
     case "ruin4":
-      return "Ruin: "
+      return "A partially broken down ruin, yet to fully be reclaimed by the dungeon";
     case "ruin5":
-      return "Ruin: "
+      return "A partially broken down ruin, yet to fully be reclaimed by the dungeon";
     case "ruin6":
-      return "Ruin: "
+      return "A partially broken down ruin, yet to fully be reclaimed by the dungeon";
     case "artfloor":
-      return "???"
+      return "A glowing geometric mesh cuts across the floor. Its alienity causes you discomfort";
     case "artpill":
-      return "???";
+      return "A pillar covered in glowing runes. Despite its well-worn surroundings it looks untouched";
     case "tele1":
-      return "Teleporter: "
+      return "A glowing pad on the floor, ready to send an adventurer into the depths of the dungeon";
     case "tele2":
-      return "Teleporter: "
+      return "A glowing pad on the floor, ready to send an adventurer into the depths of the dungeon";
     case "tele3":
-      return "Teleporter: "
+      return "A glowing pad on the floor, ready to send an adventurer into the depths of the dungeon";
     case "tele4":
-      return "Teleporter: "
+      return "A glowing pad on the floor, ready to send an adventurer into the depths of the dungeon";
     case "shopkeeper":
-      return "Shopkeeper: "
+      return "shopkeeper"
     case "priest":
-      return "Priest: "
+      return "A lively priest, pacing and reciting prayers";
     case "alchemist":
-      return "Alchemist: "
+      return "A manic alchemist, offering you a variety of helpful potions for the right price";
     case "blacksmith":
-      return "Blacksmith: "
+      return "A grizzled blacksmith, she can make sure you're equipped for your adventures";
     case "librarian":
-      return "Librarian: "
+      return "A frail librarian, he's an expert in ancient scrolls";
     case "bat":
-      return "Bat: "
+      return "An evasive bat. Frail, but not to be underestimated due to the difficulty in hitting it in combat";
     case "jackal":
-      return "Jackal: "
+      return "A hungry jackal. A minor threat in individual combat, but potentially life ending when supported by other creatures";
     case "goblin":
-      return "Goblin: "
+      return "An ugly stout goblin. Its vision and memory are poor, so it's easier to avoid than fight";
     case "goblinarcher":
-      return "Goblin Archer: "
+      return "This goblin seems to have found itself a bow. Its vision is significantly better than its melee compatriot, and it will attempt to keep its distance";
     case "wolf":
-      return "Wolf: "
+      return "A grizzled wolf, a survivor of many previous fights";
+    case "cavespider":
+      return "A small spider. It's sturdier than it looks, and very evasive";
     case "potion of confusion":
-      return "Potion of confusion: "
+      return "A potion containing a peculiar liquid which confuses all it comes into contact with. Somehow benign to ingest"
     case "potion of healing":
-      return "Potion of Healing: "
+      return "A miracle brew, able to fully restore any entity's life force";
     case "potion of regeneration":
-      return "Potion of Regeneration: "
+      return "An ichor which promotes rapid recovery. Entities who come in contact with it will rapidly heal";
     case "potion of invisibility":
-      return "Potion of invisibility: "
+      return "A substance which when consumed hides an entity's presence from others";
     case "unstable potion":
-      return "Unstable Potion: "
+      return "Make sure that you're the pitcher and not the receiver if you're going to play catch...";
     case "potion of might":
-      return "Potion of Might: "
+      return "A potion which imbues entities with herculean strength and dexterity";
     case "scroll of teleportation":
-      return "Scroll of Teleportation: "
+      return "A scroll which when read entangles the reader across space causing them to end up elsewhere";
     case "scroll of omniscience":
-      return "Scroll of Omniscience: "
+      return "A scroll which reveals all for a single level";
     case "scroll of poison":
-      return "Scroll of Poison: "
+      return "A scroll which poisons all entities within line of sight of the reader";
     case "dagger":
-      return "Dagger: "
+      return "A short but wicked blade";
     case "spear":
-      return "Spear: "
+      return "A sharp point affixed to a long staff";
     case "sword":
-      return "Sword: "
+      return "A sharp and balanced blade";
     case "axe":
-      return "Axe: "
+      return "A heavy double-bladed battleaxe";
     case "glaive":
-      return "Glaive: "
+      return "The result of a spear and an axe having a child";
     case "leather armor":
-      return "Leather Armor: "
+      return "Armor made from pliable leather";
     case "chain mail":
-      return "Chain mail: "
+      return "Armor made by many interlocking chain links";
     case "scale mail":
-      return "Scale Mail: "
+      return "Armor formed from linking together protective metal scales";
     case "plate armor":
-      return "Plate Armor: "
+      return "Armor consisting of large, solid metal plates joined together to fit the wearer's form";
     case "player":
-      return "Player: That's you!"
+      return "You"
     case "fence":
-      return "Wooden Barrier: What is hidden behind this obstruction?"
+      return "A mysterious metal barricade";
     default:
-      throw new Error("MESSAGE ID MISSING");
+      return key;
   }
 }
