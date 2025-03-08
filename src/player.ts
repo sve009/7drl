@@ -96,6 +96,18 @@ export class Player extends Character {
           if (dstair) {
             if (this.position.x == dstair.x && this.position.y == dstair.y) {
               return new Actions.DescendAction(this);
+            } else if (this.dungeonLevel == 0) {
+              const { x, y } = this.position;
+              const idx = x + 80*y;
+              if (state.maps[0].tiles[idx].tileType.name == "tele1") {
+                return new Actions.DescendAction(this, false, 2);
+              } else if (state.maps[0].tiles[idx].tileType.name == "tele2") {
+                return new Actions.DescendAction(this, false, 4);
+              } else if (state.maps[0].tiles[idx].tileType.name == "tele3") {
+                return new Actions.DescendAction(this, false, 6);
+              } else if (state.maps[0].tiles[idx].tileType.name == "tele4") {
+                return new Actions.DescendAction(this, false, 8);
+              }
             }
           }
           break;
@@ -160,12 +172,14 @@ export class Player extends Character {
                 this.damage += 1;
                 this.accuracy += 10;
                 this.dodge += 10;
-                this.armor += 1;
 
                 logMessage("You hand over an artifact");
                 logMessage("The priest blesses you");
                 logMessage("You feel stronger");
 
+                const state = getUIManager().gameState;
+                state.refreshShopInventories(0);
+                state.unveilTeleporter();
               }
 
               return new Actions.NoAction();

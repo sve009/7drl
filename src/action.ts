@@ -195,15 +195,19 @@ export class AscendAction extends Action {
 export class DescendAction extends Action {
   entity: GameEntity;
   onStair: boolean;
+  level: number;
 
-  constructor(entity: GameEntity, onStair: boolean = true) {
+  constructor(entity: GameEntity, onStair: boolean = true, level = -1) {
     super();
     this.entity = entity;
     this.onStair = onStair;
+    this.level = level;
   }
 
   run(state: GameState) {
-    if (this.entity.dungeonLevel == 10) {
+    if (this.level > 0) {
+      this.entity.dungeonLevel = this.level;
+      this.entity.position = state.openSpot(this.level);
       return;
     }
 
@@ -250,7 +254,8 @@ export class DescendAction extends Action {
 
       // Enemies
       // 6 Guaranteed
-      for (let i = 0; i < randi(5, 9); i++) {
+      const z = this.entity.dungeonLevel
+      for (let i = 0; i < randi(5, 7) + z; i++) {
         EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
     }

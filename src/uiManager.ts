@@ -172,7 +172,6 @@ export class UIManager {
 
   openShop (shopName: string): void {
     const inventory = this.gameState.shopInventory(shopName);
-    console.log(this.gameState.player);
     this.focusObjectQueue.push(new ShopMenu(inventory, this.gameState.player));
   }
 

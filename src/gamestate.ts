@@ -22,6 +22,25 @@ export class GameState {
   positionToRemember: { x: number, y: number } | null = null;
   shopInventories: Map<string, Items.Item[]>;
 
+  teleporters = [
+    [
+      { x: 59, y: 5},
+      { x: 59, y: 6},
+      { x: 59, y: 7}
+    ], [
+      { x: 59, y: 16 },
+      { x: 59, y: 17 },
+      { x: 59, y: 18 }
+    ], [
+      { x: 59, y: 27 },
+      { x: 59, y: 28 },
+      { x: 59, y: 29 }
+    ], [
+      { x: 59, y: 37 },
+      { x: 59, y: 38 }
+    ]
+  ];
+
   turn: number = 0;
   skipPlayerTurn: boolean = false;
 
@@ -179,6 +198,13 @@ export class GameState {
       );
     }
     this.shopInventories.set("alchemist", pots);
+  }
+
+  unveilTeleporter(): void {
+    const pts = this.teleporters.shift();
+    for (const pt of pts) {
+      this.maps[0].setTile(pt.x, pt.y, 1);
+    }
   }
 
   getDescription (x: number, y: number): { tileID: string | null, entities: Array<GameEntity> } {
@@ -394,6 +420,22 @@ export class GameMap {
       }
       case 28: {
         t = TileTypeFactory.create("artpill");
+        break;
+      }
+      case 29: {
+        t = TileTypeFactory.create("tele1");
+        break;
+      }
+      case 30: {
+        t = TileTypeFactory.create("tele2");
+        break;
+      }
+      case 31: {
+        t = TileTypeFactory.create("tele3");
+        break;
+      }
+      case 32: {
+        t = TileTypeFactory.create("tele4");
         break;
       }
     }
@@ -789,6 +831,46 @@ class TileTypeFactory {
           "\u{3152}",
           "#91781f",
           "#31233b",
+          (t: Tile) => false,
+          (t: Tile) => false,
+        );
+      }
+      case "tele1": {
+        return new TileType(
+          symbol,
+          ">",
+          "#5dfc4c",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "tele2": {
+        return new TileType(
+          symbol,
+          ">",
+          "#1b3cf7",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "tele3": {
+        return new TileType(
+          symbol,
+          ">",
+          "#b51bf7",
+          "#000",
+          (t: Tile) => true,
+          (t: Tile) => false,
+        );
+      }
+      case "tele4": {
+        return new TileType(
+          symbol,
+          ">",
+          "#f71b26",
+          "#000",
           (t: Tile) => true,
           (t: Tile) => false,
         );

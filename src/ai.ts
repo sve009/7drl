@@ -254,12 +254,10 @@ export class BasicRanged extends BasicMelee {
 
     // Clear line of sight
     if (los) {
-      console.log('just right!');
       return new AttackAction(character, state.player);
     }   
 
     // Saw player, but not in los or too close
-    console.log('no los!');
     return super.seesPlayerAction(state, character);
   }
 }

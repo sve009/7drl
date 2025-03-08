@@ -54,6 +54,18 @@ export function descriptionCatalogue (key: string) {
       break;
     case "ruin6":
       break;
+    case "artfloor":
+      break;
+    case "artpill":
+      break;
+    case "tele1":
+      break;
+    case "tele2":
+      break;
+    case "tele3":
+      break;
+    case "tele4":
+      break;
     case "shopkeeper":
       break;
     case "priest":
