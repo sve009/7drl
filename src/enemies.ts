@@ -219,9 +219,9 @@ export class EnemyGenerator {
     const key = RNG.getWeightedValue(enemyTable);     
     const dijkstra = new Path.Dijkstra(
       state.player.position.x,
-      state.player.posiiton.y,
+      state.player.position.y,
       (x: number, y: number) => {
-        state.passable(x, y, z);
+        return state.maps[z].passable(x, y);
       },
       null
     );
