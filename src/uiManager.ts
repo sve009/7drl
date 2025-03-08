@@ -195,6 +195,7 @@ export class UIManager {
 
   restartGame (): void {
     this.focusObjectQueue = [];
+    this.logPanel.logs = [];
     this.gameState.fullRefresh();
     this.game.restartGame();
   }
