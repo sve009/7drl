@@ -155,7 +155,7 @@ export class UIManager {
   ): void {
     const title = item ? item.name : null;
     const fText = item 
-      ? descriptionCatalogue(item.name) 
+      ? item.name 
       : null;
     const dialog = new DialogPanel(
       new Position(16, 15, 47, 10),
