@@ -114,6 +114,7 @@ export class UIManager {
     this.gameState = gameState;
     this.descriptorPanel.gameState = gameState;
     this.lookModeCursor.gameState = gameState;
+    this.playerPanel.gameState = gameState;
     this.playerPanel.player = gameState.player;
     this.inventoryPanel.items = gameState.player.items;
     this.buffPanel.buffs = gameState.player.buffs;

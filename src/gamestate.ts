@@ -22,6 +22,9 @@ export class GameState {
   positionToRemember: { x: number, y: number } | null = null;
   shopInventories: Map<string, Items.Item[]>;
 
+  turn: number = 0;
+  skipPlayerTurn: boolean = false;
+
   get currentMap (): GameMap {
     return this.maps[this.player.dungeonLevel];
   }
@@ -43,11 +46,16 @@ export class GameState {
   }
 
   async update () {
+    this.turn += 1;
     // Update entities. Player is always first.
     for (let entity of this.entities) {
       // Apply buffs / debuffs
       if (entity instanceof Character) {
         entity.applyBuffs(this);
+        if (this.skipPlayerTurn) {
+          this.skipPlayerTurn = false;
+          continue;
+        }
       }
       let action = await entity.updateState(this);
       action.run(this);
