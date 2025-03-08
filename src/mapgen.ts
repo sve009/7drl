@@ -75,7 +75,7 @@ export class MapGenerator {
       logMessage("A feeling of exultation runs through you");
     }
 
-    this.addStairs();
+    this.addStairs(z);
     this.addRuins();
     this.addStatues();
   }
@@ -195,7 +195,7 @@ export class MapGenerator {
     }
   }
 
-  addStairs(): void {
+  addStairs(z: number): void {
     // Place up stairs
     let ux: number;
     let uy: number;
@@ -210,6 +210,11 @@ export class MapGenerator {
         this.map.setTile(x, y, 12);
         break;
       }
+    }
+
+    // Don't place down stair on level 10
+    if (z == 10) {
+      return;
     }
 
     // Place down stairs at least 100 units away
