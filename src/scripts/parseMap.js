@@ -108,6 +108,10 @@ fs.readFile(file, 'utf8', (err, contents) => {
         mapArr.push(32);
         break;
       }
+      case "f": {
+        mapArr.push(33);
+        break;
+      }
     }
   }
 

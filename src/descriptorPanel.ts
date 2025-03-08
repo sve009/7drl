@@ -21,6 +21,8 @@ export class DescriptorPanel extends UIComponent {
   refreshVisuals(): void {
     let gameDescription: { tileID: string, entities: GameEntity[] };
     const dialog = Array<string>();
+    const indentDialog = Array<string>();
+    const doubleIndentDialog = Array<string>();
     if (this.lookModeCursor.active) {
       const pos = this.lookModeCursor.currentPosition();
       dialog.push(`Look Mode: [${pos.x}, ${pos.y}]`);
@@ -29,28 +31,31 @@ export class DescriptorPanel extends UIComponent {
       dialog.push("Player Mode:");
       gameDescription = this.gameState.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
     }
-    dialog.push((gameDescription.tileID) 
-      ? descriptionCatalogue(gameDescription.tileID)
-      : "Unexplored");
+    indentDialog.push((gameDescription.tileID) 
+    ? descriptionCatalogue(gameDescription.tileID)
+    : "Unexplored");
+    doubleIndentDialog.push("", "");
     for (const entity of gameDescription.entities) {
       if (entity instanceof Character) {
-        dialog.push("", entity.name);
+        indentDialog.push("", entity.name)
         if (entity instanceof Enemy && !("passive" in entity.enemyType.ai)) {
           const percentHealth = entity.health / entity.maxHealth;
           if (percentHealth > 0.9) {
-            dialog.push(entity.name + " is healthy!")
+            indentDialog.push(entity.name + " is healthy!")
           } else if (percentHealth > 0.2) {
-            dialog.push(entity.name + " is hurt.")
+            indentDialog.push(entity.name + " is hurt.")
           } else {
-            dialog.push(entity.name + " is critically injured!")
+            indentDialog.push(entity.name + " is critically injured!")
           }  
+          // entity.enemyType.
         }
       } else if (entity instanceof Item) {
-        dialog.push("", entity.name);
+        indentDialog.push("", descriptionCatalogue(entity.name));
       }
     }
 
     this.layer.addDrawable(new TextDrawable(1, 1, dialog.join("\n"), this.boundaries.getWidth() - 2));
+    this.layer.addDrawable(new TextDrawable(2, 3, dialog.join("\n"), this.boundaries.getWidth() - 3));
     super.refreshVisuals();
   }
 }

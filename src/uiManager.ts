@@ -41,7 +41,7 @@ export class UIManager {
   gameState: GameState | null = null;
   playerPanelHeight: number = 7;
   equipPanelHeight: number = 10;
-  buffPanelHeight: number = 10;
+  buffPanelHeight: number = 8;
   inventoryPanelInset: number = 10;
 
   focusObjectQueue: Array<UIComponent> = new Array;

@@ -1,4 +1,4 @@
-export function descriptionCatalogue (key: string) {
+export function descriptionCatalogue (key: string): string {
   switch (key) {
     case "#":
       return "Wall: Just regular old stone";
@@ -11,7 +11,7 @@ export function descriptionCatalogue (key: string) {
     case "bush":
       return "Bush: Is it rustling slightly, I hope there isn't a goblin hiding in there.";
     case "shrub":
-      return "Shrub: We are the nights that say NEE!";
+      return "Shrub: We are the knights that say NEE!";
     case "altar":
       return "Altar: The priest talks about artifacts and "
     case "water":
@@ -124,6 +124,8 @@ export function descriptionCatalogue (key: string) {
       return "Plate Armor: "
     case "player":
       return "Player: That's you!"
+    case "fence":
+      return "Wooden Barrier: What is hidden behind this obstruction?"
     default:
       throw new Error("MESSAGE ID MISSING");
   }

@@ -30,10 +30,8 @@ export class Game {
     const firstMap = new GameMap(this.state.boundaries);
     firstMap.loadTown(this.state);
     this.state.maps.push(firstMap);
-    
-    let { x, y } = firstMap.openSpot();
-    
-    this.state.player = new Player(x, y);
+      
+    this.state.player = new Player(22, 18);
     this.state.entities.unshift(this.state.player);
     getUIManager().addGameState(this.state);
   }

@@ -438,6 +438,10 @@ export class GameMap {
         t = TileTypeFactory.create("tele4");
         break;
       }
+      case 33: {
+        t = TileTypeFactory.create("fence");
+        break;
+      }
     }
 
     let tile = new Tile(t);
@@ -660,6 +664,16 @@ class TileTypeFactory {
           symbol,
           "\u{2551}",
           "#966111",
+          "#000",
+          (t: Tile) => false,
+          (t: Tile) => true,
+        );
+      }
+      case "fence": {
+        return new TileType(
+          symbol,
+          "\u{256C}",
+          "#4d301c",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
