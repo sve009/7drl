@@ -58,6 +58,7 @@ export class DescriptorPanel extends UIComponent {
         }
       } else if (entity instanceof Item) {
         indentDialog.push("", descriptionCatalogue(entity.name));
+        doubleIndentDialog.push("", "");
       }
     }
     this.layer.addDrawable(new TextDrawable(1, 1, dialog.join("\n"), this.boundaries.getWidth() - 2));

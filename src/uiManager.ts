@@ -16,6 +16,7 @@ import { HelpPanel } from "./helpPanel";
 import { PausePanel } from "./pausePanel";
 import { EndScreen } from "./endScreen";
 import { EquipmentPanel } from "./equipmentPanel";
+import { CreditsPanel } from "./creditsPanel";
 
 export class UIManager {
   game: Game;
@@ -23,13 +24,16 @@ export class UIManager {
   startScreenInset: number = 15;
   endScreen: EndScreen;
   endHorizontalPanelInset: number = 35;
-  endVerticalPanelInset: number = 19;
+  endVerticalPanelInset: number = 17;
   helpPanel: HelpPanel
   helpHorizontalPanelInset: number = 26;
   helpVerticalPanelInset: number = 10;
   pausePanel: PausePanel;
   pauseHorizontalPanelInset: number = 40;
   pauseVerticalPanelInset: number = 21;
+  creditsPanel: CreditsPanel;
+  creditsHorizontalPanelInset: number = 26;
+  creditsVerticalPanelInset: number = 21;
 
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
@@ -77,7 +81,13 @@ export class UIManager {
     renderPos.getStartY() + this.endVerticalPanelInset,
     renderPos.getWidth() - 2 * this.endHorizontalPanelInset,
     renderPos.getHeight() - 2 * this.endVerticalPanelInset);
-    this.endScreen = new EndScreen(endScreenPos, Number.MAX_SAFE_INTEGER);
+    this.endScreen = new EndScreen(endScreenPos, Number.MAX_SAFE_INTEGER-1);
+
+    const creditScreenPos = new Position(renderPos.getStartX() + this.creditsHorizontalPanelInset,
+    renderPos.getStartY() + this.creditsVerticalPanelInset,
+    renderPos.getWidth() - 2 * this.creditsHorizontalPanelInset,
+    renderPos.getHeight() - 2 * this.creditsVerticalPanelInset);
+    this.creditsPanel = new CreditsPanel(creditScreenPos, Number.MAX_SAFE_INTEGER);
 
     this.logPanel = new LogPanel(3);
     this.playerPanel = new PlayerPanel(3);
@@ -90,6 +100,7 @@ export class UIManager {
 
   async updateContent() {
     let gameEvent = await this.focusedObject.updateContent();
+    console.log(gameEvent);
     gameEvent.run(this.gameState);
   }
 
@@ -226,13 +237,20 @@ export class UIManager {
     this.gameState.fullRefresh();
   }
 
-  showEndScreen () {
+  showEndScreen (win: boolean) {
+    this.endScreen.win = win;
     this.focusObjectQueue.push(this.endScreen);
   }
 
   exitAllFocus (): void {
     this.focusObjectQueue = [];
     this.tempObjectQueue = [];
+    this.gameState.fullRefresh();
+  }
+
+  showCredits () {
+    this.tempObjectQueue = this.focusObjectQueue;
+    this.focusObjectQueue = [this.creditsPanel];
     this.gameState.fullRefresh();
   }
 }

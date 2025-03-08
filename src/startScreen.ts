@@ -8,7 +8,8 @@ export class StartScreen extends SelectionPanel {
   text: string;
   buttonNames = [
     "Start",
-    "Help"
+    "Help",
+    "Credits"
   ];
   indexMap: number[];
 
@@ -26,8 +27,6 @@ export class StartScreen extends SelectionPanel {
 
     this.text = [
       getGameName(),
-      "",
-      "    Created by: Sam Eagen && Alexandre Ait Ettajer",
       "",
       "2000 years after the end of civilization and 2000 years before another age of silicon. The church has been the only institution to survive the apocolypse and retain any memory of the fires and radiation.",
       "",
@@ -48,6 +47,8 @@ export class StartScreen extends SelectionPanel {
           return new UIGameEvents.ExitUI();
         case 1:
           return new UIGameEvents.OpenHelp();
+        case 2:
+          return new UIGameEvents.ShowCredits();
       }
       return new UIGameEvents.NoEvent();
     }
@@ -63,7 +64,7 @@ export class StartScreen extends SelectionPanel {
 
       // Add button text
       const bText = this.buttonNames[i];
-      const x = this.boundaries.getWidth() / 2 - 10 + 2 + i * 9;
+      const x =  27 + i * 9;
       const y = this.boundaries.getHeight() - 3;
       this.layer.addDrawable(
         new TextDrawable(x, y, bText)

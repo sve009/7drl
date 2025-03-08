@@ -92,3 +92,9 @@ export class SendPositionToGameStateAndExit extends UIGameEvent {
     getUIManager().exitCurrentFocus();
   }
 }
+
+export class ShowCredits extends UIGameEvent {
+  run (_state: GameState): void {
+    getUIManager().showCredits();
+  }
+}

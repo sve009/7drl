@@ -18,6 +18,7 @@ export class Player extends Character {
   distanceTraveled: number;
   gold: number;
   artifacts: number;
+  artifactsTurnedIn: number = 0;
 
   visible: boolean = true;
   private visionRadiusByLevel: Array<number> = [200, 25, 25];
@@ -180,9 +181,17 @@ export class Player extends Character {
                 const state = getUIManager().gameState;
                 state.refreshShopInventories(0);
                 state.unveilTeleporter();
+                this.artifactsTurnedIn++;
+              } else {
+                return new Actions.NoAction();
               }
-
-              return new Actions.NoAction();
+              if (this.artifactsTurnedIn === 5) {
+                logMessage("You hand over the final artifact")
+                logMessage("The priest tells you")
+                logMessage("My child, you are now ready to take my place and lead this monastery")
+                logMessage("YOU WIN - What was left unexplored in those dungeons")
+                getUIManager().showEndScreen(true);
+              } 
             }
           }
           return new Actions.AttackAction(this, e as Character); 
@@ -206,6 +215,6 @@ export class Player extends Character {
 
   die(state: GameState): void {
     logMessage("Death comes for us all. GAME OVER");
-    getUIManager().showEndScreen();
+    getUIManager().showEndScreen(false);
   }
 }

@@ -4,9 +4,11 @@ import { SelectionPanel } from "./selectionPanel";
 import * as UIGameEvents from "./uiGameEvent"
 
 export class EndScreen extends SelectionPanel {
-  text: string;
-  buttonNames = ["Restart"];
+  loseText: string;
+  winText: string;
+  buttonNames = ["Restart", "Credits"];
   indexMap: number[];
+  win: boolean = false;
 
   constructor (boundaries: Position, layerIdx: number) {
     super(boundaries, layerIdx);
@@ -19,24 +21,35 @@ export class EndScreen extends SelectionPanel {
         count++;
     }
     this.numberOfRows = count - 1;
-    this.text = [
+    this.loseText = [
       "Game Over",
       "",
-      "The forbidden dungeons have captured another orphan. Perhaps another may be able to recover all the artifacts."
+      "The forbidden dungeons has captured another orphan. Perhaps another may be able to recover all the artifacts."
+    ].join("\n");
+
+    this.winText = [
+      "You Win",
+      "",
+      "You have become the new priest of this monastery, what mysteries does this forbidden dungeon contain.",
     ].join("\n");
   }
 
   async updateContent(): Promise<GameEvent> {
     const event = await super.updateContent();
     if (event instanceof UIGameEvents.Select) {
-      return new UIGameEvents.RestartGame();
+      if (!this.selectionIdx) {
+        return new UIGameEvents.RestartGame()
+      } else {
+        return new UIGameEvents.ShowCredits();
+      }
     }
     return new UIGameEvents.NoEvent();
   }
 
   refreshVisuals(): void {
     // Display text first
-    this.layer.addDrawable(new TextDrawable(1, 1, this.text, this.boundaries.getWidth() - 2));
+    const text = (this.win || true) ? this.winText : this.loseText;
+    this.layer.addDrawable(new TextDrawable(1, 1, text, this.boundaries.getWidth() - 2));
 
     // Add buttons
     for (let i = 0; i < this.buttonNames.length; i++) {
