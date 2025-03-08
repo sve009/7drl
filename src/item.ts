@@ -681,7 +681,7 @@ export class BasicWeaponArmorFactory {
         profile = new BasicArmorProfile(
           "leather armor",
           20,
-          2,
+          1,
         );
         break;
       }
@@ -689,7 +689,7 @@ export class BasicWeaponArmorFactory {
         profile = new BasicArmorProfile(
           "chain mail",
           15,
-          4,
+          2,
         );
         break;
       }
@@ -697,7 +697,7 @@ export class BasicWeaponArmorFactory {
         profile = new BasicArmorProfile(
           "scale mail",
           15,
-          5,
+          3,
         );
         break;
       }
@@ -705,7 +705,7 @@ export class BasicWeaponArmorFactory {
         profile = new BasicArmorProfile(
           "plate armor",
           10,
-          7,
+          4,
         );
         break;
       }
