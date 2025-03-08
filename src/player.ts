@@ -182,16 +182,17 @@ export class Player extends Character {
                 state.refreshShopInventories(0);
                 state.unveilTeleporter();
                 this.artifactsTurnedIn++;
-              } else {
-                return new Actions.NoAction();
-              }
+              } 
+
               if (this.artifactsTurnedIn === 5) {
                 logMessage("You hand over the final artifact")
                 logMessage("The priest tells you")
                 logMessage("My child, you are now ready to take my place and lead this monastery")
-                logMessage("YOU WIN - What was left unexplored in those dungeons")
+                logMessage("YOU WIN - But what was left unexplored in those dungeons?")
                 getUIManager().showEndScreen(true);
               } 
+
+              return new Actions.NoAction();
             }
           }
           return new Actions.AttackAction(this, e as Character); 
