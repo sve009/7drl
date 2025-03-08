@@ -1,4 +1,4 @@
-import { RNG } from "rot-js";
+import { RNG, Path } from "rot-js";
 import * as AI from "./ai";
 import { Character } from "./gameObject";
 import type { GameState } from "./gamestate";
@@ -217,7 +217,27 @@ export class EnemyGenerator {
     }
     const enemyTable = enemyTables[tableIndex];
     const key = RNG.getWeightedValue(enemyTable);     
-    const position = state.openSpot(z);
+    const dijkstra = new Path.Dijkstra(
+      state.player.position.x,
+      state.player.posiiton.y,
+      (x: number, y: number) => {
+        state.passable(x, y, z);
+      },
+      null
+    );
+
+    let dist = 0;
+    let position = state.player.position;
+    while (dist < 12) {
+      dist = 0;
+      position = state.openSpot(z);
+      dijkstra.compute(
+        position.x,
+        position.y,
+        (x: number, y: number) => { dist++; },
+      );
+    }
+
     const enemy = new Enemy(key, position.x, position.y, z);
     state.entities.push(enemy);
   }
