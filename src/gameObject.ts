@@ -5,6 +5,7 @@ import { Equippable, Attackable, Defendable } from "./item";
 import { Drawable, getRenderer, Layer, Position, TextDrawable, Glyph } from "./renderer";
 import { Buff } from "./buff";
 import { Inventory } from "./inventory";
+import { logMessage } from "./uiManager";
 
 abstract class GameObject {}
 
@@ -115,8 +116,22 @@ export abstract class Character extends GameEntity {
       }
     }
   }
+
+  applyDamage(state: GameState, dmg: number) {
+    this.health -= dmg;
+    if (this.health <= 0) {
+      this.die(state);
+    }
+  }
   
-  die(state: GameState): void {}
+  die(state: GameState): void {
+    logMessage(`${this.name} dies`);
+    for (let i = 0; i < state.entities.length; i++) {
+      if (state.entities[i] == this) {
+        state.entities.splice(i, 1);
+      }
+    }
+  }
 }
 
 export abstract class UIComponent extends GameObject {
