@@ -1,16 +1,18 @@
 TODO:
 Artifacts
-End Screen
+End Screen (Alexandre)
 Descriptions
 Frame Narrative
 Enemies
 NPCs
 Shops
 Map Gen
-Health Bar
+Health Bar (Alexandre)
 Rings
-Armor Panel
-Enemies and Items on look mode
+Armor/Weapon Panel (Alexandre)
+Player Panel
+Make use of inventory equal action taken
+Enemies and Items on look mode (Alexandre)
    Flavor text
    Strategic Advice
    Damage
