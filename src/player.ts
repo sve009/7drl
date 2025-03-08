@@ -37,7 +37,7 @@ export class Player extends Character {
     this.armor = 0;
 
     this.distanceTraveled = 0;
-    this.gold = 0;
+    this.gold = 75;
     this.ioHandler = new IOHandler();
   }
 
