@@ -1,14 +1,10 @@
 TODO:
-Artifacts
 Descriptions
-Frame Narrative
-Enemies
-Rings
-Implement scroll of enchantment
-Player Panel Revamp (Alexandre)
-Armor/Weapon Panel (Alexandre)
+Enemy Profiles
 Health Bar (Alexandre)
 Enemies and Items on look mode (Alexandre)
    Strategic Advice
    Damage
    Items need to tell you what they do
+
+Bug Fixing

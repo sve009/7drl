@@ -25,6 +25,7 @@ export class IOHandler {
     this.lastKey = null;
 
     let code = event.keyCode;
+    console.log(code)
     switch (code) {
       case KEYS.VK_SHIFT: {
         this.shifting = true;
@@ -124,6 +125,7 @@ export class IOHandler {
         } else {
           this.lastKey = ":";
         }
+        break;
       }
       case KEYS.VK_SLASH: {
         if (!this.shifting) {

@@ -23,16 +23,14 @@ export class PlayerPanel extends UIComponent {
     `Gold: ${this.player.gold}\n` + 
     `Turn: ${this.gameState.turn}\n` +
     `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
-    `Dungeon Level: ${this.player.dungeonLevel}\n` +
-    `Seed: ${RNG.getSeed()}`;
+    `Dungeon Level: ${this.player.dungeonLevel}`;
     if (!this.player.dungeonLevel) {
       playerStats =
       `Health: ${this.player.health}/${this.player.maxHealth}\n` +
       `Gold: ${this.player.gold}\n` + 
       `Turn: ${this.gameState.turn}\n` +
       `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
-      `Ground Level` +
-      `Seed: ${RNG.getSeed()}`;  
+      `Ground Level`
     }
 
     this.layer.addDrawable(new TextDrawable(1, 1, playerStats, this.boundaries.getWidth() - 2));

@@ -15,6 +15,7 @@ import { StartScreen } from "./startScreen";
 import { HelpPanel } from "./helpPanel";
 import { PausePanel } from "./pausePanel";
 import { EndScreen } from "./endScreen";
+import { EquipmentPanel } from "./equipmentPanel";
 
 export class UIManager {
   game: Game;
@@ -34,11 +35,13 @@ export class UIManager {
   playerPanel: PlayerPanel;
   inventoryPanel: InventoryPanel;
   descriptorPanel: DescriptorPanel;
+  equipmentPanel: EquipmentPanel;
   buffPanel: BuffsPanel;
   lookModeCursor: LookModeCursor;
   gameState: GameState | null = null;
-  playerPanelHeight: number = 10;
-  descPanelHeight: number = 10;
+  playerPanelHeight: number = 7;
+  equipPanelHeight: number = 10;
+  buffPanelHeight: number = 10;
   inventoryPanelInset: number = 10;
 
   focusObjectQueue: Array<UIComponent> = new Array;
@@ -78,6 +81,7 @@ export class UIManager {
 
     this.logPanel = new LogPanel(3);
     this.playerPanel = new PlayerPanel(3);
+    this.equipmentPanel = new EquipmentPanel(3);
     this.buffPanel = new BuffsPanel(3);
     this.inventoryPanel = new InventoryPanel(11);
     this.lookModeCursor = new LookModeCursor(10);
@@ -96,12 +100,14 @@ export class UIManager {
     const logPanelPos = new Position(renderPos.getStartX(), endMapY, renderPos.getWidth(), renderPos.getHeight() - endMapY);
     const rightPanelWidth = renderPos.getEndX() - endMapX + 1;
     const playPanelPos = new Position(endMapX, renderPos.getStartY(), rightPanelWidth, this.playerPanelHeight);
-    const descPanelPos = new Position(endMapX, playPanelPos.getEndY() + 1, rightPanelWidth, this.descPanelHeight);
-    const buffPanelPos = new Position(endMapX, descPanelPos.getEndY() + 1, rightPanelWidth, endMapY - descPanelPos.getEndY() - 1);
+    const equiPanelPos = new Position(endMapX, playPanelPos.getEndY() + 1, rightPanelWidth, this.equipPanelHeight) 
+    const buffPanelPos = new Position(endMapX, equiPanelPos.getEndY() + 1, rightPanelWidth, this.buffPanelHeight);
+    const descPanelPos = new Position(endMapX, buffPanelPos.getEndY() + 1, rightPanelWidth, endMapY - buffPanelPos.getEndY() - 1);
     this.logPanel.setBoundaries(logPanelPos);
     this.playerPanel.setBoundaries(playPanelPos);
-    this.descriptorPanel.setBoundaries(descPanelPos);
+    this.equipmentPanel.setBoundaries(equiPanelPos);
     this.buffPanel.setBoundaries(buffPanelPos);
+    this.descriptorPanel.setBoundaries(descPanelPos);
 
     const invPanelPos = new Position(this.gameState.terrainLayer.position.getStartX() + this.inventoryPanelInset,
                                      this.gameState.terrainLayer.position.getStartY() + this.inventoryPanelInset / 2,
@@ -118,6 +124,7 @@ export class UIManager {
     this.playerPanel.player = gameState.player;
     this.inventoryPanel.items = gameState.player.items;
     this.buffPanel.buffs = gameState.player.buffs;
+    this.equipmentPanel.player = gameState.player;
 
     this.updateUIComponentBoundaries();
   }
@@ -153,6 +160,7 @@ export class UIManager {
     this.playerPanel.refreshVisuals();
     this.descriptorPanel.refreshVisuals();
     this.buffPanel.refreshVisuals();
+    this.equipmentPanel.refreshVisuals();
     if (this.focused) {
       this.focusedObject.refreshVisuals();
     }

@@ -130,9 +130,11 @@ export class Player extends Character {
         case "escape": {
           return new UIGameEvents.OpenPauseMenu();
         }
-        default: {
+        case ".": {
           return new Actions.NoAction();
         }
+        default:
+          continue;
       }
 
       if (dir != -1) {
