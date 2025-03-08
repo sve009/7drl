@@ -31,7 +31,7 @@ export class Game {
     firstMap.loadTown(this.state);
     this.state.maps.push(firstMap);
       
-    this.state.player = new Player(22, 18);
+    this.state.player = new Player(24, 17);
     this.state.entities.unshift(this.state.player);
     getUIManager().addGameState(this.state);
   }

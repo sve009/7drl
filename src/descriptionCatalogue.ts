@@ -1,4 +1,7 @@
 export function descriptionCatalogue (key: string): string {
+  if (key.includes("gold")) {
+    return key;
+  }
   switch (key) {
     case "#":
       return "A rough-hewn stone wall, with pocks running all through it";
