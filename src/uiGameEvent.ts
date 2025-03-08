@@ -20,6 +20,19 @@ export class OpenInventory extends UIGameEvent {
   }
 }
 
+export class OpenShop extends UIGameEvent {
+  shopName: string;
+
+  constructor(name: string) {
+    super();
+    this.shopName = name;  
+  }
+
+  run(_state: GameState): void {
+    getUIManager().openShop(this.shopName);
+  }
+}
+
 export class LookModeActivate extends UIGameEvent {
   initPosition: { x: number, y: number }
 

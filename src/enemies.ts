@@ -86,6 +86,32 @@ class EnemyType {
 class EnemyTypeFactory {
   static createEnemyType(name: string): EnemyType {
     switch (name) {
+      case "shopkeeper": {
+        return new EnemyType(
+          "shopkeeper",
+          "@",
+          "#fff",
+          new AI.RandomProfile(false, true),
+          5,
+          50,
+          5,
+          5,
+          5,
+        );
+      }
+      case "priest": {
+        return new EnemyType(
+          "priest",
+          "@",
+          "#fa73e1",
+          new AI.RandomProfile(false, true),
+          5,
+          50,
+          5,
+          5,
+          5,
+        );
+      }
       case "bat": {
         return new EnemyType(
           "bat",

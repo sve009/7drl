@@ -28,13 +28,13 @@ export class Game {
     this.state.running = true;
 
     const firstMap = new GameMap(this.state.boundaries);
-    firstMap.loadTown();
+    firstMap.loadTown(this.state);
     this.state.maps.push(firstMap);
     
     let { x, y } = firstMap.openSpot();
     
     this.state.player = new Player(x, y);
-    this.state.entities.push(this.state.player);
+    this.state.entities.unshift(this.state.player);
     getUIManager().addGameState(this.state);
   }
 

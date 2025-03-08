@@ -3,6 +3,8 @@ import { SightMap } from "./fov";
 import { Player } from "./player";
 import { getRenderer, Glyph, Layer, Position } from "./renderer";
 import { GameEntity, Character } from "./gameObject";
+import { Enemy } from "./enemies";
+import * as Items from "./item";
 import town from "./data/town.json";
 
 const townMap = town.gameMap;
@@ -18,6 +20,7 @@ export class GameState {
   terrainLayer: Layer;
   fullRefreshVisual: boolean
   positionToRemember: { x: number, y: number } | null = null;
+  shopInventories: Map<string, Items.Item[]>;
 
   get currentMap (): GameMap {
     return this.maps[this.player.dungeonLevel];
@@ -34,6 +37,9 @@ export class GameState {
     this.terrainLayer = new Layer(0, boundaries);
     this.terrainLayer.bg = "#000";
     this.fullRefreshVisual = false;
+    this.shopInventories = new Map();
+
+    this.refreshShopInventories(0);
   }
 
   async update () {
@@ -136,6 +142,37 @@ export class GameState {
       0 <= fx && fx < this.currentMap.width;
   }
 
+  shopInventory(name: string): Items.Item[] {
+    return this.shopInventories.get(name);
+  }
+
+  refreshShopInventories(z: number) {
+    // Blacksmith
+    const equips = [
+      Items.BasicWeaponArmorFactory.createRandomBasicWeapon(),
+      Items.BasicWeaponArmorFactory.createRandomBasicArmor(),
+    ];
+    this.shopInventories.set("blacksmith", equips);
+    
+    // Librarian
+    const scrolls: Items.Item[] = [];
+    for (let i = 0; i < 5; i++) {
+      scrolls.push(
+        Items.ScrollFactory.getRandomScroll()
+      );
+    }
+    this.shopInventories.set("librarian", scrolls);
+
+    // Alchemist
+    const pots: Items.Item[] = [];
+    for (let i = 0; i < 5; i++) {
+      pots.push(
+        Items.PotionFactory.getRandomPotion()
+      );
+    }
+    this.shopInventories.set("alchemist", pots);
+  }
+
   getDescription (x: number, y: number): { tileDescription: string | null, entities: Array<GameEntity> } {
     return { tileDescription: this.currentMap.getTileDescription(x, y),
       entities: this.allEntitiesAt(x, y, this.player.dungeonLevel, false)};
@@ -164,13 +201,31 @@ export class GameMap {
     this.layer = new Layer(0, boundaries);
   }
 
-  loadTown(): void {
+  loadTown(state: GameState): void {
     this.width = town.width;
     this.height = town.height;
     for (let i = 0; i < townMap.length; i++) {
       const x = i % this.width;
       const y = Math.floor(i / this.width);
       this.setTile(x, y, townMap[i]);
+    }
+
+    const shopkeepers = [
+      new Enemy("shopkeeper", 10, 26, 0),
+      new Enemy("shopkeeper", 8, 10, 0),
+      new Enemy("shopkeeper", 25, 36, 0),
+      new Enemy("priest", 27, 2, 0),
+    ];
+    const names = [
+      "alchemist",
+      "blacksmith",
+      "librarian",
+      "priest",
+    ];
+    for (let i = 0; i < shopkeepers.length; i++) {
+      const e = shopkeepers[i];
+      e.name = names[i];
+      state.entities.push(e);
     }
   }
 

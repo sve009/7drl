@@ -3,6 +3,7 @@ import { getRenderer, Position } from "./renderer";
 import { UIComponent } from "./gameObject";
 import { PlayerPanel } from "./playerPanel";
 import { InventoryPanel } from "./inventoryPanel";
+import { ShopMenu } from "./shopPanel";
 import { GameState } from "./gamestate";
 import { LookModeCursor } from "./lookModeCursor";
 import { DescriptorPanel } from "./descriptorPanel";
@@ -157,6 +158,12 @@ export class UIManager {
 
   openInventory (): void {
     this.focusObjectQueue.push(this.inventoryPanel);
+  }
+
+  openShop (shopName: string): void {
+    const inventory = this.gameState.shopInventory(shopName);
+    console.log(this.gameState.player);
+    this.focusObjectQueue.push(new ShopMenu(inventory, this.gameState.player));
   }
 
   createStartScreen () {

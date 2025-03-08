@@ -3,8 +3,9 @@ import { Character } from "./gameObject";
 import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
+import { Player } from "./player";
 import { logMessage } from "./uiManager";
-import { Item, ItemGenerator, Applyable, Equippable, Throwable } from "./item";
+import { Item, Gold, ItemGenerator, Applyable, Equippable, Throwable } from "./item";
 import { EnemyGenerator } from "./enemies";
 import { randi } from "./utilities";
 import { Action } from "./gameEvent";
@@ -125,7 +126,13 @@ export class PickUpAction extends Action {
           entity.dungeonLevel == this.character.dungeonLevel
         ) {
           state.entities.splice(i, 1);
-          this.character.items.addItem(entity);
+
+          // Bad bad bad bad
+          if (entity instanceof Gold) {
+            (this.character as Player).gold += entity.amount;
+          } else {
+            this.character.items.addItem(entity);
+          }
           logMessage(`Picked up ${entity.name}`);
         }
       }

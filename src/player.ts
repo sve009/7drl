@@ -8,12 +8,14 @@ import { dirMap } from "./constants";
 import { Item } from "./item";
 import { Inventory } from "./inventory";
 import { getUIManager, logMessage } from "./uiManager";
+import { Enemy } from "./enemies";
 
 export class Player extends Character {
   ioHandler: IOHandler;
   maxHealth: number;
   health: number;
   distanceTraveled: number;
+  gold: number;
 
   visible: boolean = true;
   private visionRadiusByLevel: Array<number> = [200, 25, 25];
@@ -35,6 +37,7 @@ export class Player extends Character {
     this.armor = 0;
 
     this.distanceTraveled = 0;
+    this.gold = 0;
     this.ioHandler = new IOHandler();
   }
 
@@ -132,7 +135,14 @@ export class Player extends Character {
           this.dungeonLevel
         );
         this.distanceTraveled += 1;
-        if (e instanceof Character) {
+        if (e instanceof Enemy) {
+          if ("passive" in e.enemyType.ai && e.enemyType.ai.passive) {
+            if (e.name != "priest") {
+              return new UIGameEvents.OpenShop(e.name);
+            } else {
+              return new Actions.NoAction();
+            }
+          }
           return new Actions.AttackAction(this, e as Character); 
         } else if (this.canMove({ x: fx, y: fy}, state.maps[this.dungeonLevel])) {
           return new Actions.MoveAction(this, { x: fx, y: fy });

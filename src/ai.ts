@@ -16,10 +16,12 @@ export abstract class AIProfile {
 export class RandomProfile extends AIProfile {
   seesPlayer: boolean = false;
   opensDoors: boolean;
+  passive: boolean;
 
-  constructor (opensDoors: boolean = true) {
+  constructor (opensDoors: boolean = true, passive: boolean = false) {
     super();
     this.opensDoors = opensDoors;
+    this.passive = passive;
   }
 
   update(state: GameState, character: Character): Action {
@@ -40,7 +42,11 @@ export class RandomProfile extends AIProfile {
       ) {
         found = true;
       } else if (pos.x == state.player.position.x && pos.y == state.player.position.y) {
-        return new AttackAction(character, state.player);
+        if (this.passive) {
+          return new NoAction();
+        } else {
+          return new AttackAction(character, state.player);
+        }
       }
     } 
 

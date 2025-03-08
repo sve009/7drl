@@ -39,6 +39,7 @@ export interface Defendable extends Equippable {
 
 export abstract class Item extends GameEntity {
   name: string;
+  cost: number;
 
   async updateState(state: GameState) {
     return new NoAction();
@@ -53,6 +54,7 @@ export class Potion extends Item implements Throwable, Applyable {
   constructor(profile: PotionProfile) {
     super();
     this.name = profile.name;
+    this.cost = 75;
     this.range = 20;
     this.radius = 2;
     this.profile = profile;
@@ -128,7 +130,7 @@ const potionDropTable = {
   weakness: 0,
   warding: 0
 };
-class PotionFactory {
+export class PotionFactory {
   static getRandomPotion(): Potion {
     const key = RNG.getWeightedValue(potionDropTable);
     return PotionFactory.createPotion(key);
@@ -272,6 +274,7 @@ export class Scroll extends Item implements Applyable {
   constructor(profile: ScrollProfile) {
     super();
     this.name = profile.name;
+    this.cost = 75;
     this.profile = profile;
   }
 
@@ -317,7 +320,7 @@ const scrollDropTable = {
   repulsion: 0,
   fire: 0,
 };
-class ScrollFactory {
+export class ScrollFactory {
   static getRandomScroll(): Scroll {
     const key = RNG.getWeightedValue(scrollDropTable);
     return ScrollFactory.createScroll(key);
@@ -372,9 +375,10 @@ class ScrollFactory {
 
 export abstract class Weapon extends Item implements Attackable, Equippable {
   equippedTo: Character | null;
+  cost: number = 250;
 
   equip(character: Character) {
-    const old = character.equipment.get("armor");
+    const old = character.equipment.get("weapon");
     if (old) {
       old.unequip(character);
     }
@@ -419,6 +423,7 @@ export abstract class RangedWeapon extends Weapon implements Throwable {
 
 export abstract class Armor extends Item implements Defendable, Equippable {
   equippedTo: Character | null;
+  cost: number = 250;
 
   equip(character: Character) {
     const old = character.equipment.get("armor");
@@ -569,7 +574,30 @@ class BasicArmorProfile {
   }
 }
 
-class BasicWeaponArmorFactory {
+const weaponTable = {
+  dagger: 8,
+  spear: 5,
+  sword: 3,
+  axe: 2,
+  glaive: 1,
+};
+const armorTable = {
+  leather: 8,
+  chain: 5,
+  scale: 3,
+  plate: 2,
+}
+export class BasicWeaponArmorFactory {
+  static createRandomBasicWeapon(): BasicWeapon {
+    const profile = RNG.getWeightedValue(weaponTable);
+    return BasicWeaponArmorFactory.createBasicWeapon(profile);
+  }
+
+  static createRandomBasicArmor(): BasicArmor {
+    const profile = RNG.getWeightedValue(armorTable);
+    return BasicWeaponArmorFactory.createBasicArmor(profile);
+  }
+
   static createBasicWeapon(name: string): BasicWeapon {
     let profile;
     switch (name) {
@@ -663,19 +691,6 @@ const itemTable = {
   gold: 20,
   equipment: 15,
 };
-const weaponTable = {
-  dagger: 8,
-  spear: 5,
-  sword: 3,
-  axe: 2,
-  glaive: 1,
-};
-const armorTable = {
-  leather: 8,
-  chain: 6,
-  scale: 4,
-  plate: 2,
-}
 const equipmentTable = {
   weapon: 60,
   armor: 40,
