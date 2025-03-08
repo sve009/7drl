@@ -11,12 +11,10 @@ Implement scroll of poison
 Implement scroll of enchantment
 Implement throwing stuff!!!!
 Make use of inventory equal action taken
-Player Panel Revamp
+Player Panel Revamp (Alexandre)
 Armor/Weapon Panel (Alexandre)
 Health Bar (Alexandre)
 Enemies and Items on look mode (Alexandre)
-   Flavor text
    Strategic Advice
    Damage
-   Health (Maybe)
    Items need to tell you what they do

@@ -1,5 +1,6 @@
-import { UIComponent } from "./gameObject";
+import { Character, GameEntity, UIComponent } from "./gameObject";
 import { GameState } from "./gamestate";
+import { Item } from "./item";
 import { LookModeCursor } from "./lookModeCursor";
 import { Position, TextDrawable } from "./renderer";
 
@@ -16,14 +17,33 @@ export class DescriptorPanel extends UIComponent {
   }
 
   refreshVisuals(): void {
-    let description: string = "";
+    let gameDescription: { tileDescription: string, entities: GameEntity[] };
     if (this.lookModeCursor.active) {
       const pos = this.lookModeCursor.currentPosition();
-      description = this.gameState.currentMap.getDescription(pos.x, pos.y);
+      gameDescription = this.gameState.getDescription(pos.x, pos.y);
     } else {
-      description = this.gameState.currentMap.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
+      gameDescription = this.gameState.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
     }
-    this.layer.addDrawable(new TextDrawable(1, 1, description, this.boundaries.getWidth() - 2));
+    let dialog = [
+      (gameDescription.tileDescription) ? gameDescription.tileDescription : "Unknown"
+    ];
+    for (const entity of gameDescription.entities) {
+      if (entity instanceof Character) {
+        dialog.push("", entity.name);
+        const percentHealth = entity.health / entity.maxHealth;
+        if (percentHealth > 0.9) {
+          dialog.push(entity.name + " is healthy!")
+        } else if (percentHealth > 0.2) {
+          dialog.push(entity.name + " is hurt.")
+        } else {
+          dialog.push(entity.name + " is critically injured!")
+        }
+      } else if (entity instanceof Item) {
+        dialog.push("", entity.name);
+      }
+    }
+
+    this.layer.addDrawable(new TextDrawable(1, 1, dialog.join("\n"), this.boundaries.getWidth() - 2));
     super.refreshVisuals();
   }
 }
