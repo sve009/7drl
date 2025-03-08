@@ -173,8 +173,8 @@ export class GameState {
     this.shopInventories.set("alchemist", pots);
   }
 
-  getDescription (x: number, y: number): { tileDescription: string | null, entities: Array<GameEntity> } {
-    return { tileDescription: this.currentMap.getTileDescription(x, y),
+  getDescription (x: number, y: number): { tileID: string | null, entities: Array<GameEntity> } {
+    return { tileID: this.currentMap.getTileID(x, y),
       entities: this.allEntitiesAt(x, y, this.player.dungeonLevel, false)};
   }
 }
@@ -412,10 +412,10 @@ export class GameMap {
     }
   }
 
-  getTileDescription (x: number, y: number): string | null {
+  getTileID (x: number, y: number): string | null {
     const t = this.tiles[x + y*this.width];
     return (t.seen)
-      ? t.getDescription()
+      ? t.tileType.name
       : null;
   }
 }
@@ -427,6 +427,9 @@ class Tile {
 
   constructor(t: TileType) {
     this.tileType = t;
+    if (!t) {
+      debugger
+    }
     this.seen = false;
     this.open = false;
   }
@@ -462,34 +465,30 @@ class Tile {
       Color.toHex(bg),
     ];
   }
-
-  getDescription(): string {
-    return this.tileType.description();
-  }
 }
 
 class TileType {
   symbol: string;
   foreground: string;
   background: string;
+  name: string;
   passable: (t: Tile) => boolean;
   blocksSight: (t: Tile) => boolean;
-  description: () => string;
 
   constructor(
+    name: string,
     symbol: string, 
     foreground: string, 
     background: string, 
     passable: (t: Tile) => boolean,
     blocksSight: (t: Tile) => boolean,
-    description: () => string = () => "The swampy green bog invites you to play :)"
   ) {
+      this.name = name;
       this.symbol = symbol;
       this.foreground = foreground;
       this.background = background;
       this.passable = passable;
       this.blocksSight = blocksSight;
-      this.description = description;
   }
 }
 
@@ -498,15 +497,17 @@ class TileTypeFactory {
     switch (symbol) {
       case "#": {
         return new TileType(
+          symbol,
           "#",
           "#fff",
           "#444",
           (t: Tile) => false,
-          (t: Tile) => true
+          (t: Tile) => true,
         );
       }
       case ".": {
         return new TileType(
+          symbol,
           ".",
           "#fff",
           "#000",
@@ -516,6 +517,7 @@ class TileTypeFactory {
       }
       case "+": {
         return new TileType(
+          symbol,
           "+",
           "#fff",
           "##593909",
@@ -525,243 +527,242 @@ class TileTypeFactory {
       }
       case "grass": {
         return new TileType(
+          symbol,
           "\u{0022}",
           "#549e26",
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "This is grass. Touch it. We sure haven't in days."
         );
-
       }
       case "bush": {
         return new TileType(
+          symbol,
           "\u{2660}",
           "#18c434",
           "#000",
           (t: Tile) => true,
           (t: Tile) => true,
-          () => "bush"
         );
       }
       case "shrub": {
         return new TileType(
+          symbol,
           "\u{2663}",
           "#31995e",
           "#000",
           (t: Tile) => true,
           (t: Tile) => true,
-          () => "shrub"
         );
       }
       case "altar": {
         return new TileType(
+          symbol,
           "\u{2020}",
           "#fff",
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "I don't believe in GOD"
         );
       }
       case "water": {
         return new TileType(
+          symbol,
           "\u{2248}",
           "#13166e",
           "#242552",
           (t: Tile) => false,
           (t: Tile) => false,
-          () => "water"
         );
       }
       case "swater": {
         return new TileType(
+          symbol,
           " ",
           "#101230",
           "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "shallow water"
         );
       }
       case "leaf": {
         return new TileType(
+          symbol,
           "\u{2042}",
           "#18b85a",
           "#186337",
           (t: Tile) => false,
           (t: Tile) => false,
-          () => "leaf"
         );
       }
       case "hshelf": {
         return new TileType(
+          symbol,
           "\u{2550}",
           "#966111",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "shelf"
         );
       }
       case "vshelf": {
         return new TileType(
+          symbol,
           "\u{2551}",
           "#966111",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "shelf"
         );
       }
       case ">": {
         return new TileType(
+          symbol,
           ">",
           "#fff",
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "down stairs"
         );
       }
       case "<": {
         return new TileType(
+          symbol,
           "<",
           "#fff",
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "up stairs"
         );
       }
       case "carpet": {
         return new TileType(
+          symbol,
           " ",
           "#fff",
           "#910707",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "carpet"
         );
       }
       case "woodf": {
         return new TileType(
+          symbol,
           ".",
           "#593b20",
           "#362212",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "wood floor"
         );
       }
       case "path": {
         return new TileType(
+          symbol,
           ".",
           "#403221",
           "#5e4c35",
           (t: Tile) =>  true,
           (t: Tile) => false,
-          () => "path"
         );
       }
       case "statue1": {
         return new TileType(
+          symbol,
           "\u{2359}",
           "#c79a12",
           "#000",
           (t: Tile) => false,
           (t: Tile) => false,
-          () => "statue"
         );
       }
       case "statue2": {
         return new TileType(
+          symbol,
           "\u{235C}",
           "#9195a3",
           "#000",
           (t: Tile) => false,
           (t: Tile) => false,
-          () => "statue"
         );
       }
       case "lilypad": {
         return new TileType(
+          symbol,
           "\u{230C}",
           "#2de346",
           "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "lilypad"
         );
       }
       case "reed": {
         return new TileType(
+          symbol,
           "\u{2300}",
           "#48bf11",
           "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
-          () => "reed"
         );
       }
       case "ruin1": {
         return new TileType(
+          symbol,
           "\u{2550}",
           "#a99ff5",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "ruin"
         );
       }
       case "ruin2": {
         return new TileType(
+          symbol,
           "\u{2551}",
           "#a99ff5",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "ruin"
         );
       }
       case "ruin3": {
         return new TileType(
+          symbol,
           "\u{2554}",
           "#a99ff5",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "ruin"
         );
       }
       case "ruin4": {
         return new TileType(
+          symbol,
           "\u{2557}",
           "#a99ff5",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "ruin"
         );
       }
       case "ruin5": {
         return new TileType(
+          symbol,
           "\u{255A}",
           "#a99ff5",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "ruin"
         );
       }
       case "ruin6": {
         return new TileType(
+          symbol,
           "\u{255D}",
           "#a99ff5",
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
-          () => "ruin"
         );
       }
       case "artfloor": {

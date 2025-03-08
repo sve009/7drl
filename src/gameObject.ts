@@ -18,6 +18,7 @@ const equipSlots: EquipSlot[] = [
 ];
 
 export abstract class GameEntity extends GameObject{
+  name: string
   position: { x: number; y: number; };
   dungeonLevel: number;
 
@@ -55,8 +56,6 @@ export abstract class GameEntity extends GameObject{
 }
 
 export abstract class Character extends GameEntity {
-  name: string; 
-
   maxHealth: number;
   health: number;
 

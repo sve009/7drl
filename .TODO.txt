@@ -9,6 +9,7 @@ Make use of inventory equal action taken
 Player Panel Revamp (Alexandre)
 Armor/Weapon Panel (Alexandre)
 Health Bar (Alexandre)
+Make sure that inventory interaction counts as a turn (Alexandre)
 Enemies and Items on look mode (Alexandre)
    Strategic Advice
    Damage

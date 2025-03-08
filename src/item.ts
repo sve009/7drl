@@ -38,7 +38,6 @@ export interface Defendable extends Equippable {
 }
 
 export abstract class Item extends GameEntity {
-  name: string;
   cost: number;
 
   async updateState(state: GameState) {

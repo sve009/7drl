@@ -1,6 +1,7 @@
 import { GameEvent } from "./gameEvent";
 import { UIComponent } from "./gameObject";
 import { IOHandler } from "./io";
+import { MovementControl } from "./movementControl";
 import { Position, TextDrawable } from "./renderer";
 import * as UIGameEvents from "./uiGameEvent";
 
@@ -12,6 +13,7 @@ export class HelpPanel extends UIComponent {
     super(boundaries, layerIdx);
     this.showBorder = true;
     this.title = "Help";
+    MovementControl.setPreference("wasd");
 
     this.helpText = [
       "Pause: <escape>",
@@ -41,14 +43,14 @@ export class HelpPanel extends UIComponent {
       "",
       "",
       "",
-      "h - left",
-      "j - down",
-      "k - up",
-      "l - right",
-      "y - up/left diagonal",
-      "u - up/right diagonal",
-      "n - down/right diagonal",
-      "b - down/left diagonal",
+      MovementControl.convertDirectionToKey("left") + " - left",
+      MovementControl.convertDirectionToKey("down") + " - down",
+      MovementControl.convertDirectionToKey("up") + " - up",
+      MovementControl.convertDirectionToKey("right") + " - right",
+      MovementControl.convertDirectionToKey("upleft") + " - up/left diagonal",
+      MovementControl.convertDirectionToKey("upright") + " - up/right diagonal",
+      MovementControl.convertDirectionToKey("downright") + " - down/right diagonal",
+      MovementControl.convertDirectionToKey("downleft") + " - down/left diagonal",
       "> - Go down stairs (Must be on a '>' tile)",
       "< - Go up stairs (Must be on a '<' tile)",
     ].join("\n");
