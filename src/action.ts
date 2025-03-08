@@ -46,7 +46,7 @@ export class ApplyAction extends Action {
 
   run(state: GameState) {
     // TODO: let enemies use items
-    this.item.apply(state, state.player);  
+    this.item.apply(state, state.player);
   }
 }
 

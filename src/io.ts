@@ -135,33 +135,33 @@ export class IOHandler {
       }
       case KEYS.VK_UP: {
         if (!this.shifting) {
-          this.lastKey = "up";
+          this.lastKey = "up arrow";
         } else {
-          this.lastKey = "Up";
+          this.lastKey = "shift + up arrow";
         }
         break;
       }
       case KEYS.VK_DOWN: {
         if (!this.shifting) {
-          this.lastKey = "down";
+          this.lastKey = "down arrow";
         } else {
-          this.lastKey = "Down";
+          this.lastKey = "shift + down arrow";
         }
         break;
       }
       case KEYS.VK_LEFT: {
         if (!this.shifting) {
-          this.lastKey = "left";
+          this.lastKey = "left arrow";
         } else {
-          this.lastKey = "Left";
+          this.lastKey = "shift + left arrow";
         }
         break;
       }
       case KEYS.VK_RIGHT: {
         if (!this.shifting) {
-          this.lastKey = "right";
+          this.lastKey = "right arrow";
         } else {
-          this.lastKey = "Right";
+          this.lastKey = "shift + right arrow";
         }
         break;
       }

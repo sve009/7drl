@@ -99,15 +99,21 @@ export class DialogPanel extends SelectionPanel {
           // Drop
           getUIManager().exitCurrentFocus();
           this.callbacks.drop(this.item);
+          getUIManager().exitAllFocus();
+          getUIManager().gameState.skipPlayerTurn = true;
           return new DropAction(this.item);
         case 2:
           // Apply
           getUIManager().exitCurrentFocus();
           this.callbacks.apply(this.item);
+          getUIManager().exitAllFocus();
+          getUIManager().gameState.skipPlayerTurn = true;
           return new ApplyAction(this.item as unknown as Applyable);
         case 3:
           // Throw
           this.throwing = true;
+          getUIManager().exitAllFocus();
+          getUIManager().gameState.skipPlayerTurn = true;
           return new StartThrowCursorMode(15);
         case 4:
           // Equip / Unequip

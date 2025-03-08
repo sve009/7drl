@@ -24,7 +24,8 @@ export class UIManager {
   endHorizontalPanelInset: number = 35;
   endVerticalPanelInset: number = 19;
   helpPanel: HelpPanel
-  helpPanelInset: number = 14;
+  helpHorizontalPanelInset: number = 26;
+  helpVerticalPanelInset: number = 10;
   pausePanel: PausePanel;
   pauseHorizontalPanelInset: number = 40;
   pauseVerticalPanelInset: number = 21;
@@ -57,10 +58,10 @@ export class UIManager {
                                   renderPos.getHeight() - 2 * this.startScreenInset);
     this.startScreen = new StartScreen(startScreenPos, Number.MAX_SAFE_INTEGER - 1);
 
-    const helpPos = new Position(renderPos.getStartX() + this.helpPanelInset,
-    renderPos.getStartY() + this.helpPanelInset,
-    renderPos.getWidth() - 2 * this.helpPanelInset,
-    renderPos.getHeight() - 2 * this.helpPanelInset);
+    const helpPos = new Position(renderPos.getStartX() + this.helpHorizontalPanelInset,
+    renderPos.getStartY() + this.helpVerticalPanelInset,
+    renderPos.getWidth() - 2 * this.helpHorizontalPanelInset,
+    renderPos.getHeight() - 2 * this.helpVerticalPanelInset);
     this.helpPanel = new HelpPanel(helpPos, Number.MAX_SAFE_INTEGER);
 
     const pausePos = new Position(renderPos.getStartX() + this.pauseHorizontalPanelInset,
@@ -113,6 +114,7 @@ export class UIManager {
     this.gameState = gameState;
     this.descriptorPanel.gameState = gameState;
     this.lookModeCursor.gameState = gameState;
+    this.playerPanel.gameState = gameState;
     this.playerPanel.player = gameState.player;
     this.inventoryPanel.items = gameState.player.items;
     this.buffPanel.buffs = gameState.player.buffs;
@@ -192,7 +194,9 @@ export class UIManager {
   }
 
   openHelp (): void {
-    this.focusObjectQueue.push(this.helpPanel);
+    this.tempObjectQueue = this.focusObjectQueue;
+    this.focusObjectQueue = [this.helpPanel];
+    this.gameState.fullRefresh();
   }
 
   openPauseMenu (): void {
