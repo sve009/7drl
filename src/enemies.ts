@@ -21,7 +21,7 @@ export class Enemy extends Character {
     this.visible = false;
 
     this.enemyType = EnemyTypeFactory.createEnemyType(name);
-
+    
     this.maxHealth = this.enemyType.health;
     this.health = this.maxHealth;
 
@@ -91,11 +91,24 @@ class EnemyTypeFactory {
           "bat",
           "b",
           "#ba944e",
-          new AI.RandomProfile(),
+          new AI.BasicMelee(10, 5),
+          3,
+          60,
+          1,
+          50,
+          0,
+        );
+      }
+      case "jackal": {
+        return new EnemyType(
+          "jackal",
+          "j",
+          "#c7a06d",
+          new AI.BasicMelee(7, 4),
           5,
           50,
-          5,
-          50,
+          2,
+          0,
           0,
         );
       }
@@ -107,7 +120,7 @@ class EnemyTypeFactory {
           new AI.BasicMelee(5, 3),
           5,
           75,
-          2,
+          3,
           0,
           0,
         );
@@ -116,44 +129,28 @@ class EnemyTypeFactory {
   }
 }
 
-const enemyTable = {
-  goblin: 100,
-  smallGoblinGroup: 0,
-  largeGoblinGroup: 0,
-};
+const enemyTables = [
+  // Level 0
+  {},
 
+  // Level 1
+  {
+    goblin: 33,
+    bat: 33,
+    jackal: 33,
+  }
+];
 export class EnemyGenerator {
   static createEnemyGroup(state: GameState, z: number) {
-    const key = RNG.getWeightedValue(enemyTable);     
-    switch (key) {
-      case "goblin": {
-        const position = state.openSpot(z);
-        const goblin = new Enemy("goblin", position.x, position.y, z);
-        state.entities.push(goblin);
-        break;
-      }
-      case "smallGoblinGroup": {
-        const position = state.openSpot(z);
-        const leader = new Enemy("goblin", position.x, position.y, z);
-        for (let i = 0; i < randi(2, 4); i++) {
-          const pos = state.openSpot(z);
-          const goblin = new Enemy("goblin", pos.x, pos.y, z);
-          goblin.enemyType.ai = new AI.MeleeFollower(5, 3, leader);
-          state.entities.push(goblin);
-        }
-        break;
-      }
-      case "largeGoblinGroup": {
-        const position = state.openSpot(z);
-        const leader = new Enemy("goblin", position.x, position.y, z);
-        for (let i = 0; i < randi(4, 6); i++) {
-          const pos = state.openSpot(z);
-          const goblin = new Enemy("goblin", pos.x, pos.y, z);
-          goblin.enemyType.ai = new AI.MeleeFollower(5, 3, leader);
-          state.entities.push(goblin);
-        }
-        break;
-      }
+    let tableIndex = z;
+    if (tableIndex >= enemyTables.length) {
+      tableIndex = enemyTables.length - 1;
     }
+    console.log(tableIndex);
+    const enemyTable = enemyTables[tableIndex];
+    const key = RNG.getWeightedValue(enemyTable);     
+    const position = state.openSpot(z);
+    const enemy = new Enemy(key, position.x, position.y, z);
+    state.entities.push(enemy);
   }
 }
