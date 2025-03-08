@@ -47,4 +47,3 @@ export class MovementControl {
 }
 
 MovementControl.setPreference("hjkl");
-
