@@ -99,6 +99,27 @@ export class GameState {
     return null;
   }
 
+  allEntitiesAt(
+    x: number,
+    y: number,
+    z: number,
+    includePlayer: boolean = true
+  ): Array<GameEntity> {
+    const allEntities = Array<GameEntity>();
+    for (const entity of this.entities) {
+      if (entity.position.x == x && 
+        entity.position.y == y &&
+        entity.dungeonLevel == z
+      ) {
+        if (!includePlayer && entity instanceof Player) {
+          continue;
+        }
+        allEntities.push(entity);
+      }
+    }
+    return allEntities;
+  }
+
   openSpot(z: number): { x: number; y: number; } {
     let found = false;
     let pos;
@@ -113,6 +134,11 @@ export class GameState {
   isWithinMapBoundaries(fx: number, fy: number): boolean {
     return 0 <= fy && fy < this.currentMap.height &&
       0 <= fx && fx < this.currentMap.width;
+  }
+
+  getDescription (x: number, y: number): { tileDescription: string | null, entities: Array<GameEntity> } {
+    return { tileDescription: this.currentMap.getTileDescription(x, y),
+      entities: this.allEntitiesAt(x, y, this.player.dungeonLevel, false)};
   }
 }
 
@@ -323,9 +349,11 @@ export class GameMap {
     }
   }
 
-  getDescription (x: number, y: number): string {
+  getTileDescription (x: number, y: number): string | null {
     const t = this.tiles[x + y*this.width];
-    return t.getDescription();
+    return (t.seen)
+      ? t.getDescription()
+      : null;
   }
 }
 
@@ -450,7 +478,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => true,
-          () => "The bush sways in the wind"
+          () => "bush"
         );
       }
       case "shrub": {
@@ -460,7 +488,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => true,
-          () => "We are the nights that say NEE"
+          () => "shrub"
         );
       }
       case "altar": {
@@ -480,6 +508,7 @@ class TileTypeFactory {
           "#242552",
           (t: Tile) => false,
           (t: Tile) => false,
+          () => "water"
         );
       }
       case "swater": {
@@ -489,6 +518,7 @@ class TileTypeFactory {
           "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "shallow water"
         );
       }
       case "leaf": {
@@ -498,6 +528,7 @@ class TileTypeFactory {
           "#186337",
           (t: Tile) => false,
           (t: Tile) => false,
+          () => "leaf"
         );
       }
       case "hshelf": {
@@ -507,6 +538,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "shelf"
         );
       }
       case "vshelf": {
@@ -516,6 +548,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "shelf"
         );
       }
       case ">": {
@@ -525,6 +558,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "down stairs"
         );
       }
       case "<": {
@@ -534,6 +568,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "up stairs"
         );
       }
       case "carpet": {
@@ -543,6 +578,7 @@ class TileTypeFactory {
           "#910707",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "carpet"
         );
       }
       case "woodf": {
@@ -552,6 +588,7 @@ class TileTypeFactory {
           "#362212",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "wood floor"
         );
       }
       case "path": {
@@ -561,6 +598,7 @@ class TileTypeFactory {
           "#5e4c35",
           (t: Tile) =>  true,
           (t: Tile) => false,
+          () => "path"
         );
       }
       case "statue1": {
@@ -570,6 +608,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => false,
+          () => "statue"
         );
       }
       case "statue2": {
@@ -579,6 +618,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => false,
+          () => "statue"
         );
       }
       case "lilypad": {
@@ -588,6 +628,7 @@ class TileTypeFactory {
           "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "lilypad"
         );
       }
       case "reed": {
@@ -597,6 +638,7 @@ class TileTypeFactory {
           "#3c3e7d",
           (t: Tile) => true,
           (t: Tile) => false,
+          () => "reed"
         );
       }
       case "ruin1": {
@@ -606,6 +648,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "ruin"
         );
       }
       case "ruin2": {
@@ -615,6 +658,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "ruin"
         );
       }
       case "ruin3": {
@@ -624,6 +668,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "ruin"
         );
       }
       case "ruin4": {
@@ -633,6 +678,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "ruin"
         );
       }
       case "ruin5": {
@@ -642,6 +688,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "ruin"
         );
       }
       case "ruin6": {
@@ -651,6 +698,7 @@ class TileTypeFactory {
           "#000",
           (t: Tile) => false,
           (t: Tile) => true,
+          () => "ruin"
         );
       }
     }

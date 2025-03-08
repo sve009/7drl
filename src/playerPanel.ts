@@ -18,12 +18,18 @@ export class PlayerPanel extends UIComponent {
     super.refreshVisuals();
     let playerStats =
     `Health: ${this.player.health}/${this.player.maxHealth}\n` +
-    `Distance Traveled: ${this.player.distanceTraveled}\n` +
+    `Turn: ${this.player.distanceTraveled}\n` +
     `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
-    `Level: ${this.player.dungeonLevel}\n` +
+    `Dungeon Level: ${this.player.dungeonLevel}\n` +
     `Seed: ${RNG.getSeed()}`;
-
-    playerStats = ` %b{${this.layer.bg}}${playerStats}`;
+    if (!this.player.dungeonLevel) {
+      playerStats =
+      `Health: ${this.player.health}/${this.player.maxHealth}\n` +
+      `Turn: ${this.player.distanceTraveled}\n` +
+      `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
+      `Ground Level` +
+      `Seed: ${RNG.getSeed()}`;  
+    }
 
     this.layer.addDrawable(new TextDrawable(1, 1, playerStats, this.boundaries.getWidth() - 2));
   }
