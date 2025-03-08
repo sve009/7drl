@@ -76,6 +76,7 @@ export class DialogPanel extends SelectionPanel {
       this.throwing = false;
       this.callbacks.throw(this.item);
       getUIManager().exitAllFocus();
+      getUIManager().gameState.skipPlayerTurn = true;
       return new ThrowAction(
         this.item as unknown as Throwable, 
         state.positionToRemember
@@ -112,8 +113,7 @@ export class DialogPanel extends SelectionPanel {
         case 3:
           // Throw
           this.throwing = true;
-          getUIManager().exitAllFocus();
-          getUIManager().gameState.skipPlayerTurn = true;
+          getUIManager().gameState.skipPlayerTurn = false;
           return new StartThrowCursorMode(15);
         case 4:
           // Equip / Unequip

@@ -35,7 +35,6 @@ export class MovementControl {
   }
 
   static convertIfDirection (key: string): string {
-    console.log(key, MovementControl.keys)
     const idx = MovementControl.keys.indexOf(key);
     return (idx == -1)
       ? key
