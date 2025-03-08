@@ -186,11 +186,11 @@ export class Player extends Character {
                   logMessage("My child, you are now ready to take my place and lead this monastery")
                   logMessage("YOU WIN - But what was left unexplored in those dungeons?")
                   getUIManager().showEndScreen(true);
-                } 
-
-                const state = getUIManager().gameState;
-                state.refreshShopInventories(0);
-                state.unveilTeleporter();
+                } else { 
+                  const state = getUIManager().gameState;
+                  state.refreshShopInventories(0);
+                  state.unveilTeleporter();
+                }
               } 
 
               return new Actions.NoAction();

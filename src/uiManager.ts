@@ -17,6 +17,7 @@ import { PausePanel } from "./pausePanel";
 import { EndScreen } from "./endScreen";
 import { EquipmentPanel } from "./equipmentPanel";
 import { CreditsPanel } from "./creditsPanel";
+import { descriptionCatalogue } from "./descriptionCatalogue";
 
 export class UIManager {
   game: Game;
@@ -153,7 +154,9 @@ export class UIManager {
     callbacks: DialogCallbacks,
   ): void {
     const title = item ? item.name : null;
-    const fText = item ? item.name : null;
+    const fText = item 
+      ? descriptionCatalogue(item.name) 
+      : null;
     const dialog = new DialogPanel(
       new Position(16, 15, 47, 10),
       0,
