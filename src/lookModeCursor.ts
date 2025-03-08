@@ -1,5 +1,5 @@
 import { dirMap } from "./constants";
-import { GameEvent } from "./gameEvent";
+import { Action, GameEvent } from "./gameEvent";
 import { UIComponent } from "./gameObject";
 import { GameState } from "./gamestate";
 import { IOHandler } from "./io";
@@ -67,6 +67,9 @@ export class LookModeCursor extends UIComponent {
         case "n": {
           dir = 5;
           break;
+        }
+        case "select": {
+          return new UIGameEvents.SendPositionToGameStateAndExit({ x: this.boundaries.startX, y: this.boundaries.startY });
         }
         case "escape":
           return new UIGameEvents.ExitUI;

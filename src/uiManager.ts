@@ -195,6 +195,13 @@ export class UIManager {
     this.lookModeCursor.lockToPlayer(radius);
     this.tempObjectQueue = this.focusObjectQueue;
     this.focusObjectQueue = [this.lookModeCursor];
+    this.gameState.fullRefresh();
+  }
+
+  exitAllFocus (): void {
+    this.focusObjectQueue = [];
+    this.tempObjectQueue = [];
+    this.gameState.fullRefresh();
   }
 }
 
