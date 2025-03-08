@@ -92,6 +92,22 @@ fs.readFile(file, 'utf8', (err, contents) => {
         mapArr.push(18);
         break;
       }
+      case "1": {
+        mapArr.push(29);
+        break;
+      }
+      case "2": {
+        mapArr.push(30);
+        break;
+      }
+      case "3": {
+        mapArr.push(31);
+        break;
+      }
+      case "4": {
+        mapArr.push(32);
+        break;
+      }
     }
   }
 
