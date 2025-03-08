@@ -127,5 +127,4 @@ export function descriptionCatalogue (key: string) {
     default:
       throw new Error("MESSAGE ID MISSING");
   }
-  return key;
 }
