@@ -1,10 +1,10 @@
 export function descriptionCatalogue (key: string) {
   switch (key) {
-    case "wall":
+    case "#":
       break;
-    case "ground":
+    case ".":
       break;
-    case "door":
+    case "+":
       break;
     case "grass":
       break;

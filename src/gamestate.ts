@@ -271,15 +271,15 @@ export class GameMap {
     let t: TileType;
     switch (value) {
       case 0: {
-        t = TileTypeFactory.create("wall");
+        t = TileTypeFactory.create("#");
         break;
       }
       case 1: {
-        t = TileTypeFactory.create("ground");
+        t = TileTypeFactory.create(".");
         break;
       }
       case 2: {
-        t = TileTypeFactory.create("door");
+        t = TileTypeFactory.create("+");
         break;
       }
       case 3: {
@@ -419,6 +419,9 @@ class Tile {
 
   constructor(t: TileType) {
     this.tileType = t;
+    if (!t) {
+      debugger
+    }
     this.seen = false;
     this.open = false;
   }
@@ -484,7 +487,7 @@ class TileType {
 class TileTypeFactory {
   static create(symbol: string): TileType {
     switch (symbol) {
-      case "wall": {
+      case "#": {
         return new TileType(
           symbol,
           "#",
@@ -494,7 +497,7 @@ class TileTypeFactory {
           (t: Tile) => true,
         );
       }
-      case "ground": {
+      case ".": {
         return new TileType(
           symbol,
           ".",
@@ -504,7 +507,7 @@ class TileTypeFactory {
           (t: Tile) => false
         );
       }
-      case "door": {
+      case "+": {
         return new TileType(
           symbol,
           "+",
