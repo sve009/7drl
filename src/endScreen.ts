@@ -56,7 +56,7 @@ export class EndScreen extends SelectionPanel {
 
       // Add button text
       const bText = this.buttonNames[i];
-      const x = 14 + i * 9;
+      const x = 12 + i * 9;
       const y = this.boundaries.getHeight() - 3;
       this.layer.addDrawable(
         new TextDrawable(x, y, bText)
