@@ -114,7 +114,7 @@ export class HelpPanel extends SelectionPanel {
   refreshVisuals(): void {
     this.layer.addDrawable(new TextDrawable(1, 1, this.helpText, this.boundaries.getWidth() - 2))
     this.layer.addDrawable(new TextDrawable(4, 1, this.indentHelpText, this.boundaries.getWidth() - 5))
-    this.layer.addDrawable(new TextDrawable(12, 25, "Switch Movement Configuration"))
+    this.layer.addDrawable(new TextDrawable(12, 24, "Switch Movement Configuration"))
 
         // Add buttons
     for (let i = 0; i < this.buttonNames.length; i++) {

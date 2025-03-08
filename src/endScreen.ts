@@ -48,7 +48,7 @@ export class EndScreen extends SelectionPanel {
 
   refreshVisuals(): void {
     // Display text first
-    const text = (this.win || true) ? this.winText : this.loseText;
+    const text = (this.win) ? this.winText : this.loseText;
     this.layer.addDrawable(new TextDrawable(1, 1, text, this.boundaries.getWidth() - 2));
 
     // Add buttons

@@ -33,7 +33,7 @@ export class UIManager {
   pauseVerticalPanelInset: number = 21;
   creditsPanel: CreditsPanel;
   creditsHorizontalPanelInset: number = 26;
-  creditsVerticalPanelInset: number = 21;
+  creditsVerticalPanelInset: number = 22;
 
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
