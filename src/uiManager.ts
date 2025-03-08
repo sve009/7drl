@@ -13,11 +13,15 @@ import { Game } from "./game";
 import { StartScreen } from "./startScreen";
 import { HelpPanel } from "./helpPanel";
 import { PausePanel } from "./pausePanel";
+import { EndScreen } from "./endScreen";
 
 export class UIManager {
   game: Game;
   startScreen: StartScreen;
   startScreenInset: number = 15;
+  endScreen: EndScreen;
+  endHorizontalPanelInset: number = 35;
+  endVerticalPanelInset: number = 19;
   helpPanel: HelpPanel
   helpPanelInset: number = 14;
   pausePanel: PausePanel;
@@ -64,6 +68,11 @@ export class UIManager {
     renderPos.getHeight() - 2 * this.pauseVerticalPanelInset);
     this.pausePanel = new PausePanel(pausePos, Number.MAX_SAFE_INTEGER);
 
+    const endScreenPos = new Position(renderPos.getStartX() + this.endHorizontalPanelInset,
+    renderPos.getStartY() + this.endVerticalPanelInset,
+    renderPos.getWidth() - 2 * this.endHorizontalPanelInset,
+    renderPos.getHeight() - 2 * this.endVerticalPanelInset);
+    this.endScreen = new EndScreen(endScreenPos, Number.MAX_SAFE_INTEGER);
 
     this.logPanel = new LogPanel(3);
     this.playerPanel = new PlayerPanel(3);
@@ -196,6 +205,10 @@ export class UIManager {
     this.tempObjectQueue = this.focusObjectQueue;
     this.focusObjectQueue = [this.lookModeCursor];
     this.gameState.fullRefresh();
+  }
+
+  showEndScreen () {
+    this.focusObjectQueue.push(this.endScreen);
   }
 
   exitAllFocus (): void {

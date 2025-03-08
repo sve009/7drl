@@ -31,6 +31,7 @@ export class HelpPanel extends UIComponent {
       "",
       "Look Mode: ;",
       "Pick up: ,",
+      "Wait a turn: .",
       "",
       "Interact: Move towards NPC or Enemy",
       "Help: ?"

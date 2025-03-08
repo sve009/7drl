@@ -1,6 +1,5 @@
 TODO:
 Artifacts
-End Screen (Alexandre)
 Descriptions
 Frame Narrative
 Enemies
