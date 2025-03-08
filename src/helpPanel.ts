@@ -38,6 +38,7 @@ export class HelpPanel extends SelectionPanel {
       "",
       "",
       "",
+      "",
       "Look Mode: ;",
       "Pick up: ,",
       "Wait a turn: .",
@@ -50,17 +51,18 @@ export class HelpPanel extends SelectionPanel {
       "",
       "",
       "",
-      MovementControl.convertDirectionToKey("left") + " - left",
-      MovementControl.convertDirectionToKey("down") + " - down",
-      MovementControl.convertDirectionToKey("up") + " - up",
-      MovementControl.convertDirectionToKey("right") + " - right",
-      MovementControl.convertDirectionToKey("upleft") + " - up/left diagonal",
-      MovementControl.convertDirectionToKey("upright") + " - up/right diagonal",
-      MovementControl.convertDirectionToKey("downright") + " - down/right diagonal",
-      MovementControl.convertDirectionToKey("downleft") + " - down/left diagonal",
-      "> - Go down stairs (Must be on a '>' tile)",
-      "< - Go up stairs (Must be on a '<' tile)",
-    ].join("\n");
+      "left                - " + MovementControl.convertDirectionToKey("left"),
+      "down                - " + MovementControl.convertDirectionToKey("down"),
+      "up                  - " + MovementControl.convertDirectionToKey("up"),
+      "right               - " + MovementControl.convertDirectionToKey("right"),
+      "up/left diagonal    - " + MovementControl.convertDirectionToKey("upleft"),
+      "up/right diagonal   - " + MovementControl.convertDirectionToKey("upright"),
+      "down/right diagonal - " + MovementControl.convertDirectionToKey("downright"),
+      "down/left diagonal  - " + MovementControl.convertDirectionToKey("downleft"),
+      "",
+      "Go down stairs - > (Must be on a '>' tile)",
+      "Go up stairs   - < (Must be on a '<' tile)",
+].join("\n");
 
     this.indexMap = [];
     let count = 0;
@@ -90,16 +92,17 @@ export class HelpPanel extends SelectionPanel {
           "",
           "",
           "",
-          MovementControl.convertDirectionToKey("left") + " - left",
-          MovementControl.convertDirectionToKey("down") + " - down",
-          MovementControl.convertDirectionToKey("up") + " - up",
-          MovementControl.convertDirectionToKey("right") + " - right",
-          MovementControl.convertDirectionToKey("upleft") + " - up/left diagonal",
-          MovementControl.convertDirectionToKey("upright") + " - up/right diagonal",
-          MovementControl.convertDirectionToKey("downright") + " - down/right diagonal",
-          MovementControl.convertDirectionToKey("downleft") + " - down/left diagonal",
-          "> - Go down stairs (Must be on a '>' tile)",
-          "< - Go up stairs (Must be on a '<' tile)",
+          "left                - " + MovementControl.convertDirectionToKey("left"),
+          "down                - " + MovementControl.convertDirectionToKey("down"),
+          "up                  - " + MovementControl.convertDirectionToKey("up"),
+          "right               - " + MovementControl.convertDirectionToKey("right"),
+          "up/left diagonal    - " + MovementControl.convertDirectionToKey("upleft"),
+          "up/right diagonal   - " + MovementControl.convertDirectionToKey("upright"),
+          "down/right diagonal - " + MovementControl.convertDirectionToKey("downright"),
+          "down/left diagonal  - " + MovementControl.convertDirectionToKey("downleft"),
+          "",
+          "Go down stairs - > (Must be on a '>' tile)",
+          "Go up stairs   - < (Must be on a '<' tile)",
         ].join("\n");
     
         return new UIGameEvents.NoEvent();
@@ -111,13 +114,14 @@ export class HelpPanel extends SelectionPanel {
   refreshVisuals(): void {
     this.layer.addDrawable(new TextDrawable(1, 1, this.helpText, this.boundaries.getWidth() - 2))
     this.layer.addDrawable(new TextDrawable(4, 1, this.indentHelpText, this.boundaries.getWidth() - 5))
+    this.layer.addDrawable(new TextDrawable(12, 25, "Switch Movement Configuration"))
 
         // Add buttons
     for (let i = 0; i < this.buttonNames.length; i++) {
 
       // Add button text
       const bText = this.buttonNames[i];
-      const x = this.boundaries.getWidth() / 2 - 10 + 2 + i * 9;
+      const x = 14 + i * 9;
       const y = this.boundaries.getHeight() - 3;
       this.layer.addDrawable(
         new TextDrawable(x, y, bText)

@@ -27,7 +27,7 @@ export class MovementControl {
         newKeys = ["a", "s", "w", "d", "q", "e", "x", "z"];
         break
       case "arrow":
-        newKeys = ["left", "down", "up", "right", "Up", "Right", "Down", "Left"];
+        newKeys = ["left arrow", "down arrow", "up arrow", "right arrow", "shift + up arrow", "shift + right arrow", "shift + down arrow", "shift + left arrow"];
         break
     }
     MovementControl.preference = preference;
@@ -35,6 +35,7 @@ export class MovementControl {
   }
 
   static convertIfDirection (key: string): string {
+    console.log(key, MovementControl.keys)
     const idx = MovementControl.keys.indexOf(key);
     return (idx == -1)
       ? key
