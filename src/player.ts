@@ -170,7 +170,6 @@ export class Player extends Character {
                 this.damage += 1;
                 this.accuracy += 10;
                 this.dodge += 10;
-                this.armor += 1;
 
                 logMessage("You hand over an artifact");
                 logMessage("The priest blesses you");

@@ -254,7 +254,8 @@ export class DescendAction extends Action {
 
       // Enemies
       // 6 Guaranteed
-      for (let i = 0; i < randi(5, 9); i++) {
+      const z = this.entity.dungeonLevel
+      for (let i = 0; i < randi(5, 7) + z; i++) {
         EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
     }
