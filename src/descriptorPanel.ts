@@ -1,3 +1,4 @@
+import { descriptionCatalogue } from "./descriptionCatalogue";
 import { Character, GameEntity, UIComponent } from "./gameObject";
 import { GameState } from "./gamestate";
 import { Item } from "./item";
@@ -17,7 +18,7 @@ export class DescriptorPanel extends UIComponent {
   }
 
   refreshVisuals(): void {
-    let gameDescription: { tileDescription: string, entities: GameEntity[] };
+    let gameDescription: { tileID: string, entities: GameEntity[] };
     if (this.lookModeCursor.active) {
       const pos = this.lookModeCursor.currentPosition();
       gameDescription = this.gameState.getDescription(pos.x, pos.y);
@@ -25,7 +26,7 @@ export class DescriptorPanel extends UIComponent {
       gameDescription = this.gameState.getDescription(this.gameState.player.position.x, this.gameState.player.position.y);
     }
     let dialog = [
-      (gameDescription.tileDescription) ? gameDescription.tileDescription : "Unknown"
+      (gameDescription.tileID) ? descriptionCatalogue(gameDescription.tileID) : "Unexplored"
     ];
     for (const entity of gameDescription.entities) {
       if (entity instanceof Character) {

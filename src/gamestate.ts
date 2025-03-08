@@ -173,8 +173,8 @@ export class GameState {
     this.shopInventories.set("alchemist", pots);
   }
 
-  getDescription (x: number, y: number): { tileDescription: string | null, entities: Array<GameEntity> } {
-    return { tileDescription: this.currentMap.getTileDescription(x, y),
+  getDescription (x: number, y: number): { tileID: string | null, entities: Array<GameEntity> } {
+    return { tileID: this.currentMap.getTileID(x, y),
       entities: this.allEntitiesAt(x, y, this.player.dungeonLevel, false)};
   }
 }
@@ -404,10 +404,10 @@ export class GameMap {
     }
   }
 
-  getTileDescription (x: number, y: number): string | null {
+  getTileID (x: number, y: number): string | null {
     const t = this.tiles[x + y*this.width];
     return (t.seen)
-      ? t.getDescription()
+      ? t.tileType.name
       : null;
   }
 }
@@ -454,10 +454,6 @@ class Tile {
       Color.toHex(bg),
     ];
   }
-
-  getDescription(): string {
-    return this.tileType.description();
-  }
 }
 
 class TileType {
@@ -467,7 +463,6 @@ class TileType {
   name: string;
   passable: (t: Tile) => boolean;
   blocksSight: (t: Tile) => boolean;
-  description: () => string;
 
   constructor(
     name: string,
