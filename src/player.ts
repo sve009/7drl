@@ -14,6 +14,7 @@ export class Player extends Character {
   ioHandler: IOHandler;
   maxHealth: number;
   health: number;
+  regen: number;
   distanceTraveled: number;
   gold: number;
 
@@ -30,6 +31,7 @@ export class Player extends Character {
 
     this.maxHealth = 10;
     this.health = 10;
+    this.regen = 1;
 
     this.accuracy = 75;
     this.damage = 3;
@@ -42,6 +44,12 @@ export class Player extends Character {
   }
 
   async updateState(state: GameState) {
+    if (this.distanceTraveled % 50 == 0) {
+      this.health = Math.min(
+        this.maxHealth, 
+        this.health + this.regen
+      );
+    }
     while (true) {
       let key = await this.ioHandler.requestKey();
       let dir = -1;
