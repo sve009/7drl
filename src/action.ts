@@ -4,7 +4,7 @@ import { GameState, GameMap } from "./gamestate";
 import { MapGenerator } from "./mapgen";
 import { GameEntity } from "./gameObject";
 import { logMessage } from "./uiManager";
-import { Item, ItemGenerator, Applyable, Equippable } from "./item";
+import { Item, ItemGenerator, Applyable, Equippable, Throwable } from "./item";
 import { EnemyGenerator } from "./enemies";
 import { randi } from "./utilities";
 import { Action } from "./gameEvent";
@@ -88,6 +88,22 @@ export class AttackAction extends Action {
       logMessage(`${this.attacker.name} misses ${this.defender.name}`);
     }
   } 
+}
+
+export class ThrowAction extends Action {
+  item: Throwable;
+  position: { x: number, y: number };
+
+  constructor(item: Throwable, position: { x: number, y: number }) {
+    super();
+    this.item = item;
+    this.position = position;
+  }
+
+  run(state: GameState) {
+    const { x, y } = this.position;
+    this.item.throw(x, y, state);
+  }
 }
 
 export class PickUpAction extends Action {

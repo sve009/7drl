@@ -20,6 +20,7 @@ export class LookModeCursor extends UIComponent {
     updatePosition (pos: { x: number, y: number }): void {
       this.activate();
       this.lockedRadius = 0;
+      this.startingPosition = pos;
       this.boundaries.startX = pos.x;
       this.boundaries.startY = pos.y;
     }
@@ -68,7 +69,7 @@ export class LookModeCursor extends UIComponent {
           dir = 5;
           break;
         }
-        case "select": {
+        case "enter": {
           return new UIGameEvents.SendPositionToGameStateAndExit({ x: this.boundaries.startX, y: this.boundaries.startY });
         }
         case "escape":

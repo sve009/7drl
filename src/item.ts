@@ -54,11 +54,27 @@ export class Potion extends Item implements Throwable, Applyable {
     super();
     this.name = profile.name;
     this.range = 20;
-    this.radius = profile.radius;
+    this.radius = 2;
     this.profile = profile;
   }
 
-  throw(x: number, y: number, state: GameState) {}
+  throw(x: number, y: number, state: GameState) {
+    const r = Math.pow(this.radius, 2);
+    const entitiesHit: GameEntity[] = []
+    const map = state.maps[state.player.dungeonLevel];
+    for (let y0 = 2; y0 < map.width-2; y0++) {
+      for (let x0 = 2; x0 < map.height-2; x0++) {
+        if (Math.pow(x - x0, 2) + Math.pow(y - y0, 2) <= r) {
+          // TODO: untie from player
+          const e =  state.entityAt(x0, y0, state.player.dungeonLevel);
+          if (e) {
+            entitiesHit.push(e);
+          }
+        }
+      }
+    }
+    this.profile.thrown(entitiesHit);
+  }
   
   apply(state: GameState, character: Character) {
     this.profile.applied(character);
@@ -682,12 +698,10 @@ export class ItemGenerator {
         switch (RNG.getWeightedValue(equipmentTable)) {
           case "weapon": {
             const wep = RNG.getWeightedValue(weaponTable);
-            console.log(wep);
             return BasicWeaponArmorFactory.createBasicWeapon(wep);
           }
           case "armor": {
             const arm = RNG.getWeightedValue(armorTable);
-            console.log(arm);
             return BasicWeaponArmorFactory.createBasicArmor(arm);
           }
         }

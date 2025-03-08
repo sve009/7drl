@@ -146,7 +146,6 @@ export class EnemyGenerator {
     if (tableIndex >= enemyTables.length) {
       tableIndex = enemyTables.length - 1;
     }
-    console.log(tableIndex);
     const enemyTable = enemyTables[tableIndex];
     const key = RNG.getWeightedValue(enemyTable);     
     const position = state.openSpot(z);

@@ -1,9 +1,9 @@
 import { UIComponent } from "./gameObject";
 import { GameState } from "./gamestate";
-import type { Item, Applyable, Equippable } from "./item";
+import type { Item, Applyable, Equippable, Throwable } from "./item";
 import { Position, TextDrawable } from "./renderer";
-import { Select, NoEvent, ExitUI } from "./uiGameEvent";
-import { ApplyAction, EquipAction, DropAction } from "./action";
+import { Select, NoEvent, ExitUI, StartThrowCursorMode } from "./uiGameEvent";
+import { ApplyAction, EquipAction, DropAction, ThrowAction } from "./action";
 import { SelectionPanel } from "./selectionPanel";
 import { GameEvent } from "./gameEvent";
 import { getUIManager } from "./uiManager";
@@ -29,6 +29,8 @@ export class DialogPanel extends SelectionPanel {
   callbacks: DialogCallbacks;
 
   indexMap: number[];
+
+  throwing: boolean = false;
 
   constructor(
     boundaries: Position, 
@@ -68,6 +70,18 @@ export class DialogPanel extends SelectionPanel {
   }
 
   async updateContent(): Promise<GameEvent> {
+    // Handle if the user chose to throw last update
+    const state = getUIManager().gameState;
+    if (this.throwing && state.positionToRemember) {
+      this.throwing = false;
+      this.callbacks.throw(this.item);
+      getUIManager().exitAllFocus();
+      return new ThrowAction(
+        this.item as unknown as Throwable, 
+        state.positionToRemember
+      );
+    }
+
     const event = await super.updateContent();
     if (event instanceof Select) {
       let j;
@@ -93,8 +107,8 @@ export class DialogPanel extends SelectionPanel {
           return new ApplyAction(this.item as unknown as Applyable);
         case 3:
           // Throw
-          // TODO
-          return new NoEvent();
+          this.throwing = true;
+          return new StartThrowCursorMode(15);
         case 4:
           // Equip / Unequip
           getUIManager().exitCurrentFocus();

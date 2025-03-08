@@ -76,6 +76,6 @@ export class SendPositionToGameStateAndExit extends UIGameEvent {
 
   run (state: GameState): void {
     state.positionToRemember = this.positionToSend;
-    getUIManager().exitAllFocus();
+    getUIManager().exitCurrentFocus();
   }
 }
