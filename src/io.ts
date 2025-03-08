@@ -1,4 +1,5 @@
 import { KEYS } from "rot-js";
+import { MovementControl } from "./movementControl";
 
 /**
  * Handle all keyboard input
@@ -120,8 +121,9 @@ export class IOHandler {
       case 186: {
         if (!this.shifting) {
           this.lastKey = ";";
+        } else {
+          this.lastKey = ":";
         }
-        break;
       }
       case KEYS.VK_SLASH: {
         if (!this.shifting) {
@@ -131,7 +133,89 @@ export class IOHandler {
         }
         break;
       }
+      case KEYS.VK_UP: {
+        if (!this.shifting) {
+          this.lastKey = "up";
+        } else {
+          this.lastKey = "Up";
+        }
+        break;
+      }
+      case KEYS.VK_DOWN: {
+        if (!this.shifting) {
+          this.lastKey = "down";
+        } else {
+          this.lastKey = "Down";
+        }
+        break;
+      }
+      case KEYS.VK_LEFT: {
+        if (!this.shifting) {
+          this.lastKey = "left";
+        } else {
+          this.lastKey = "Left";
+        }
+        break;
+      }
+      case KEYS.VK_RIGHT: {
+        if (!this.shifting) {
+          this.lastKey = "right";
+        } else {
+          this.lastKey = "Right";
+        }
+        break;
+      }
+      case KEYS.VK_Q: {
+        if (!this.shifting) {
+          this.lastKey = "q";
+        }
+        break;
+      }
+      case KEYS.VK_W: {
+        if (!this.shifting) {
+          this.lastKey = "w";
+        }
+        break;
+      }
+      case KEYS.VK_E: {
+        if (!this.shifting) {
+          this.lastKey = "e";
+        }
+        break;
+      }
+      case KEYS.VK_A: {
+        if (!this.shifting) {
+          this.lastKey = "a";
+        }
+        break;
+      }
+      case KEYS.VK_S: {
+        if (!this.shifting) {
+          this.lastKey = "s";
+        }
+        break;
+      }
+      case KEYS.VK_D: {
+        if (!this.shifting) {
+          this.lastKey = "d";
+        }
+        break;
+      }
+      case KEYS.VK_Z: {
+        if (!this.shifting) {
+          this.lastKey = "z";
+        }
+        break;
+      }
+      case KEYS.VK_X: {
+        if (!this.shifting) {
+          this.lastKey = "x";
+        }
+        break;
+      }
     }
+
+    this.lastKey = MovementControl.convertIfDirection(this.lastKey);
 
     if (this.keyPressCallback && this.lastKey) {
       this.keyPressCallback(this.lastKey);

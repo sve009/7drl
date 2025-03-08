@@ -37,35 +37,35 @@ export class LookModeCursor extends UIComponent {
       let key = await this.ioHandler.requestKey();
       let dir = -1;
       switch (key) {
-        case "h": {
+        case "left": {
           dir = 0;
           break;
         }
-        case "j": {
+        case "down": {
           dir = 1;
           break;
         }
-        case "k": {
+        case "up": {
           dir = 3;
           break;
         }
-        case "l": {
+        case "right": {
           dir = 2;
           break;
         }
-        case "y": {
+        case "upleft": {
           dir = 7;
           break;
         }
-        case "u": {
+        case "upright": {
           dir = 6;
           break;
         }
-        case "b": {
+        case "downleft": {
           dir = 4;
           break;
         }
-        case "n": {
+        case "downright": {
           dir = 5;
           break;
         }

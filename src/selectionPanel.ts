@@ -11,16 +11,16 @@ export abstract class SelectionPanel extends UIComponent {
   async updateContent(): Promise<GameEvent> {
     let key = await this.ioHandler.requestKey();
     switch (key) {
-      case "h":
+      case "left":
         this.selectionIdx -= 1;
         break;
-      case "j":
+      case "down":
         this.selectionIdx += 1;
         break;
-      case "k":
+      case "up":
         this.selectionIdx -= 1;
         break;
-      case "l":
+      case "right":
         this.selectionIdx += 1;
         break;
       case "enter":
