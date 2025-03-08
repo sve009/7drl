@@ -30,7 +30,7 @@ export class StartScreen extends SelectionPanel {
       "",
       "2000 years after the end of civilization and 2000 years before another age of silicon. The church has been the only institution to survive the apocolypse and retain any memory of the fires and radiation.",
       "",
-      "The abbot has tasked you to enter the forbidden dungeon in search of artifacts of a forgotten time.",
+      "The priest has tasked you to enter the forbidden dungeon in search of artifacts of a forgotten time.",
       "",
       "Are you ready?",
       "",
