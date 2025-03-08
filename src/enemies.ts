@@ -1,4 +1,4 @@
-import { RNG } from "rot-js";
+import { RNG, Path } from "rot-js";
 import * as AI from "./ai";
 import { Character } from "./gameObject";
 import type { GameState } from "./gamestate";
@@ -128,7 +128,7 @@ class EnemyTypeFactory {
       case "jackal": {
         return new EnemyType(
           "jackal",
-          "j",
+          "d",
           "#c7a06d",
           new AI.BasicMelee(7, 4),
           5,
@@ -167,13 +167,26 @@ class EnemyTypeFactory {
       case "wolf": {
         return new EnemyType(
           "wolf",
-          "j",
+          "d",
           "#bd0d0d",
           new AI.BasicMelee(8, 5),
           15,
           60,
-          6,
+          4,
           10,
+          0,
+        );
+      }
+      case "cavespider": {
+        return new EnemyType(
+          "cave spider",
+          "s",
+          "#17f013",
+          new AI.BasicMelee(7, 3),
+          8,
+          60,
+          6,
+          60,
           0,
         );
       }
@@ -207,6 +220,14 @@ const enemyTables = [
     jackal: 10,
     goblinarcher: 25,
     wolf: 15,
+  },
+
+  // Level 4
+  {
+    bat: 20,
+    wolf: 35,
+    goblinarcher: 25,
+    cavespider: 20,
   }
 ];
 export class EnemyGenerator {
@@ -217,7 +238,30 @@ export class EnemyGenerator {
     }
     const enemyTable = enemyTables[tableIndex];
     const key = RNG.getWeightedValue(enemyTable);     
-    const position = state.openSpot(z);
+    const dijkstra = new Path.Dijkstra(
+      state.player.position.x,
+      state.player.position.y,
+      (x: number, y: number) => {
+        return state.maps[z].passable(x, y);
+      },
+      null
+    );
+
+    let dist = 0;
+    let count = 0;
+    let position = state.player.position;
+    while (dist < 12 && count < 10) {
+      count++;
+
+      dist = 0;
+      position = state.openSpot(z);
+      dijkstra.compute(
+        position.x,
+        position.y,
+        (x: number, y: number) => { dist++; },
+      );
+    }
+
     const enemy = new Enemy(key, position.x, position.y, z);
     state.entities.push(enemy);
   }

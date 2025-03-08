@@ -6,7 +6,7 @@ import { Glyph } from "./renderer";
 import { randi } from "./utilities";
 import { Enemy } from "./enemies";
 import { RandomProfile } from "./ai";
-import { logMessage } from "./uiManager";
+import { logMessage, getUIManager } from "./uiManager";
 import * as Buffs from "./buff";
 
 export interface Throwable {
@@ -61,18 +61,18 @@ export class Potion extends Item implements Throwable, Applyable {
   }
 
   throw(x: number, y: number, state: GameState) {
-    const r = Math.pow(this.radius, 2);
     const entitiesHit: GameEntity[] = []
-    const map = state.maps[state.player.dungeonLevel];
-    for (let y0 = 2; y0 < map.width-2; y0++) {
-      for (let x0 = 2; x0 < map.height-2; x0++) {
-        if (Math.pow(x - x0, 2) + Math.pow(y - y0, 2) <= r) {
-          // TODO: untie from player
-          const e =  state.entityAt(x0, y0, state.player.dungeonLevel);
-          if (e) {
-            entitiesHit.push(e);
-          }
-        }
+    for (const e of state.entities) {
+      if (!(e instanceof Character)) {
+        continue;
+      }
+      
+      if (e.dungeonLevel != state.player.dungeonLevel) {
+        continue;
+      }
+
+      if (e.position.x == x && e.position.y == y) {
+        entitiesHit.push(e);
       }
     }
     this.profile.thrown(entitiesHit);
@@ -228,8 +228,8 @@ export class PotionFactory {
             logMessage("The potion explodes!");
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
-                entity.health -= 10;
                 logMessage(`The expolosion hits ${entity.name}!`);
+                entity.applyDamage(getUIManager().gameState, 40);
               }
             }
           },
@@ -313,7 +313,7 @@ class ScrollProfile {
 const scrollDropTable = {
   teleportation: 1,
   enchantment: 0,
-  mapping: 1,
+  omniscience: 1,
   poison: 1,
   blinking: 0,
   recall: 0,
@@ -340,14 +340,17 @@ export class ScrollFactory {
         );
         break;
       }
-      case "mapping": {
+      case "omniscience": {
         profile = new ScrollProfile(
-          "scroll of mapping",
+          "scroll of omniscience",
           "#47c5c9",
           (state: GameState, character: Character) => {
             const z = character.dungeonLevel;
             for (const tile of state.maps[z].tiles) {
               tile.seen = true;
+            }
+            for (const e of state.entities) {
+              e.visibleOverride = e.dungeonLevel == z;
             }
             logMessage("The floor's secrets reveal themselves to you");
           }
@@ -613,40 +616,40 @@ export class BasicWeaponArmorFactory {
       case "dagger": {
         profile = new BasicWeaponProfile(
           name,
-          50,
-          2
+          10,
+          1
         );
         break;
       }
       case "spear": {
         profile = new BasicWeaponProfile(
           name,
-          50,
-          2
+          20,
+          1
         );
         break;
       }
       case "sword": {
         profile = new BasicWeaponProfile(
           name,
-          70,
-          4
+          20,
+          3
         );
         break;
       }
       case "axe": {
         profile = new BasicWeaponProfile(
           name,
-          50,
-          8
+          10,
+          5
         );
         break;
       }
       case "glaive": {
         profile = new BasicWeaponProfile(
           name,
-          80,
-          8
+          30,
+          7
         );
         break;
       }

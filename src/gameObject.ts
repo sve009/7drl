@@ -22,6 +22,7 @@ export abstract class GameEntity extends GameObject{
   dungeonLevel: number;
 
   visible: boolean;
+  visibleOverride: boolean = false;
   invisible: boolean = false;
 
   abstract updateState(state: GameState): Promise<GameEvent>;
@@ -35,7 +36,7 @@ export abstract class GameEntity extends GameObject{
   }
 
   refreshVisuals(): Drawable | null {
-    if (this.visible) {
+    if (this.visible || this.visibleOverride) {
       return this.getGlyph();
     }
     return null;

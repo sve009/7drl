@@ -207,6 +207,11 @@ export class DescendAction extends Action {
         map
       );
       generator.generateLevel();
+      
+      if (this.onStair) {
+        const stairPos = state.maps[this.entity.dungeonLevel].stairUp;
+        this.entity.position = stairPos;
+      }
 
       // Code is here temporarily
 
@@ -240,11 +245,6 @@ export class DescendAction extends Action {
       for (let i = 0; i < randi(5, 9); i++) {
         EnemyGenerator.createEnemyGroup(state, this.entity.dungeonLevel);
       }
-    }
-
-    if (this.onStair) {
-      const stairPos = state.maps[this.entity.dungeonLevel].stairUp;
-      this.entity.position = stairPos;
     }
   }
 }

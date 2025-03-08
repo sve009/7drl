@@ -3,13 +3,8 @@ Artifacts
 Descriptions
 Frame Narrative
 Enemies
-NPCs
-Shops
 Rings
-Fix potion of invisibility
-Implement scroll of poison
 Implement scroll of enchantment
-Implement throwing stuff!!!!
 Make use of inventory equal action taken
 Player Panel Revamp (Alexandre)
 Armor/Weapon Panel (Alexandre)
