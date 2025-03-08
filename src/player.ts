@@ -178,18 +178,19 @@ export class Player extends Character {
                 logMessage("The priest blesses you");
                 logMessage("You feel stronger");
 
+                this.artifactsTurnedIn++;
+
+                if (this.artifactsTurnedIn === 5) {
+                  logMessage("You hand over the final artifact")
+                  logMessage("The priest tells you")
+                  logMessage("My child, you are now ready to take my place and lead this monastery")
+                  logMessage("YOU WIN - But what was left unexplored in those dungeons?")
+                  getUIManager().showEndScreen(true);
+                } 
+
                 const state = getUIManager().gameState;
                 state.refreshShopInventories(0);
                 state.unveilTeleporter();
-                this.artifactsTurnedIn++;
-              } 
-
-              if (this.artifactsTurnedIn === 5) {
-                logMessage("You hand over the final artifact")
-                logMessage("The priest tells you")
-                logMessage("My child, you are now ready to take my place and lead this monastery")
-                logMessage("YOU WIN - But what was left unexplored in those dungeons?")
-                getUIManager().showEndScreen(true);
               } 
 
               return new Actions.NoAction();
