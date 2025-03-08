@@ -24,7 +24,7 @@ export class UIManager {
   startScreenInset: number = 15;
   endScreen: EndScreen;
   endHorizontalPanelInset: number = 35;
-  endVerticalPanelInset: number = 17;
+  endVerticalPanelInset: number = 18;
   helpPanel: HelpPanel
   helpHorizontalPanelInset: number = 26;
   helpVerticalPanelInset: number = 10;
@@ -33,7 +33,7 @@ export class UIManager {
   pauseVerticalPanelInset: number = 21;
   creditsPanel: CreditsPanel;
   creditsHorizontalPanelInset: number = 26;
-  creditsVerticalPanelInset: number = 22;
+  creditsVerticalPanelInset: number = 21;
 
   logPanel: LogPanel;
   playerPanel: PlayerPanel;
