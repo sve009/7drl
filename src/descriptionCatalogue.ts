@@ -79,18 +79,6 @@ export function descriptionCatalogue (key: string): string {
       return "A grizzled blacksmith, she can make sure you're equipped for your adventures";
     case "librarian":
       return "A frail librarian, he's an expert in ancient scrolls";
-    case "bat":
-      return "An evasive bat. Frail, but not to be underestimated due to the difficulty in hitting it in combat";
-    case "jackal":
-      return "A hungry jackal. A minor threat in individual combat, but potentially life ending when supported by other creatures";
-    case "goblin":
-      return "An ugly stout goblin. Its vision and memory are poor, so it's easier to avoid than fight";
-    case "goblinarcher":
-      return "This goblin seems to have found itself a bow. Its vision is significantly better than its melee compatriot, and it will attempt to keep its distance";
-    case "wolf":
-      return "A grizzled wolf, a survivor of many previous fights";
-    case "cavespider":
-      return "A small spider. It's sturdier than it looks, and very evasive";
     case "potion of confusion":
       return "A potion containing a peculiar liquid which confuses all it comes into contact with. Somehow benign to ingest"
     case "potion of healing":
