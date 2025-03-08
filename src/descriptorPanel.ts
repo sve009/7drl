@@ -34,28 +34,35 @@ export class DescriptorPanel extends UIComponent {
     indentDialog.push((gameDescription.tileID) 
     ? descriptionCatalogue(gameDescription.tileID)
     : "Unexplored");
-    doubleIndentDialog.push("", "");
+    doubleIndentDialog.push("");
     for (const entity of gameDescription.entities) {
       if (entity instanceof Character) {
-        indentDialog.push("", entity.name)
+        indentDialog.push("", descriptionCatalogue(entity.name));
+        doubleIndentDialog.push("", "");
         if (entity instanceof Enemy && !("passive" in entity.enemyType.ai)) {
           const percentHealth = entity.health / entity.maxHealth;
+          indentDialog.push("");
+          doubleIndentDialog.push("");
+          let name = entity.name;
+          name = name[0].toUpperCase() + name.slice(1);
           if (percentHealth > 0.9) {
-            indentDialog.push(entity.name + " is healthy!")
+            doubleIndentDialog.push(name + " is healthy!")
           } else if (percentHealth > 0.2) {
-            indentDialog.push(entity.name + " is hurt.")
+            doubleIndentDialog.push(name + " is hurt.")
           } else {
-            indentDialog.push(entity.name + " is critically injured!")
-          }  
-          // entity.enemyType.
+            doubleIndentDialog.push(name + " is critically injured!")
+          }
+          indentDialog.push("","","")
+          doubleIndentDialog.push(`Accuracy: ${entity.enemyType.accuracy}`)
+          doubleIndentDialog.push(`Damage: ${entity.enemyType.damage}`)
         }
       } else if (entity instanceof Item) {
         indentDialog.push("", descriptionCatalogue(entity.name));
       }
     }
-
     this.layer.addDrawable(new TextDrawable(1, 1, dialog.join("\n"), this.boundaries.getWidth() - 2));
-    this.layer.addDrawable(new TextDrawable(2, 3, dialog.join("\n"), this.boundaries.getWidth() - 3));
+    this.layer.addDrawable(new TextDrawable(2, 3, indentDialog.join("\n"), this.boundaries.getWidth() - 3));
+    this.layer.addDrawable(new TextDrawable(3, 3, doubleIndentDialog.join("\n"), this.boundaries.getWidth() - 4));
     super.refreshVisuals();
   }
 }

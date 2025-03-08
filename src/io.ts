@@ -25,7 +25,6 @@ export class IOHandler {
     this.lastKey = null;
 
     let code = event.keyCode;
-    console.log(code)
     switch (code) {
       case KEYS.VK_SHIFT: {
         this.shifting = true;

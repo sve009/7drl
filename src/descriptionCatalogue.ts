@@ -1,4 +1,7 @@
 export function descriptionCatalogue (key: string): string {
+  if (key.includes("gold")) {
+    return key;
+  }
   switch (key) {
     case "#":
       return "Wall: Just regular old stone";
@@ -127,6 +130,6 @@ export function descriptionCatalogue (key: string): string {
     case "fence":
       return "Wooden Barrier: What is hidden behind this obstruction?"
     default:
-      throw new Error("MESSAGE ID MISSING");
+      throw new Error("MESSAGE ID MISSING FOR: " + key);
   }
 }
