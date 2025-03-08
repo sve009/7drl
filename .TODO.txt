@@ -9,6 +9,10 @@ Shops
 Health Bar
 Rings
 Armor Panel
+Fix potion of invisibility
+Implement scroll of poison
+Implement scroll of enchantment
+Implement throwing stuff!!!!
 Enemies and Items on look mode
    Flavor text
    Strategic Advice
