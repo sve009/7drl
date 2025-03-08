@@ -5,15 +5,15 @@ Frame Narrative
 Enemies
 NPCs
 Shops
-Health Bar (Alexandre)
 Rings
-Armor/Weapon Panel (Alexandre)
-Player Panel
 Fix potion of invisibility
 Implement scroll of poison
 Implement scroll of enchantment
 Implement throwing stuff!!!!
 Make use of inventory equal action taken
+Player Panel Revamp
+Armor/Weapon Panel (Alexandre)
+Health Bar (Alexandre)
 Enemies and Items on look mode (Alexandre)
    Flavor text
    Strategic Advice
