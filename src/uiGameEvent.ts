@@ -54,3 +54,15 @@ export class RestartGame extends UIGameEvent {
     getUIManager().restartGame();
   }
 }
+
+export class StartThrowCursorMode extends UIGameEvent {
+  radiusFromPlayer: number
+  constructor (radiusFromPlayer: number) {
+    super();
+    this.radiusFromPlayer = radiusFromPlayer;
+  }
+
+  run (state: GameState): void {
+    getUIManager().throwCursorMode(state.player.position, this.radiusFromPlayer);
+  }
+}
