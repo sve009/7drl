@@ -130,11 +130,13 @@ class PotionFactory {
             for (const entity of entitiesHit) {
               if (entity instanceof Character) {
                 entity.addBuff(new Buffs.ConfusionDebuff(15));
+                logMessage(`${entity.name} looks confused`);
               }
             }
           },
           (character: Character) => {
             character.addBuff(new Buffs.ConfusionDebuff(20));
+            logMessage(`You feel perplexed for a moment, but the feeling passes`);
           }
         );
         break;

@@ -43,9 +43,9 @@ export class RandomProfile extends AIProfile {
 
 /**
  * If unaware of the player, picks a random spot on the map and
- * travels to it. If aware of the player, approaches and attacks the player.
+ * travels to it. If aware of the player, delegates to subclass.
  */
-export class BasicMelee extends AIProfile {
+export abstract class BasicAI extends AIProfile {
   path: Array<{ x: number, y: number }>;
   visionRange: number;
   seesPlayer: boolean;
@@ -69,9 +69,11 @@ export class BasicMelee extends AIProfile {
       character.position.y,
       this.visionRange,
       (x, y, r, visibility) => {
-        if (x == state.player.position.x && 
-            y == state.player.position.y &&
-            character.dungeonLevel == state.player.dungeonLevel
+        if (
+          x == state.player.position.x && 
+          y == state.player.position.y &&
+          character.dungeonLevel == state.player.dungeonLevel &&
+          !state.player.invisible
         ) {
           this.focus = this.memory;
         }
@@ -87,21 +89,25 @@ export class BasicMelee extends AIProfile {
     }
   }
 
+  passable(state: GameState, character: Character, x: number, y: number): boolean {
+    const map = state.maps[character.dungeonLevel];
+    const entity = state.entityAt(x, y, character.dungeonLevel);
+    let blockingEntity;
+    if (entity instanceof Player) {
+      blockingEntity  = false;
+    } else if (entity instanceof Character) {
+      blockingEntity = entity == character ? false : true;
+    } else {
+      blockingEntity = false;
+    }
+    return map.passable(x, y) && !blockingEntity;
+  }
+
   update(state: GameState, character: Character): Action {
     const map = state.maps[character.dungeonLevel];
-    const passable = (x: number, y: number) => {
-      const entity = state.entityAt(x, y, character.dungeonLevel);
-      let blockingEntity;
-      if (entity instanceof Player) {
-        blockingEntity  = false;
-      } else if (entity instanceof Character) {
-        blockingEntity = entity == character ? false : true;
-      } else {
-        blockingEntity = false;
-      }
-      return map.passable(x, y) && !blockingEntity;
-    }
+
     this.updateSeesPlayer(state, character);
+
     if (!this.seesPlayer) {
       if (this.path.length == 0) {
         let { x, y } = map.openSpot();
@@ -110,27 +116,10 @@ export class BasicMelee extends AIProfile {
           x = pos.x;
           y = pos.y;
         }
-        const dijkstra = new Path.Dijkstra(x, y, passable, null);
-        dijkstra.compute(
-          character.position.x,
-          character.position.y,
-          (x: number, y: number) => {
-            this.path.push({ x, y });
-          }
-        );
-
-        this.path.shift();
-      } 
-    } else {
-      const [dist, dir] = d(character.position, state.player.position);
-      if (dist <= 2 && character.dungeonLevel == state.player.dungeonLevel) {
-        return new AttackAction(character, state.player);
-      } else {
-        this.path = [];
         const dijkstra = new Path.Dijkstra(
-          state.player.position.x, 
-          state.player.position.y, 
-          passable,
+          x, 
+          y, 
+          (x: number, y: number) => this.passable(state, character, x, y), 
           null
         );
         dijkstra.compute(
@@ -141,52 +130,35 @@ export class BasicMelee extends AIProfile {
           }
         );
 
-        // Throw away current square
-        this.path.shift()
-      }
-    }
+        this.path.shift();
+      } 
 
-    if (this.path.length == 0) {
-      return new NoAction();
-    }
-
-    const pos = this.path.shift();
-    return new MoveAction(character, pos);
-  }
-}
-
-export class MeleeFollower extends BasicMelee {
-  leader: Character;
-
-  constructor(visionRange: number, memory: number, leader: Character) {
-    super(visionRange, memory);
-    this.leader = leader;
-  }
-
-  update(state: GameState, character: Character): Action {
-    const map = state.maps[character.dungeonLevel];
-
-    this.updateSeesPlayer(state, character);
-
-    // Fix this tomorrow
-    const passable = (x: number, y: number) => {
-      return map.passable(x, y);
-    }
-
-    // Do its own thing
-    if (this.seesPlayer || this.leader.health <= 0) {
-      return super.update(state, character);
-    } else {
-      const [dist, dir] = d(character.position, this.leader.position);
-      if (dist <= 2) {
+      if (this.path.length == 0) {
         return new NoAction();
       }
+
+      const pos = this.path.shift();
+      return new MoveAction(character, pos);
+    } else {
+      return this.seesPlayerAction(state, character);
+    }
+  }
+
+  abstract seesPlayerAction(state: GameState, character: Character): Action;
+}
+
+export class BasicMelee extends BasicAI {
+  seesPlayerAction(state: GameState, character: Character): Action {
+    const [dist, dir] = d(character.position, state.player.position);
+    if (dist <= 2 && character.dungeonLevel == state.player.dungeonLevel) {
+      return new AttackAction(character, state.player);
+    } else {
       this.path = [];
       const dijkstra = new Path.Dijkstra(
-        this.leader.position.x,
-        this.leader.position.y,
-        passable,
-        null,
+        state.player.position.x, 
+        state.player.position.y, 
+        (x: number, y: number) => this.passable(state, character, x, y),
+        null
       );
       dijkstra.compute(
         character.position.x,
@@ -196,7 +168,12 @@ export class MeleeFollower extends BasicMelee {
         }
       );
 
-      this.path.shift();
+      // Throw away current square
+      this.path.shift()
+    }
+
+    if (this.path.length == 0) {
+      return new NoAction();
     }
 
     const pos = this.path.shift();

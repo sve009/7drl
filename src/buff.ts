@@ -96,15 +96,7 @@ export class InvisibilityBuff extends Buff {
   }
 
   update(state: GameState, character: Character) {
-    if (character instanceof Player) {
-      for (const entity of state.entities) {
-        if (entity instanceof Enemy) {
-          entity.enemyType.ai.seesPlayer = false;
-        }
-      }
-    } else {
       character.invisible = true;
-    }
   }
 
   end(character: Character) {
