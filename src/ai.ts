@@ -15,6 +15,13 @@ export abstract class AIProfile {
 
 export class RandomProfile extends AIProfile {
   seesPlayer: boolean = false;
+  opensDoors: boolean;
+
+  constructor (opensDoors: boolean = true) {
+    super();
+    this.opensDoors = opensDoors;
+  }
+
   update(state: GameState, character: Character): Action {
     let found = false;
     let pos;
@@ -28,7 +35,7 @@ export class RandomProfile extends AIProfile {
         y: character.position.y + dirPair.y,
       };
 
-      if (character.canMove(pos, state.maps[character.dungeonLevel]) && 
+      if (character.canMove(pos, state.maps[character.dungeonLevel], this.opensDoors) && 
           !state.entityAt(pos.x, pos.y, character.dungeonLevel)
       ) {
         found = true;

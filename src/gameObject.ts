@@ -41,8 +41,15 @@ export abstract class GameEntity extends GameObject{
     return null;
   }
 
-  canMove(position: { x: number; y: number; }, map: GameMap): boolean {
-    return map.passable(position.x, position.y);
+  canMove(
+    position: { x: number; y: number; }, 
+    map: GameMap, 
+    opensDoors: boolean = true
+  ): boolean {
+    const idx = position.x + position.y*map.width;
+    const isDoor = map.tiles[idx].getSymbol() == "+";
+    const canOpen = !isDoor || opensDoors;
+    return map.passable(position.x, position.y) && canOpen;
   }
 }
 
