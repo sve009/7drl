@@ -17,6 +17,7 @@ export class GameState {
   entityLayer: Layer;
   terrainLayer: Layer;
   fullRefreshVisual: boolean
+  positionToRemember: { x: number, y: number } | null = null;
 
   get currentMap (): GameMap {
     return this.maps[this.player.dungeonLevel];

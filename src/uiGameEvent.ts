@@ -66,3 +66,16 @@ export class StartThrowCursorMode extends UIGameEvent {
     getUIManager().throwCursorMode(state.player.position, this.radiusFromPlayer);
   }
 }
+
+export class SendPositionToGameStateAndExit extends UIGameEvent {
+  positionToSend: { x: number, y: number };
+  constructor (position: { x: number, y: number }) {
+    super();
+    this.positionToSend = position;
+  }
+
+  run (state: GameState): void {
+    state.positionToRemember = this.positionToSend;
+    getUIManager().exitAllFocus();
+  }
+}
