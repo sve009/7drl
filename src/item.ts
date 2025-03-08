@@ -359,7 +359,16 @@ export class ScrollFactory {
           "scroll of poison",
           "#35e82e",
           (state: GameState, character: Character) => {
-            // TODO
+            for (const entity of state.entities) {
+              if (entity.dungeonLevel != character.dungeonLevel) {
+                continue;
+              }
+              if (entity instanceof Enemy) {
+                if (state.sightMap.isVisible(entity.position.x, entity.position.y)) {
+                  entity.addBuff(new Buffs.PoisonDebuff(20));
+                }
+              }
+            }
             logMessage("A toxic aura radiates out from you");
           }
         );
