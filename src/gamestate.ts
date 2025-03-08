@@ -767,6 +767,7 @@ class TileTypeFactory {
       }
       case "artfloor": {
         return new TileType(
+          symbol,
           "\u{2394}",
           "#91781f",
           "#31233b",
@@ -776,6 +777,7 @@ class TileTypeFactory {
       }
       case "artpill": {
         return new TileType(
+          symbol,
           "\u{3152}",
           "#91781f",
           "#31233b",
