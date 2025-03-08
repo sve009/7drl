@@ -194,6 +194,76 @@ export class BasicMelee extends BasicAI {
   }
 }
 
+export class BasicRanged extends BasicMelee {
+  seesPlayerAction(state: GameState, character: Character): Action {
+    const los = this.focus == this.memory - 1;
+    const dijkstra = new Path.Dijkstra(
+      state.player.position.x,
+      state.player.position.y,
+      (x: number, y: number) => this.passable(state, character, x, y),
+      null
+    );
+
+    let dist = 0;
+    dijkstra.compute(
+      character.position.x,
+      character.position.y,
+      (x: number, y: number) => {
+        dist++;
+      }
+    );
+    dist--;
+
+    // Too close
+    if (dist <= 4) {
+      // Choose the spot furthest away
+      // Check all adjacent directions
+      let maxDir = 0;
+      let maxDist = dist;
+      for (let i = 0; i < 8; i++) {
+        const dPos = dirMap.get(i);
+
+        let p = 0;
+        dijkstra.compute(
+          character.position.x + dPos.x,
+          character.position.y + dPos.y,
+          (x: number, y: number) => {
+            p++;
+          }
+        );
+        p--;
+
+        if (p >= 0 && p > maxDist) {
+          maxDir = i;
+          maxDist = p;
+        }
+      }
+
+      if (maxDir == 0) {
+        if (!los) {
+          return new NoAction();
+        }
+      } else {
+        const dPos = dirMap.get(maxDir);
+        return new MoveAction(character, {
+          x: character.position.x + dPos.x,
+          y: character.position.y + dPos.y,
+        });
+      }
+    }
+
+    // Clear line of sight
+    if (los) {
+      console.log('just right!');
+      return new AttackAction(character, state.player);
+    }   
+
+    // Saw player, but not in los or too close
+    console.log('no los!');
+    return super.seesPlayerAction(state, character);
+  }
+}
+
 function d(
   p1: { x: number, y: number }, 
   p2: { x: number, y: number }

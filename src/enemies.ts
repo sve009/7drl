@@ -15,12 +15,12 @@ export class Enemy extends Character {
 
   constructor(name: string, x: number, y: number, z: number) {
     super();
-    this.name = name;
     this.position = { x, y };
     this.dungeonLevel = z;
     this.visible = false;
 
     this.enemyType = EnemyTypeFactory.createEnemyType(name);
+    this.name = this.enemyType.name;
     
     this.maxHealth = this.enemyType.health;
     this.health = this.maxHealth;
@@ -119,7 +119,7 @@ class EnemyTypeFactory {
           "#ba944e",
           new AI.BasicMelee(10, 5),
           3,
-          60,
+          35,
           1,
           50,
           0,
@@ -132,7 +132,7 @@ class EnemyTypeFactory {
           "#c7a06d",
           new AI.BasicMelee(7, 4),
           5,
-          50,
+          35,
           2,
           0,
           0,
@@ -145,9 +145,35 @@ class EnemyTypeFactory {
           "#db4809",
           new AI.BasicMelee(5, 3),
           5,
-          75,
+          60,
           3,
           0,
+          0,
+        );
+      }
+      case "goblinarcher": {
+        return new EnemyType(
+          "goblin archer",
+          "g",
+          "#035efc",
+          new AI.BasicRanged(8, 6),
+          3,
+          50,
+          2,
+          0,
+          0,
+        );
+      }
+      case "wolf": {
+        return new EnemyType(
+          "wolf",
+          "j",
+          "#bd0d0d",
+          new AI.BasicMelee(8, 5),
+          15,
+          60,
+          6,
+          10,
           0,
         );
       }
@@ -161,9 +187,26 @@ const enemyTables = [
 
   // Level 1
   {
-    goblin: 33,
-    bat: 33,
-    jackal: 33,
+    goblin: 30,
+    bat: 30,
+    jackal: 40,
+  },
+
+  // Level 2
+  {
+    goblin: 40,
+    bat: 30,
+    jackal: 20,
+    goblinarcher: 10,
+  },
+
+  // Level 3
+  {
+    goblin: 30,
+    bat: 20,
+    jackal: 10,
+    goblinarcher: 25,
+    wolf: 15,
   }
 ];
 export class EnemyGenerator {

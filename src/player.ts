@@ -33,7 +33,7 @@ export class Player extends Character {
 
     this.accuracy = 75;
     this.damage = 3;
-    this.dodge = 25;
+    this.dodge = 0;
     this.armor = 0;
 
     this.distanceTraveled = 0;
