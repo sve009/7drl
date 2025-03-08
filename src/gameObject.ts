@@ -132,7 +132,9 @@ export abstract class Character extends GameEntity {
   }
   
   die(state: GameState): void {
-    logMessage(`${this.name} dies`);
+    if (this.visible) {
+      logMessage(`${this.name} dies`);
+    }
     for (let i = 0; i < state.entities.length; i++) {
       if (state.entities[i] == this) {
         state.entities.splice(i, 1);

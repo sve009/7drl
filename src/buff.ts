@@ -4,6 +4,7 @@ import { AIProfile, RandomProfile } from "./ai";
 import { Player } from "./player";
 import { Enemy } from "./enemies";
 import { Attackable, Defendable } from "./item";
+import { logMessage } from "./uiManager";
 
 export abstract class Buff implements Attackable, Defendable {
   name: string;
@@ -67,6 +68,9 @@ export class RegenerationBuff extends Buff {
   }
 
   update(state: GameState, character: Character) {
+    if (character.visible && character.health != character.maxHealth) {
+      logMessage(`${character.name} regenerates`);
+    }
     character.health = Math.min(
       character.maxHealth, 
       character.health + Math.ceil(character.maxHealth / 10)
@@ -84,7 +88,11 @@ export class MightBuff extends Buff {
   update(state: GameState, character: Character) {}
 
   attack(state: GameState, character: Character): [number, number] {
-    return [40, 2];
+    const damageBoost = Math.max(
+      2,
+      Math.ceil(character.damage * .4),
+    );
+    return [40, damageBoost];
   }
 }
 
@@ -112,7 +120,10 @@ export class PoisonDebuff extends Buff {
   }
 
   update(state: GameState, character: Character) {
-    character.health -= Math.ceil(character.maxHealth / 25);
+    character.applyDamage(state, Math.ceil(character.maxHealth / 25));
+    if (character.visible) {
+      logMessage(`${character.name} suffers from poisoning`);
+    }
   }
 }
 

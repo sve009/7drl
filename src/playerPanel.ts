@@ -18,6 +18,7 @@ export class PlayerPanel extends UIComponent {
     super.refreshVisuals();
     let playerStats =
     `Health: ${this.player.health}/${this.player.maxHealth}\n` +
+    `Gold: ${this.player.gold}\n` + 
     `Turn: ${this.player.distanceTraveled}\n` +
     `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
     `Dungeon Level: ${this.player.dungeonLevel}\n` +
@@ -25,6 +26,7 @@ export class PlayerPanel extends UIComponent {
     if (!this.player.dungeonLevel) {
       playerStats =
       `Health: ${this.player.health}/${this.player.maxHealth}\n` +
+      `Gold: ${this.player.gold}\n` + 
       `Turn: ${this.player.distanceTraveled}\n` +
       `Position: [${this.player.position.x}, ${this.player.position.y}]\n` +
       `Ground Level` +
