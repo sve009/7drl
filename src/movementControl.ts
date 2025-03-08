@@ -40,6 +40,10 @@ export class MovementControl {
       ? key
       : translation[idx];
   }
+
+  static convertDirectionToKey (direction: string): string {
+    return MovementControl.keys[translation.indexOf(direction)]
+  }
 }
 
 MovementControl.setPreference("hjkl");
