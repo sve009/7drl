@@ -90,5 +90,5 @@ export class Game {
 }
 
 export function getGameName (): string {
-  return "Leibowitz's Canticle";
+  return "Canticle for the Doomed";
 }
